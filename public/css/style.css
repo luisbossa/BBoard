@@ -11,17 +11,6 @@
   padding: 20px;
 }
 
-.box {
-  background-color: var(--box-bg);
-  padding: 20px;
-  border: 0.5px solid var(--border-color);
-  border-radius: 10px;
-}
-
-.box-hover:hover {
-  border-color: var(--main-color);
-}
-
 .counter-title {
   margin-bottom: 20px;
   text-transform: capitalize;
@@ -45,89 +34,9 @@
   font-weight: 700;
 }
 
-.box-body {
-  padding: 20px 0;
-}
-
-.product-list {
-  list-style-type: none;
-}
-
-.product-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 0;
-}
-
-.item-info {
-  display: flex;
-  align-items: center;
-}
-
-.item-info img {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.product-name,
-.product-sales {
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.product-name {
-  margin-bottom: 5px;
-}
-
-.product-sales {
-  margin-top: 5px;
-}
-
-.text-second {
-  color: var(--text-second-color);
-}
-
-.item-sale-info {
-  text-align: right;
-}
-
 .card-div {
   height: 100%;
   overflow-y: auto;
-}
-
-.dashcard-div {
-  max-height: 500px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-
-.dashcard-div::-webkit-scrollbar {
-  width: 8px; /* Ancho del scroll */
-}
-
-.dashcard-div::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Fondo del track */
-  border-radius: 4px;
-}
-
-.dashcard-div::-webkit-scrollbar-thumb {
-  background-color: #507cd1; /* Color del "thumb" */
-  border-radius: 4px;
-  border: 2px solid #f1f1f1; /* Espacio alrededor del thumb */
-}
-
-.dashcard-div::-webkit-scrollbar-thumb:hover {
-  background-color: #3456a1;
-}
-
-/* Firefox */
-.dashcard-div {
-  scrollbar-width: thin;
-  scrollbar-color: #507cd1 #f1f1f1;
 }
 
 table {
@@ -159,20 +68,15 @@ table td {
   border-bottom: 1px solid var(--border-color);
 }
 
-.order-status {
-  padding: 5px 15px;
-  border-radius: 5px;
-  font-weight: 500;
-}
-
 .order-ready {
   color: #2a59d1;
   background-color: rgba(62, 121, 247, 0.1);
 }
 
 .order-shipped {
-  color: #00ab6f;
-  background-color: rgba(4, 209, 130, 0.1);
+  border-radius: 40px;
+  background: #ffd06b;
+  color: #b78103;
 }
 
 .payment-status {
@@ -193,10 +97,6 @@ table td {
 
 .payment-pending .dot {
   background-color: #ffc542;
-}
-
-.overflow-scroll {
-  overflow-y: auto;
 }
 
 .overlay {
@@ -242,27 +142,77 @@ table td {
 
 /*------------------------*/
 
-.dashboard-card-header {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  padding-bottom: 8px;
+
+/* ==============================
+   ORDER TICKET MODERNO
+================================ */
+
+.order-ticket.modern {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1.2fr;
+  gap: 20px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
-.dashboard-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.order-ticket.modern:hover {
+  border-color: var(--main-color);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+
+.order-col-main {
+  gap: 8px;
+}
+
+.order-col-total {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Cliente */
+.order-col-client p {
+  margin: 0;
+}
+
+.address {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.shipping-cost {
+  font-size: 13px;
+  color: #777;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .order-ticket.modern {
+    grid-template-columns: 1fr;
+  }
+
+  .order-col-total {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1.2fr 1.4fr 2fr;
+  gap: 20px;
 }
 
 .order-ticket {
-  padding: 12px 15px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  gap: 15px;
+  background: #fff;
+  border: 1px solid #e6e8ec;
+  border-radius: 12px;
+  padding: 16px;
 }
 
 .order-info {
@@ -270,17 +220,6 @@ table td {
   flex-direction: column;
   gap: 4px;
   min-width: 150px;
-}
-
-.order-number {
-  font-weight: 700;
-  color: #333;
-}
-
-.order-client,
-.order-date {
-  font-size: 14px;
-  color: #666;
 }
 
 .order-details {
@@ -291,21 +230,26 @@ table td {
   text-align: right;
 }
 
-.product-name {
-  font-weight: 600;
-  color: #111;
+.order-products {
+  font-size: 13px;
 }
 
-.product-quantity,
-.product-price,
-.order-total,
-.order-status {
-  font-size: 14px;
+.order-product {
+  padding: 8px 0;
+  border-bottom: 1px dashed #ddd;
+}
+
+.order-product:last-child {
+  border-bottom: none;
+}
+
+.product-meta {
   color: #555;
 }
 
-.status {
-  font-weight: 700;
-  color: var(--main-color);
+.product-extra {
+  font-size: 12px;
+  color: #777;
 }
+
 

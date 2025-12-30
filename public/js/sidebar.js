@@ -7,8 +7,6 @@ sidebarBtn.addEventListener("click", () => {
   main.classList.toggle("sidebar-collapsed");
 });
 
-
-
 document.querySelectorAll(".sidebar-menu-dropdown").forEach((dropdown) => {
   dropdown.addEventListener("click", (e) => {
     e.preventDefault();
@@ -32,6 +30,28 @@ document.querySelectorAll(".sidebar-menu-dropdown").forEach((dropdown) => {
     if (!isOpen) {
       submenu.style.height = submenu.scrollHeight + "px";
       icon.classList.add("active");
+    }
+  });
+});
+
+// ===============================
+// ACTIVO ÚNICO EN SIDEBAR
+// ===============================
+const sidebarLinks = document.querySelectorAll(".sidebar-menu a");
+
+sidebarLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    // quitar active de todos
+    sidebarLinks.forEach((l) => l.classList.remove("active"));
+
+    // agregar active al clickeado
+    link.classList.add("active");
+
+    // si está dentro de un submenu, marcar también el padre
+    const parentSubmenu = link.closest(".sidebar-submenu");
+    if (parentSubmenu) {
+      const parentLink = parentSubmenu.querySelector(".sidebar-menu-dropdown");
+      if (parentLink) parentLink.classList.add("active");
     }
   });
 });

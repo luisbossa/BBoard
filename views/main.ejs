@@ -1,0 +1,246 @@
+<%- include("partials/header") %>
+
+    <div class="main-content">
+        <div class="row">
+            <% dashboardStats.forEach(stat=> { %>
+                <div class="col-3 col-md-6 col-sm-12">
+                    <div class="box box-hover">
+                        <div class="counter">
+                            <div class="counter-title">
+                                <%= stat.title %>
+                            </div>
+                            <div class="counter-info">
+                                <div class="counter-count">
+                                    <%= stat.value %>
+                                </div>
+                                <i class='bx <%= stat.icon %>'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+
+        <div class="row">
+
+            <!-- PRODUCTOS MAS VENDIDOS -->
+            <div class="col-4 col-md-6 col-sm-12">
+                <div class="box dashcard-div">
+                    <div class="dashboard-card-header">
+                        Lo más vendidos
+                    </div>
+                    <div class="box-body">
+                        <ul id="product-list" class="product-list">
+                            <% if (products && products.length> 0) { %>
+                                <% products.forEach(product=> { %>
+
+                                    <li class="product-list-item">
+                                        <div class="item-info">
+                                            <img src="<%= product.image %>" alt="imagen del producto">
+
+                                            <div>
+                                                <div class="product-name">
+                                                    <%= product.name %>
+                                                </div>
+
+                                                <div class="text-second">
+                                                    <%= product.unitsSold %> unidades vendidas
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="item-sale-info">
+                                            <div class="text-second">Última venta</div>
+                                            <div class="product-sales">
+                                                <%= new Date(product.lastSale).toLocaleDateString() %>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <li>No hay productos para mostrar</li>
+                                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALISTAR PEDIDOS 3 COLUMNAS -->
+            <div class="col-8 col-md-6 col-sm-12">
+                <div class="box dashcard-div">
+
+                    <div class="dashboard-card-header">Pedidos</div>
+
+                    <div class="dashboard-card-body">
+                        <% if (orderTickets && orderTickets.length> 0) { %>
+                            <% orderTickets.forEach(order=> { %>
+
+                                <div class="order-ticket gridcolums-3">
+
+                                    <!-- COLUMNA 1: PEDIDO -->
+                                    <div class="order-col">
+                                        <div class="order-number">
+                                            #<%= order.id %> · Pedido <%= order.orderNumber || '—' %>
+                                        </div>
+
+                                        <div class="order-date">
+                                            <%= new Date(order.date).toLocaleDateString() %>
+                                        </div>
+
+                                        <span class="status <%= order.status %>">
+                                            <%= order.status %>
+                                        </span>
+
+                                        <div class="order-payment">
+                                            💳 <%= order.paymentMethod || 'No definido' %>
+                                        </div>
+
+                                        <div class="order-shipping">
+                                            🚚
+                                            <%= order.shippingCost> 0
+                                                ? `Correo + ₡ ${order.shippingCost.toLocaleString()}`
+                                                : 'Retiro en tienda ₡ 0' %>
+                                        </div>
+
+                                        <div class="order-summary">
+                                            <div class="order-items-total">
+                                                Artículos: <strong><%= order.totalItems %></strong>
+                                            </div>
+
+                                            <div class="order-total">
+                                                Total: <strong>₡ <%= order.orderTotal.toLocaleString() %></strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="order-actions">
+                                            <a href="https://wa.me/506<%= order.phone %>?text=<%= encodeURIComponent(
+                                                `Hola ${order.client},
+                                                Pedido #${order.orderNumber || order.id}
+
+                                                Dirección:
+                                                ${order.province}, ${order.canton}, ${order.district}
+                                                ${order.neighborhood}
+                                                ${order.address}
+
+                                                Método de pago: ${order.paymentMethod}
+                                                Envío: ${order.shippingCost > 0 ? 'Correo ₡ 2.500' : 'Retiro en tienda'}
+
+                                                Gracias por su compra.`
+                                                ) %>" target="_blank" class="btn-action whatsapp">
+                                                WhatsApp
+                                            </a>
+
+                                            <button class="btn-action print" onclick="printOrder(this)">
+                                                Imprimir
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- COLUMNA 2: CLIENTE -->
+                                    <div class="order-col">
+                                        <div class="order-client">
+                                            <strong>
+                                                <%= order.client %>
+                                            </strong>
+                                        </div>
+
+                                        <div class="order-id">
+                                            Ced: <%= order.nationalId %>
+                                        </div>
+
+                                        <div class="order-phone">
+                                            Cel: <%= order.phone %>
+                                        </div>
+
+                                        <div class="order-email">
+                                            ✉️ <%= order.email %>
+                                        </div>
+                                    </div>
+
+                                    <!-- COLUMNA 3: DIRECCIÓN -->
+                                    <div class="order-col">
+                                        <div class="order-address">
+                                            <strong>
+                                                <%= order.province %>
+                                            </strong>,
+                                            <%= order.canton %>,
+                                                <%= order.district %>
+                                        </div>
+
+                                        <div class="order-neighborhood">
+                                            Barrio: <%= order.neighborhood %>
+                                        </div>
+
+                                        <div class="order-address-detail">
+                                            <%= order.address %>
+                                        </div>
+                                    </div>
+
+                                    <!-- COLUMNA 4: PRODUCTOS -->
+                                    <div class="order-col gap-col">
+                                        <% if (order.items.length> 0) { %>
+                                            <% order.items.forEach(item=> { %>
+
+                                                <div>
+                                                    <strong>
+                                                        <%= item.productName %>
+                                                    </strong>
+                                                    <div>Cantidad: <%= item.quantity %>
+                                                    </div>
+                                                    <div>Precio: ₡<%= item.price.toLocaleString() %>
+                                                    </div>
+
+                                                    <% if (item.color) { %>
+                                                        <div>Color: <%= item.color %>
+                                                        </div>
+                                                        <% } %>
+
+                                                            <% if (item.size) { %>
+                                                                <div>Talla: <%= item.size %>
+                                                                </div>
+                                                                <% } %>
+
+                                                                    <% if (item.topSize) { %>
+                                                                        <div>Top: <%= item.topSize %>
+                                                                        </div>
+                                                                        <% } %>
+
+                                                                            <% if (item.bottomSize) { %>
+                                                                                <div>Bottom: <%= item.bottomSize %>
+                                                                                </div>
+                                                                                <% } %>
+
+                                                                                    <% if (item.bottomStyle) { %>
+                                                                                        <div>Estilo: <%=
+                                                                                                item.bottomStyle %>
+                                                                                        </div>
+                                                                                        <% } %>
+
+                                                </div>
+
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <span class="muted">Sin productos</span>
+                                                        <% } %>
+                                    </div>
+
+
+
+                                </div>
+
+
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>No hay órdenes recientes</p>
+                                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+
+            <%- include("partials/main-table") %>
+        </div>
+    </div>
+
+    <div class="overlay"></div>

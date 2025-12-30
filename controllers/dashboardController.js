@@ -6,15 +6,15 @@ exports.dashboard = async (req, res, next) => {
       products,
       dashboardStats,
       orderTickets,
-      recentOrdersTable // 👈 NUEVO
+      recentOrdersTable 
     ] = await Promise.all([
       dashboardService.getLatestProducts(),
       dashboardService.getOrderStats(),
-      dashboardService.getRecentOrders(),       // tickets
-      dashboardService.getRecentOrdersTable(),  // tabla
+      dashboardService.getRecentOrders(),       
+      dashboardService.getRecentOrdersTable(), 
     ]);
 
-    res.render("index", {
+    res.render("main", {
       title: "Dashboard",
       products,
       dashboardStats,

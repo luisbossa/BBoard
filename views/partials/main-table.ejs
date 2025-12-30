@@ -1,0 +1,83 @@
+<div class="col-12">
+    <div class="box-table">
+        <div class="box-header">
+            pedidos recientes
+        </div>
+
+        <div class="box-body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Orden</th>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Fecha</th>
+                        <th>Estado del pedido</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (recentOrdersTable && recentOrdersTable.length> 0) { %>
+                        <% recentOrdersTable.forEach(order=> { %>
+                            <tr>
+                                <!-- ID -->
+                                <td>#<%= order.id %>
+                                </td>
+
+                                <!-- ORDER NUMBER -->
+                                <td>
+                                    <strong>
+                                        <%= order.orderNumber || '—' %>
+                                    </strong>
+                                </td>
+
+                                <!-- CLIENTE -->
+                                <td>
+                                    <strong>
+                                        <%= order.client %>
+                                    </strong>
+                                </td>
+
+                                <!-- EMAIL -->
+                                <td>
+                                    <%= order.email %>
+                                </td>
+
+                                <!-- TELÉFONO -->
+                                <td>
+                                    <%= order.phone %>
+                                </td>
+
+                                <!-- FECHA -->
+                                <td>
+                                    <%= new Date(order.date).toLocaleDateString() %>
+                                </td>
+
+                                <!-- ESTADO DEL PEDIDO -->
+                                <td>
+                                    <span class="order-status 
+                                        <%= order.orderStatus === 'completed' ? 'order-ready' : 'order-shipped' %>">
+                                        <%= order.orderStatus %>
+                                    </span>
+                                </td>
+
+                                <!-- TOTAL -->
+                                <td>
+                                    <strong>
+                                        <%= order.total %>
+                                    </strong>
+                                </td>
+                            </tr>
+                        <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="8">No hay pedidos recientes</td>
+                                </tr>
+                        <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

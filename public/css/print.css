@@ -1,0 +1,187 @@
+/* ======================================================
+   VARIABLES DE IMPRESIÓN (AISLADAS)
+====================================================== */
+:root {
+  --print-font-family: "Segoe UI", Arial, sans-serif;
+
+  --print-color-muted: #6b7280;
+  --print-color-border: #e5e7eb;
+  --print-color-background: #ffffff;
+  --print-color-surface: #f9fafb;
+
+  --print-color-accent: #2563eb;
+  --print-color-warning-bg: #fff7ed;
+  --print-color-warning-text: #9a3412;
+  --print-color-success-bg: #ecfdf5;
+  --print-color-success-text: #065f46;
+
+  --print-radius-small: 6px;
+  --print-radius-medium: 10px;
+
+  --print-padding-small: 12px;
+  --print-padding-medium: 20px;
+  --print-padding-large: 32px;
+
+  --print-font-size-base: 14px;
+  --print-font-size-small: 12px;
+  --print-font-size-title: 22px;
+}
+
+/* ======================================================
+   BASE DE IMPRESIÓN
+====================================================== */
+body {
+  margin: 0;
+  background: #f3f4f6;
+  font-family: var(--print-font-family);
+}
+
+/* ======================================================
+   HOJA TIPO PDF (A4)
+====================================================== */
+.print-page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 24px auto;
+  background: var(--print-color-background);
+  padding: var(--print-padding-large);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+.print-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--print-padding-medium);
+  border-bottom: 2px solid var(--print-color-border);
+}
+
+.print-logo {
+  width: 120px;
+  object-fit: contain;
+}
+
+.print-header-info {
+  text-align: right;
+}
+
+.print-header-info h1 {
+  margin: 0;
+  font-size: var(--print-font-size-title);
+  font-weight: 700;
+}
+
+.print-header-info span {
+  display: block;
+  font-size: var(--print-font-size-small);
+  color: var(--print-color-muted);
+}
+
+/* ======================================================
+   CONTENIDO PRINCIPAL
+====================================================== */
+.print-content {
+  flex: 1;
+  margin-top: var(--print-padding-large);
+}
+
+/* ======================================================
+   TARJETA DEL PEDIDO
+====================================================== */
+.print-order-card {
+  border: 1px solid var(--print-color-border);
+  border-radius: var(--print-radius-medium);
+  padding: var(--print-padding-medium);
+  background: var(--print-color-surface);
+}
+
+/* Grid interno */
+.print-order-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--print-padding-medium);
+}
+
+/* Columnas */
+.print-order-column {
+  font-size: var(--print-font-size-base);
+}
+
+.print-order-column strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ======================================================
+   ESTADOS
+====================================================== */
+.print-status {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: var(--print-font-size-small);
+  font-weight: 600;
+}
+
+.print-status--pending {
+  background: var(--print-color-warning-bg);
+  color: var(--print-color-warning-text);
+}
+
+.print-status--completed {
+  background: var(--print-color-success-bg);
+  color: var(--print-color-success-text);
+}
+
+/* ======================================================
+   SECCIONES EXTRA (cliente / envío / totales)
+====================================================== */
+.print-section {
+  margin-top: var(--print-padding-large);
+}
+
+.print-section-title {
+  font-size: var(--print-font-size-small);
+  font-weight: 700;
+  color: var(--print-color-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+.print-footer {
+  border-top: 1px solid var(--print-color-border);
+  margin-top: var(--print-padding-large);
+  padding-top: var(--print-padding-small);
+  font-size: var(--print-font-size-small);
+  color: var(--print-color-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ======================================================
+   IMPRESIÓN REAL
+====================================================== */
+@media print {
+  body {
+    background: none;
+  }
+
+  .print-page {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .order-actions,
+  button {
+    display: none !important;
+  }
+}
