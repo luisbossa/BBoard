@@ -5,8 +5,12 @@
 }
 
 .footer div {
-    font-size: 0.75rem;
-    color: var(--text-color);
+  font-size: 12px;
+  text-align: center;
+  color: var(--text-color);
+  transition: all 0.3s ease;
 }
 
-
+.sidebar.collapsed .footer .full-text {
+  display: none;
+}

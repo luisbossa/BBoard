@@ -152,6 +152,10 @@
 /* ================= ICON ================= */
 .material-symbols-rounded {
   font-family: "Material Symbols Rounded";
-  font-size: 18px;
+  font-size: 22px;
   color: var(--text-color);
+}
+
+.tiny-icon {
+  font-size: 18px;
 }

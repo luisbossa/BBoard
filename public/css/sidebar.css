@@ -19,7 +19,7 @@
 }
 
 /* Ocultar textos */
-.sidebar.collapsed .sidebar-menu > li > a span {
+.sidebar.collapsed .sidebar-menu > li > a .sidebar-text {
   display: none;
 }
 
