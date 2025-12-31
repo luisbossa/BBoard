@@ -169,11 +169,94 @@
   width: auto;
   font-size: 1.5rem;
   background-color: #fff;
-  padding: 8px 10px 6px 10px;
+  padding: 6px 10px 4px 10px;
   border-radius: 6px;
   border: 1px solid var(--border-color);
   text-transform: capitalize;
 }
+
+.dropdown-icon {
+  --size: 15px;
+  --color: var(--text-color);
+  height: var(--size);
+  width: var(--size);
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-icon::after,
+.dropdown-icon::before {
+  --height: 2px;
+  content: "";
+  width: 50%;
+  height: var(--height);
+  border-radius: 2.5px;
+  position: absolute;
+  top: calc(50% - var(--height) / 2);
+  background-color: var(--color);
+  transition: transform 0.3s ease;
+}
+
+.dropdown-icon::before {
+  left: calc(50% - var(--height) / 3);
+  transform-origin: center left;
+  transform: rotate(-45deg);
+}
+
+.dropdown-icon::after {
+  right: calc(50% - var(--height) / 3);
+  transform-origin: right;
+  transform: rotate(45deg);
+}
+
+.dropdown-icon.active::before {
+  transform: rotate(45deg);
+}
+
+.dropdown-icon.active::after {
+  transform: rotate(-45deg);
+}
+
+.darkmode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.darkmode-switch {
+  --height: 20px;
+  --width: calc(var(--height) * 2);
+
+  width: var(--width);
+  height: var(--height);
+  background-color: #e1e1e1;
+  border-radius: calc(var(--height) / 2);
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.darkmode-switch::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background-color: #507cd1;
+  transition: left 0.3s ease;
+}
+
+.darkmode-switch.active::before {
+  left: 50%;
+}
+
+.dark .darkmode-switch {
+  background-color: #2f3640;
+}
+
 
 @media only screen and (max-width: 1280px) {
   .sidebar {

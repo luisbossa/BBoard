@@ -55,3 +55,46 @@ sidebarLinks.forEach((link) => {
     }
   });
 });
+
+// ===============================
+// NOTIFICATION BTN
+// ===============================
+const notificationBtn = document.getElementById("notificationBtn");
+
+notificationBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  notificationBtn.classList.toggle("active");
+});
+
+document.addEventListener("click", () => {
+  notificationBtn.classList.remove("active");
+});
+
+/* ===============================
+   TOGGLE DARK MODE
+================================ */
+const darkToggle = document.getElementById("darkmode-toggle");
+const darkSwitch = darkToggle.querySelector(".darkmode-switch");
+const body = document.body;
+
+/* ===============================
+   CARGAR ESTADO GUARDADO
+================================ */
+const isDark = localStorage.getItem("theme") === "dark";
+
+if (isDark) {
+  body.classList.add("dark");
+  darkSwitch.classList.add("active");
+}
+
+darkToggle.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  body.classList.toggle("dark");
+  darkSwitch.classList.toggle("active");
+
+  localStorage.setItem(
+    "theme",
+    body.classList.contains("dark") ? "dark" : "light"
+  );
+});

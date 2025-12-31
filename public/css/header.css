@@ -1,6 +1,7 @@
+/* ================= HEADER ================= */
 .main-header {
   height: 80px;
-  padding: 20px 30px 20px 20px;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,66 +9,149 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-.dark .main-header {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.mobile-toggle {
-  display: none;
-}
-
+/* ================= USER ================= */
 .user-div {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
+/* ================= NOTIFICATION BUTTON ================= */
+.notification-button {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.notification-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ================= BADGE ================= */
+.notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+/* ================= DROPDOWN ================= */
+.notification-dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  width: 320px;
+  background: var(--box-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.25s ease;
+  z-index: 100;
+}
+
+.notification-button.active .notification-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ================= DROPDOWN HEADER ================= */
+.notification-header {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ================= LIST ================= */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.notification-item.unread {
+  background: rgba(62, 121, 247, 0.08);
+}
+
+.notification-item p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.notification-item small {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ================= FOOTER ================= */
+.notification-footer {
+  display: block;
+  padding: 12px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--main-color);
+  border-top: 1px solid var(--border-color);
+  text-decoration: none;
+}
+
+.notification-footer:hover {
+  background: rgba(62, 121, 247, 0.08);
+}
+
+/* ================= USER IMG ================= */
 .user-img {
-  background-repeat: no-repeat;
-  background-size: cover;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-size: cover;
 }
 
-.user-div div,
-.client-img {
-  height: 40px;
-  width: 40px;
+/* ================= LOGOUT ================= */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
-.user-name {
-  margin: 0 2rem 0 10px;
-}
-
-.user-div span:last-child {
-  display: inline-block;
-  font-size: 1rem;
-  font-weight: 400;
-  margin-left: 0.3rem;
-  text-transform: capitalize;
-}
-
-.la-power-off:before {
-  content: "\f011";
-}
-
-.la,
-.las {
-  font-size: 1.3rem;
-  font-family: "Line Awesome Free";
+/* ================= ICON ================= */
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded";
+  font-size: 18px;
   color: var(--text-color);
-  font-weight: 900;
-}
-
-@media only screen and (max-width: 1280px) {
-  .mobile-toggle {
-    display: grid;
-    place-items: center;
-    font-size: 2rem;
-    margin-right: 30px;
-    cursor: pointer;
-  }
-
-  .sidebar-btn {
-    display: none;
-  }
 }

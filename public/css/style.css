@@ -61,7 +61,6 @@
 
 /*----------------------------------*/
 
-/* Contenido del cuadro */
 .dashboard-card-body {
   display: flex;
   flex-direction: column;
@@ -74,14 +73,10 @@
   margin: 6px 0;
 }
 
-/* Destacar números si quieres */
 .dashboard-card-body p span {
   font-weight: 700;
   color: #111;
 }
-
-/*------------------------*/
-
 
 /* ==============================
    ORDER TICKET MODERNO
@@ -102,8 +97,6 @@
   border-color: var(--main-color);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
-
-
 
 .order-col-main {
   gap: 8px;

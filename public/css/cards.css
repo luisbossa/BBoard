@@ -53,10 +53,6 @@
   border-radius: 10px;
 }
 
-.box-hover:hover {
-  border-color: var(--main-color);
-}
-
 .product-list {
   list-style-type: none;
 }
@@ -179,13 +175,30 @@
   gap: 15px;
 }
 
-.gridcolums-3 {
+.gridcolums-4 {
   display: grid;
   grid-template-columns: 1.6fr 1.3fr 1.5fr 1fr;
+  grid-template-areas: "pedido cliente direccion productos";
   background-color: #f9f9f9;
   border-radius: 10px;
   padding: 15px;
   gap: 20px;
+}
+
+.gridcolums-4 > .order-col:nth-child(1) {
+  grid-area: pedido;
+}
+
+.gridcolums-4 > .order-col:nth-child(2) {
+  grid-area: cliente;
+}
+
+.gridcolums-4 > .order-col:nth-child(3) {
+  grid-area: direccion;
+}
+
+.gridcolums-4 > .order-col:nth-child(4) {
+  grid-area: productos;
 }
 
 .order-number {
@@ -250,4 +263,64 @@
 
 .gap-col {
   gap: 13px;
+}
+
+@media (max-width: 1280px) {
+  .gridcolums-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "pedido productos"
+      "cliente direccion";
+  }
+
+  .order-actions {
+    flex-wrap: wrap;
+  }
+
+  .btn-action.print {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-ticket {
+    padding: 14px;
+  }
+
+  .order-col {
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border-color);
+  }
+
+  .order-col:last-child {
+    border-bottom: none;
+  }
+
+  .order-actions {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .order-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .order-payment,
+  .order-shipping {
+    font-size: 12px;
+  }
 }
