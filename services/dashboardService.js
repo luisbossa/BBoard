@@ -10,28 +10,29 @@ async function getOrderStats() {
       COUNT(*) FILTER (WHERE paid_at IS NOT NULL)::int AS paid_orders
     FROM orders
   `);
+
   const stats = rows[0];
 
   return [
     {
       title: "Total de pedidos",
       value: stats.total_orders,
-      icon: "bx-shopping-bag",
+      icon: "shopping_bag", // Material Symbols Rounded
     },
     {
       title: "Ingresos totales",
       value: `₡${Number(stats.total_revenue).toLocaleString()}`,
-      icon: "bx-line-chart",
+      icon: "insights",
     },
     {
       title: "Pedidos pendientes",
       value: stats.pending_orders,
-      icon: "bx-time-five",
+      icon: "schedule",
     },
     {
       title: "Pedidos pagados",
       value: stats.paid_orders,
-      icon: "bx-check-circle",
+      icon: "check_circle",
     },
   ];
 }

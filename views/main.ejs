@@ -1,24 +1,31 @@
 <%- include("partials/header") %>
 
+    <!-- MAIN 4 ESTADISTICS -->
     <div class="main-content">
         <div class="row">
-            <% dashboardStats.forEach(stat=> { %>
-                <div class="col-3 col-md-6 col-sm-12">
-                    <div class="box">
-                        <div class="counter">
-                            <div class="counter-title">
-                                <%= stat.title %>
-                            </div>
-                            <div class="counter-info">
-                                <div class="counter-count">
-                                    <%= stat.value %>
+            <% const icons=["shopping_bag", "insights" , "schedule" , "check_circle" ]; %>
+                <% const titles=["Total de pedidos", "Ingresos totales" , "Pedidos pendientes" , "Pedidos pagados" ]; %>
+
+                    <% dashboardStats.forEach((stat, index)=> { %>
+                        <div class="col-3 col-md-6 col-sm-12">
+                            <div class="box">
+                                <div class="counter">
+                                    <div class="counter-title">
+                                        <%= titles[index] %>
+                                    </div>
+                                    <div class="counter-info">
+                                        <div class="counter-count">
+                                            <%= stat.value %>
+                                        </div>
+                                        <span class="material-symbols-rounded main-icons">
+                                            <%= icons[index] %>
+                                        </span>
+                                    </div>
                                 </div>
-                                <i class='bx <%= stat.icon %>'></i>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <% }) %>
+                        <% }) %>
+
         </div>
 
         <div class="row">
