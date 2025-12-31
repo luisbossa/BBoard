@@ -26,7 +26,7 @@
             <!-- PRODUCTOS MAS VENDIDOS -->
             <div class="col-4 col-md-6 col-sm-12">
                 <div class="box dashcard-div">
-                    <div class="dashboard-card-header">
+                    <div class="bestseller-header">
                         Lo más vendidos
                     </div>
                     <div class="box-body">
@@ -69,7 +69,7 @@
             <div class="col-8 col-md-6 col-sm-12">
                 <div class="box dashcard-div">
 
-                    <div class="dashboard-card-header">Pedidos</div>
+                    <div class="dashboard-card-header">Detalle de pedidos</div>
 
                     <div class="dashboard-card-body">
                         <% if (orderTickets && orderTickets.length> 0) { %>
@@ -80,7 +80,7 @@
                                     <!-- COLUMNA 1: PEDIDO -->
                                     <div class="order-col">
                                         <div class="order-number">
-                                            #<%= order.id %> · Pedido <%= order.orderNumber || '—' %>
+                                            #<%= order.id %> - Pedido <%= order.orderNumber || '—' %>
                                         </div>
 
                                         <div class="order-date">
@@ -103,11 +103,10 @@
                                         </div>
 
                                         <div class="order-summary">
-                                            <div class="order-items-total">
+                                            <div>
                                                 Artículos: <strong><%= order.totalItems %></strong>
                                             </div>
-
-                                            <div class="order-total">
+                                            <div>
                                                 Total: <strong>₡ <%= order.orderTotal.toLocaleString() %></strong>
                                             </div>
                                         </div>
@@ -154,16 +153,14 @@
                                         </div>
 
                                         <div class="order-email">
-                                            ✉️ <%= order.email %>
+                                            <%= order.email %>
                                         </div>
                                     </div>
 
                                     <!-- COLUMNA 3: DIRECCIÓN -->
                                     <div class="order-col">
                                         <div class="order-address">
-                                            <strong>
-                                                <%= order.province %>
-                                            </strong>,
+                                            <strong><%= order.province %></strong>,
                                             <%= order.canton %>,
                                                 <%= order.district %>
                                         </div>

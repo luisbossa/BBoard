@@ -68,14 +68,21 @@
                                     <strong>
                                         <%= order.total %>
                                     </strong>
+                                    <div class="text-second">
+                                        <%= order.totalItems %> artículos
+                                    </div>
+                                    <div class="text-second">
+                                        <%= order.paymentMethod %>
+                                    </div>
                                 </td>
+
                             </tr>
-                        <% }) %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="8">No hay pedidos recientes</td>
-                                </tr>
-                        <% } %>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="8">No hay pedidos recientes</td>
+                                    </tr>
+                                    <% } %>
                 </tbody>
             </table>
         </div>

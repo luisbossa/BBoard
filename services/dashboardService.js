@@ -66,52 +66,50 @@ async function getLatestProducts(limit = 10) {
 async function getRecentOrders(limit = 10) {
   const { rows } = await pool.query(
     `
-  SELECT
-  o.id,
-  o.order_number,
-  COALESCE(u.full_name, o.full_name) AS client,
-  o.email,
-  o.phone,
-  o.national_id,
-  o.created_at,
-  o.status,
-  o.payment_method,
-  o.shipping,
-  o.total AS order_total,
+    SELECT
+    o.id,
+    o.order_number,
+    COALESCE(u.full_name, o.full_name) AS client,
+    o.email,
+    o.phone,
+    o.national_id,
+    o.created_at,
+    o.status,
+    o.payment_method,
+    o.shipping,
+    o.total AS order_total,
 
-  -- 📦 total de artículos
-  COALESCE(SUM(oi.quantity), 0) AS total_items,
+    -- total de artículos
+    COALESCE(SUM(oi.quantity), 0) AS total_items,
 
-  o.province_name,
-  o.canton_name,
-  o.district_name,
-  o.neighborhood,
-  o.address,
+    o.province_name,
+    o.canton_name,
+    o.district_name,
+    o.neighborhood,
+    o.address,
 
-  json_agg(
-    json_build_object(
-      'productName', oi.product_name,
-      'image', oi.image,
-      'price', oi.price,
-      'quantity', oi.quantity,
-      'topSize', oi.top_size,
-      'bottomSize', oi.bottom_size,
-      'bottomStyle', oi.bottom_style,
-      'size', oi.size,
-      'color', oi.color
-    )
-  ) FILTER (WHERE oi.id IS NOT NULL) AS items
+    json_agg(
+      json_build_object(
+        'productName', oi.product_name,
+        'image', oi.image,
+        'price', oi.price,
+        'quantity', oi.quantity,
+        'topSize', oi.top_size,
+        'bottomSize', oi.bottom_size,
+        'bottomStyle', oi.bottom_style,
+        'size', oi.size,
+        'color', oi.color
+      )
+    ) FILTER (WHERE oi.id IS NOT NULL) AS items
 
-FROM orders o
-LEFT JOIN users u ON u.id = o.user_id
-LEFT JOIN order_items oi ON oi.order_id = o.id
+  FROM orders o
+  LEFT JOIN users u ON u.id = o.user_id
+  LEFT JOIN order_items oi ON oi.order_id = o.id
 
-GROUP BY o.id, u.full_name
-ORDER BY o.created_at DESC
-LIMIT $1;
-
-
-    `,
+  GROUP BY o.id, u.full_name
+  ORDER BY o.created_at DESC
+  LIMIT $1;
+      `,
     [limit]
   );
 
@@ -150,9 +148,13 @@ async function getRecentOrdersTable(limit = 10) {
       COALESCE(u.full_name, o.full_name) AS client_name,
       o.created_at,
       o.status,
-      o.total
+      o.total,
+      o.payment_method,
+      COALESCE(SUM(oi.quantity), 0) AS total_items
     FROM orders o
     LEFT JOIN users u ON u.id = o.user_id
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    GROUP BY o.id, u.full_name
     ORDER BY o.created_at DESC
     LIMIT $1
     `,
@@ -168,6 +170,13 @@ async function getRecentOrdersTable(limit = 10) {
     date: o.created_at,
     orderStatus: o.status,
     total: `₡${Number(o.total).toLocaleString()}`,
+    totalItems: Number(o.total_items),
+    paymentMethod:
+      o.payment_method === "sinpe"
+        ? "SINPE"
+        : o.payment_method === "card"
+        ? "Tarjeta"
+        : o.payment_method || "—",
   }));
 }
 

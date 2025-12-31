@@ -27,6 +27,11 @@
   padding-bottom: 8px;
 }
 
+.bestseller-header {
+  font-size: 18px;
+  font-weight: 600;
+}
+
 /* Columnas */
 .order-col {
   height: 100%;
@@ -100,6 +105,7 @@
 }
 
 .status {
+  color: #b78103;
   display: inline-block;
   margin-top: 6px;
   padding: 4px 10px 8px;
@@ -131,13 +137,6 @@
   align-items: center;
   margin-top: 6px;
   gap: 8px;
-}
-
-/* Total */
-.order-total {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--main-color);
 }
 
 .btn-action {
@@ -182,7 +181,7 @@
 
 .gridcolums-3 {
   display: grid;
-  grid-template-columns: 1.6fr 1.3fr 1.5fr 1.3fr;
+  grid-template-columns: 1.6fr 1.3fr 1.5fr 1fr;
   background-color: #f9f9f9;
   border-radius: 10px;
   padding: 15px;

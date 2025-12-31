@@ -39,66 +39,6 @@
   overflow-y: auto;
 }
 
-table {
-  width: 100%;
-  min-width: 1000px;
-}
-
-.order-owner {
-  display: flex;
-  align-items: center;
-  text-transform: capitalize;
-  font-weight: 500;
-}
-
-.order-owner img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-table thead tr {
-  text-align: left;
-}
-
-table th,
-table td {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.order-ready {
-  color: #2a59d1;
-  background-color: rgba(62, 121, 247, 0.1);
-}
-
-.order-shipped {
-  border-radius: 40px;
-  background: #ffd06b;
-  color: #b78103;
-}
-
-.payment-status {
-  display: flex;
-  align-items: center;
-}
-
-.payment-status .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.payment-paid .dot {
-  background-color: #04d182;
-}
-
-.payment-pending .dot {
-  background-color: #ffc542;
-}
-
 .overlay {
   position: absolute;
   left: 0;
