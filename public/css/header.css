@@ -9,6 +9,23 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.mobile-toggle {
+  display: none;
+}
+
+.sidebar-close {
+  width: auto;
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 1.5rem;
+  border-radius: 6px;
+  padding: 4px 6px 5px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid var(--border-color);
+}
+
 /* ================= USER ================= */
 .user-div {
   display: flex;
@@ -144,7 +161,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 12px;
+  padding: 7px 10px 8px;
   border-radius: 6px;
   border: 1px solid var(--border-color);
 }
@@ -158,4 +175,17 @@
 
 .tiny-icon {
   font-size: 18px;
+}
+
+@media screen and (max-width: 1280px) {
+  .sidebar-btn {
+    display: none;
+  }
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .sidebar-close {
+    display: grid;
+  }
 }

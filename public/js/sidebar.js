@@ -1,10 +1,46 @@
 const sidebar = document.querySelector(".sidebar");
 const main = document.querySelector(".main");
 const sidebarBtn = document.getElementById("sidebar-btn");
+const mobileBtn = document.getElementById("mobile-btn");
+const sidebarClose = document.getElementById("sidebar-close");
 
+// ======================
+// Desktop: colapsar sidebar
+// ======================
 sidebarBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("collapsed");
-  main.classList.toggle("sidebar-collapsed");
+  if (window.innerWidth > 1280) {
+    sidebar.classList.toggle("collapsed");
+    main.classList.toggle("sidebar-collapsed");
+  }
+});
+
+// ======================
+// Mobile: overlay sidebar
+// ======================
+mobileBtn.addEventListener("click", () => {
+  if (window.innerWidth <= 1280) {
+    sidebar.classList.add("active");
+  }
+});
+
+// ======================
+// Cerrar sidebar móvil con la X
+// ======================
+sidebarClose.addEventListener("click", () => {
+  sidebar.classList.remove("active");
+});
+
+// ======================
+// Cerrar sidebar móvil al hacer click fuera
+// ======================
+document.addEventListener("click", (e) => {
+  if (window.innerWidth <= 1280) {
+    const isClickInside =
+      sidebar.contains(e.target) || mobileBtn.contains(e.target);
+    if (!isClickInside) {
+      sidebar.classList.remove("active");
+    }
+  }
 });
 
 document.querySelectorAll(".sidebar-menu-dropdown").forEach((dropdown) => {

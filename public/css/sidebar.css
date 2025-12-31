@@ -52,8 +52,8 @@
   width: 100%;
   height: 80px;
   position: relative;
-  padding: 10px 5px;
-  margin-bottom: 1rem;
+  padding: 10px 5px 10px 23px;
+  margin: 10px 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,9 +62,10 @@
 
 /* Logo normal */
 .sidebar-logo img {
-  transition: all 0.3s ease;
   width: 150px;
   height: auto;
+  margin-right: auto;
+  transition: all 0.3s ease;
 }
 
 /* Sidebar colapsado */
@@ -80,10 +81,6 @@
 
 .sidebar.collapsed .logo-img {
   content: url("/images/minilogo.png");
-}
-
-.sidebar-close {
-  display: none;
 }
 
 .sidebar-menu {
@@ -165,11 +162,12 @@
   padding-left: 50px;
 }
 
+.mobile-btn,
 .sidebar-btn {
   width: auto;
   font-size: 1.5rem;
   background-color: #fff;
-  padding: 6px 10px 4px 10px;
+  padding: 6px 9px 1px 9px;
   border-radius: 6px;
   border: 1px solid var(--border-color);
   text-transform: capitalize;
@@ -257,7 +255,6 @@
   background-color: #2f3640;
 }
 
-
 @media only screen and (max-width: 1280px) {
   .sidebar {
     transition: transform 0.3s ease-in-out;
@@ -268,18 +265,5 @@
 
   .sidebar.active {
     transform: translateX(0);
-  }
-
-  .sidebar-close {
-    display: grid;
-    place-items: center;
-    font-size: 2rem;
-    margin-right: 30px;
-    cursor: pointer;
-  }
-
-  .sidebar-close {
-    position: absolute;
-    right: -15px;
   }
 }
