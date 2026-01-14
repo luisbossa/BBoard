@@ -22,12 +22,13 @@ app.use(expressLayouts);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.set("layout", "layouts/layout"); 
+app.set("layout", "layouts/layout");
 
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/loginRoute"));
 app.use("/dashboard", require("./routes/dashboardRoute"));
+app.use("/", require("./routes/logoutRoute"));
 
 const PORT = process.env.PORT || 3000;
 
