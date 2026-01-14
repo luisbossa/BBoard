@@ -59,6 +59,12 @@ table td {
   border-radius: 40px;
 }
 
+.order-paid {
+  border-radius: 40px;
+  background: #b6fcd0; /* verde claro */
+  color: #067a23; /* verde oscuro */
+}
+
 .order-shipped {
   border-radius: 40px;
   background: #ffd06b;
@@ -66,10 +72,10 @@ table td {
 }
 
 .order-ready {
-  color: #2a59d1;
-  background-color: rgba(62, 121, 247, 0.1);
+  border-radius: 40px;
+  background: #a3d2ff;
+  color: #004085;
 }
-
 
 .product-quantity,
 .product-price,

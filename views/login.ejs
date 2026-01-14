@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Bboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Condensed:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body class="page-wrapper">
+  <main class="login-container animate-scale" style="animation-delay: 0.2s">
+    <!-- Header -->
+    <header class="login-header text-center">
+      <img src="" alt="">
+    </header>
+
+    <!-- Orbit Component -->
+    <section class="orbit-wrapper">
+      <div class="orbit">
+        <div class="orbit-circle orbit-large animate-scale" style="animation-delay: 0.8s"></div>
+        <div class="orbit-circle orbit-medium animate-scale" style="animation-delay: 0.9s"></div>
+        <div class="orbit-circle orbit-small animate-scale" style="animation-delay: 1s"></div>
+
+        <!-- Main Button -->
+        <div class="orbit-main-btn animate-scale pulse" style="animation-delay: 1.1s">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4">
+            </path>
+          </svg>
+        </div>
+
+        <!-- Orbital Elements -->
+        <div class="orbital-element" id="orbital-1" style="animation: orbit 20s linear infinite; animation-delay: -0s;">
+          <div class="orbital-item">
+            <!-- Facebook SVG -->
+          </div>
+        </div>
+        <div class="orbital-element" id="orbital-2" style="animation: orbit 20s linear infinite; animation-delay: -4s;">
+          <div class="orbital-item">
+            <!-- Twitter SVG -->
+          </div>
+        </div>
+        <div class="orbital-element" id="orbital-3" style="animation: orbit 20s linear infinite; animation-delay: -8s;">
+          <div class="orbital-item">
+            <!-- Instagram SVG -->
+          </div>
+        </div>
+        <div class="orbital-element" id="orbital-4"
+          style="animation: orbit 20s linear infinite; animation-delay: -12s;">
+          <div class="orbital-item">
+            <!-- YouTube SVG -->
+          </div>
+        </div>
+        <div class="orbital-element" id="orbital-5"
+          style="animation: orbit 20s linear infinite; animation-delay: -16s;">
+          <div class="orbital-item">
+            <!-- LinkedIn SVG -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <form class="login-form" action="/" method="POST">
+      <div class="form-group animate-scale" style="animation-delay: 1.2s">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+      </div>
+
+      <div class="form-group animate-scale" style="animation-delay: 1.3s">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-options animate-scale" style="animation-delay: 1.4s">
+        <div class="remember-me">
+          <input id="remember" type="checkbox">
+          <label for="remember">Remember me</label>
+        </div>
+        <a href="#" class="forgot-password">Forgot password?</a>
+      </div>
+
+      <div class="form-submit animate-scale" style="animation-delay: 1.5s">
+        <button type="submit">Sign in</button>
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <footer class="login-footer animate-scale" style="animation-delay: 1.6s">
+      <p>Don't have an account? <a href="#">Sign up</a></p>
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.orbital-element').forEach(el => el.style.opacity = '1');
+      }, 1500);
+    });
+  </script>
+</body>
+
+</html>

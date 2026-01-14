@@ -1,0 +1,253 @@
+body.page-wrapper {
+  font-family: "Inter", sans-serif;
+  background-color: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Login Container */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 2rem;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.login-container.animate-scale {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+
+/* Header */
+.login-header {
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  font-family: "IBM Plex Condensed", sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+  opacity: 0;
+}
+
+.login-subtitle {
+  color: #4b5563;
+  font-size: 1.125rem;
+  opacity: 0;
+}
+
+/* Orbit */
+.orbit-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.orbit {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+
+.orbit-circle {
+  position: absolute;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: opacity 0.5s ease-in-out;
+}
+
+.orbit-large {
+  width: 220px;
+  height: 220px;
+}
+.orbit-medium {
+  width: 160px;
+  height: 160px;
+}
+.orbit-small {
+  width: 100px;
+  height: 100px;
+}
+
+/* Main Button */
+.orbit-main-btn {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+  transition: transform 0.4s ease-in-out;
+}
+
+.orbit-main-btn:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Orbital Elements */
+.orbital-element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.orbital-item {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.orbital-item:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  outline: none;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-options .remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-options a {
+  color: #3b82f6;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-options a:hover {
+  color: #2563eb;
+}
+
+.form-submit button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-submit button:hover {
+  background-color: #2563eb;
+}
+
+.form-submit button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Footer */
+.login-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.login-footer a {
+  color: #3b82f6;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  color: #2563eb;
+}
+
+/* Animations */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(80px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(80px) rotate(-360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+  }
+}

@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const expressLayouts = require("express-ejs-layouts");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.locals.process = {
 app.locals.ONVO_PUBLIC_KEY = process.env.ONVOPAY_PUBLIC_KEY || "";
 
 /* MIDDLEWARES */
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -24,7 +26,8 @@ app.set("layout", "layouts/layout");
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", require("./routes/dashboardRoute"));
+app.use("/", require("./routes/loginRoute"));
+app.use("/dashboard", require("./routes/dashboardRoute"));
 
 const PORT = process.env.PORT || 3000;
 

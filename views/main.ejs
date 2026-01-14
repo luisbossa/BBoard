@@ -121,23 +121,23 @@
                                         </div>
 
                                         <div class="order-actions">
-                                            <a href="https://wa.me/50664145674?text=<%= encodeURIComponent(
-                                                `ORDEN DE PEDIDO ${order.id}
-                                                Orden: #${order.orderNumber || order.id}
-                                                Cliente: ${order.client}
+                                           <a href="https://wa.me/50687925172?text=<%= encodeURIComponent(
+                                            `ORDEN DE PEDIDO ${order.id}
+                                            Orden: #${order.orderNumber || order.id}
+                                            Cliente: ${order.client}
 
-                                                DIRECCIÓN
-                                                ${order.province}, ${order.canton}, ${order.district}
-                                                ${order.neighborhood}
-                                                ${order.address}
+                                            DIRECCIÓN
+                                            ${order.province}, ${order.canton}, ${order.district}
+                                            ${order.neighborhood || ''}
+                                            ${order.address}
 
-                                                PAGO Y ENVÍO
-                                                Método de pago: ${order.paymentMethod}
-                                                Envío: ${order.shippingCost > 0 ? 'Correo ₡ 2.500' : 'Retiro en tienda'}
-                                                `
-                                                ) %>" target="_blank" class="btn-action whatsapp">
+                                            PAGO Y ENVÍO
+                                            Método de pago: ${order.paymentMethod}
+                                            Envío: ${order.shippingCost > 0 ? 'Correo ₡ 2.500' : 'Retiro en tienda'}`
+                                            ) %>" target="_blank" class="btn-action whatsapp">
                                                 WhatsApp
                                             </a>
+
 
 
                                             <button class="btn-action print" onclick="printOrder(this)">

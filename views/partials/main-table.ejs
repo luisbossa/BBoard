@@ -58,7 +58,8 @@
                                 <!-- ESTADO DEL PEDIDO -->
                                 <td>
                                     <span class="order-status 
-                                        <%= order.orderStatus === 'completed' ? 'order-ready' : 'order-shipped' %>">
+                                        <%= order.orderStatus === 'completed' ? 'order-ready' : 
+                                        order.orderStatus === 'paid' ? 'order-paid' : 'order-shipped' %>">
                                         <%= order.orderStatus %>
                                     </span>
                                 </td>

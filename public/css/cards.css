@@ -101,6 +101,7 @@
 }
 
 .status {
+  width: fit-content;
   color: #b78103;
   display: inline-block;
   margin-top: 6px;
@@ -115,7 +116,7 @@
   background: #ffd06b;
 }
 
-.status.completed {
+.status.paid {
   background: #e6f7f1;
   color: #0f9d58;
 }
