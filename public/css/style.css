@@ -233,7 +233,7 @@
 }
 
 .btn-confirm {
-  background: #0f4c5c;
+  background: var(--main-color);
   color: #fff;
   border: none;
   padding: 10px 16px;

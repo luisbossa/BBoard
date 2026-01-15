@@ -177,6 +177,18 @@
   font-size: 18px;
 }
 
+.notification-item.order_paid span {
+  color: #22c55e;
+}
+
+.notification-item.order_created span {
+  color: #3b82f6;
+}
+
+.notification-item.order_completed span {
+  color: #a855f7;
+}
+
 @media screen and (max-width: 1280px) {
   .sidebar-btn {
     display: none;

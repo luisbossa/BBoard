@@ -1,6 +1,7 @@
 // dashboardController.js
 const pool = require("../db/pool");
 const dashboardService = require("../services/dashboardService");
+const notificationService = require("../services/notificationService");
 
 exports.dashboard = async (req, res, next) => {
   try {
@@ -50,6 +51,11 @@ exports.adminOrders = async (req, res, next) => {
         message: "El pedido no existe o ya fue aprobado",
       });
     }
+
+    // 🔔 notificación
+    await notificationService.createActivity(req.user?.id || 1, "order_paid", {
+      orderId: id,
+    });
 
     res.json({ ok: true });
   } catch (err) {

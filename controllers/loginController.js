@@ -32,7 +32,11 @@ exports.login = async (req, res, next) => {
     );
 
     // Redirigir al dashboard con el token
-    res.cookie("auth_token", token, { httpOnly: true });  // Guarda el token en una cookie (opcional)
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      sameSite: "lax", // 👈 CLAVE
+      secure: false,
+    }); // Guarda el token en una cookie (opcional)
     return res.redirect("/dashboard"); // Redirigir al usuario al dashboard
   } catch (err) {
     next(err);
