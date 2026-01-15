@@ -57,5 +57,5 @@ async function createActivity(userId, action, metadata = {}) {
 
 module.exports = {
   getNotifications,
-  createActivity, // 👈 exportamos la función
+  createActivity, 
 };
