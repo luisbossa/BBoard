@@ -48,8 +48,8 @@
 
 .box {
   padding: 20px;
-  background-color: var(--box-bg);
-  border: 0.5px solid var(--border-color);
+  background-color: var(--box-bg); /* Fondo que cambia con el tema */
+  border: 0.5px solid var(--border-color); /* Borde que cambia con el tema */
   border-radius: 10px;
 }
 
@@ -264,6 +264,70 @@
 
 .gap-col {
   gap: 13px;
+}
+
+/* Modo oscuro */
+.dark .box {
+  background-color: var(--box-bg); 
+  border: 0.5px solid var(--border-color); 
+}
+
+.dark .status.pending {
+  background: #ffd06b;
+}
+
+.dark .status.paid {
+  background: #333;
+  color: #0f9d58;
+}
+
+.dark .order-ticket {
+  background-color: var(--box-bg);
+}
+
+.dark .gridcolums-4 {
+  background-color: var(--box-bg);
+}
+
+.dark .order-actions .btn-action.print {
+  background: #333;
+}
+
+.dark .product-name,
+.dark .product-sales,
+.dark .order-id span {
+  color: var(--text-color); 
+}
+
+.dark .order-col {
+  color: var(--text-color);
+}
+
+.dark .dashboard-card-header {
+  color: var(--text-color); 
+}
+
+.dark .btn-action:hover {
+  opacity: 0.9;
+}
+
+.btn-action.approve {
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-weight: 600;
+  background: #0f4c5c;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+
+.btn-action.approve:disabled,
+.btn-action.approve.approved {
+  background: #e5e7eb;   
+  color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.7;
+  pointer-events: none;   
 }
 
 @media (max-width: 1280px) {

@@ -1,4 +1,5 @@
 // dashboardController.js
+const pool = require("../db/pool");
 const dashboardService = require("../services/dashboardService");
 
 exports.dashboard = async (req, res, next) => {
@@ -22,6 +23,35 @@ exports.dashboard = async (req, res, next) => {
       recentOrdersTable,
       user, // Pasamos la información del usuario al frontend si lo necesitas
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.adminOrders = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const { rowCount } = await pool.query(
+      `
+      UPDATE orders
+      SET
+        status = 'paid',
+        paid_at = NOW()
+      WHERE id = $1
+        AND status = 'pending'
+      `,
+      [id]
+    );
+
+    if (rowCount === 0) {
+      return res.status(400).json({
+        ok: false,
+        message: "El pedido no existe o ya fue aprobado",
+      });
+    }
+
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

@@ -6,5 +6,10 @@ const authenticateToken = require("../middlewares/auth");
 
 // Ruta protegida para el Dashboard (solo usuarios autenticados)
 router.get("/", authenticateToken, dashboardController.dashboard);
+router.put(
+  "/orders/:id/approve",
+  authenticateToken,
+  dashboardController.adminOrders
+);
 
 module.exports = router;

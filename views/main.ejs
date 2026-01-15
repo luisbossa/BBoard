@@ -82,7 +82,7 @@
                         <% if (orderTickets && orderTickets.length> 0) { %>
                             <% orderTickets.forEach(order=> { %>
 
-                                <div class="order-ticket gridcolums-4">
+                                <div class="order-ticket gridcolums-4" data-order-id="<%= order.id %>">
 
                                     <!-- COLUMNA 1: PEDIDO -->
                                     <div class="order-col">
@@ -121,7 +121,7 @@
                                         </div>
 
                                         <div class="order-actions">
-                                           <a href="https://wa.me/50687925172?text=<%= encodeURIComponent(
+                                            <a href="https://wa.me/50687925172?text=<%= encodeURIComponent(
                                             `ORDEN DE PEDIDO ${order.id}
                                             Orden: #${order.orderNumber || order.id}
                                             Cliente: ${order.client}
@@ -138,13 +138,19 @@
                                                 WhatsApp
                                             </a>
 
-
-
                                             <button class="btn-action print" onclick="printOrder(this)">
                                                 Imprimir
                                             </button>
-                                        </div>
 
+                                            <!-- APROBAR PAGO -->
+                                            <% if (order.status==='pending' ) { %>
+                                                <button class="btn-action approve" data-order-id="<%= order.id %>"
+                                                    onclick="approveOrder(this)">
+                                                    Aprobar pago
+                                                </button>
+
+                                                <% } %>
+                                        </div>
                                     </div>
 
                                     <!-- COLUMNA 2: CLIENTE -->

@@ -146,6 +146,7 @@ body.page-wrapper {
 
 .form-options a {
   color: #3b82f6;
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
 }
@@ -159,7 +160,9 @@ body.page-wrapper {
   padding: 0.75rem;
   background-color: #3b82f6;
   color: white;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;

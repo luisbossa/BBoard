@@ -1,6 +1,3 @@
-/* ======================================================
-   VARIABLES DE IMPRESIÓN (AISLADAS)
-====================================================== */
 :root {
   --print-font-family: "Segoe UI", Arial, sans-serif;
 
@@ -27,18 +24,11 @@
   --print-font-size-title: 22px;
 }
 
-/* ======================================================
-   BASE DE IMPRESIÓN
-====================================================== */
 body {
   margin: 0;
-  background: #f3f4f6;
   font-family: var(--print-font-family);
 }
 
-/* ======================================================
-   HOJA TIPO PDF (A4)
-====================================================== */
 .print-page {
   width: 210mm;
   min-height: 297mm;
@@ -50,9 +40,6 @@ body {
   flex-direction: column;
 }
 
-/* ======================================================
-   HEADER
-====================================================== */
 .print-header {
   display: flex;
   justify-content: space-between;
@@ -82,17 +69,11 @@ body {
   color: var(--print-color-muted);
 }
 
-/* ======================================================
-   CONTENIDO PRINCIPAL
-====================================================== */
 .print-content {
   flex: 1;
   margin-top: var(--print-padding-large);
 }
 
-/* ======================================================
-   TARJETA DEL PEDIDO
-====================================================== */
 .print-order-card {
   border: 1px solid var(--print-color-border);
   border-radius: var(--print-radius-medium);
@@ -100,14 +81,12 @@ body {
   background: var(--print-color-surface);
 }
 
-/* Grid interno */
 .print-order-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--print-padding-medium);
 }
 
-/* Columnas */
 .print-order-column {
   font-size: var(--print-font-size-base);
 }
@@ -117,9 +96,6 @@ body {
   margin-bottom: 4px;
 }
 
-/* ======================================================
-   ESTADOS
-====================================================== */
 .print-status {
   display: inline-block;
   margin-top: 6px;
@@ -139,9 +115,6 @@ body {
   color: var(--print-color-success-text);
 }
 
-/* ======================================================
-   SECCIONES EXTRA (cliente / envío / totales)
-====================================================== */
 .print-section {
   margin-top: var(--print-padding-large);
 }
@@ -154,9 +127,6 @@ body {
   margin-bottom: 8px;
 }
 
-/* ======================================================
-   FOOTER
-====================================================== */
 .print-footer {
   border-top: 1px solid var(--print-color-border);
   margin-top: var(--print-padding-large);
@@ -167,9 +137,6 @@ body {
   justify-content: space-between;
 }
 
-/* ======================================================
-   IMPRESIÓN REAL
-====================================================== */
 @media print {
   body {
     background: none;

@@ -1,3 +1,4 @@
+/* Estilo del Sidebar */
 .sidebar {
   width: 260px;
   height: 100vh;
@@ -104,6 +105,28 @@
   gap: 5px;
 }
 
+/* Efecto hover para los links en el sidebar en modo claro */
+.sidebar-menu > li > a:hover {
+  background-color: rgba(
+    62,
+    121,
+    247,
+    0.1
+  ); /* Color de fondo al pasar el mouse */
+  color: var(--main-color);
+}
+
+/* Efecto hover para los links en el sidebar en modo oscuro */
+.dark .sidebar-menu > li > a:hover {
+  background-color: rgba(
+    62,
+    121,
+    247,
+    0.2
+  ); /* Fondo con más intensidad en modo oscuro */
+  color: var(--main-color);
+}
+
 .sidebar-menu > li > a::before {
   width: 0;
   height: 100%;
@@ -166,11 +189,21 @@
 .sidebar-btn {
   width: auto;
   font-size: 1.5rem;
-  background-color: #fff;
+  background-color: var(--box-bg);
   padding: 6px 9px 1px 9px;
   border-radius: 6px;
   border: 1px solid var(--border-color);
   text-transform: capitalize;
+  color: var(--text-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.dark .mobile-btn,
+.dark .sidebar-btn {
+  background-color: var(--box-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .dropdown-icon {

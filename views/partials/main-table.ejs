@@ -21,7 +21,7 @@
                 <tbody>
                     <% if (recentOrdersTable && recentOrdersTable.length> 0) { %>
                         <% recentOrdersTable.forEach(order=> { %>
-                            <tr>
+                            <tr data-order-id="<%= order.id %>">
                                 <!-- ID -->
                                 <td>#<%= order.id %>
                                 </td>
@@ -58,8 +58,8 @@
                                 <!-- ESTADO DEL PEDIDO -->
                                 <td>
                                     <span class="order-status 
-                                        <%= order.orderStatus === 'completed' ? 'order-ready' : 
-                                        order.orderStatus === 'paid' ? 'order-paid' : 'order-shipped' %>">
+                                    <%= order.orderStatus === 'completed' ? 'order-ready' : 
+                                        order.orderStatus === 'paid' ? 'order-paid' : 'order-shipped' %>" data-status>
                                         <%= order.orderStatus %>
                                     </span>
                                 </td>

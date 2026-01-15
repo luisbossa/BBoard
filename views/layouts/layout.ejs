@@ -31,9 +31,27 @@
             <%- body %>
         </main>
 
+        <!-- CONFIRM MODAL -->
+        <div id="approve-modal" class="approve-modal hidden">
+            <div class="approve-box">
+                <h3 class="approve-h3">¿Confirmar pago?</h3>
+                <p>Este pedido pasará a estado <strong>PAID</strong>.</p>
+
+                <div class="approve-actions">
+                    <button id="approve-cancel" class="btn-cancel">Cancelar</button>
+                    <button id="approve-confirm" class="btn-confirm">Sí, aprobar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST MESSAGE -->
+        <div id="approve-msg" class="approve-msg hidden"></div>
+
+
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
         <script src="/js/sidebar.js"></script>
+        <script src="/js/adminOrders.js"></script>
         <script src="/js/print.js"></script>
 </body>
 
