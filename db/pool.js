@@ -7,6 +7,8 @@ const pool = new Pool({
   },
 });
 
+module.exports = pool;
+
 // (async () => {
 //   try {
 //     const client = await pool.connect();
@@ -18,5 +20,4 @@ const pool = new Pool({
 //   }
 // })();
 
-module.exports = pool;
 

@@ -9,7 +9,7 @@ exports.login = async (req, res, next) => {
     // Verificar si el username existe
     const result = await pool.query(
       "SELECT * FROM public.users WHERE username = $1",
-      [username]
+      [username],
     );
     const user = result.rows[0];
 
@@ -35,15 +35,15 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: remember ? "7d" : "2h" } // 7 días si recuerda, 2 horas si no
+      { expiresIn: remember ? "7d" : "2h" }, // 7 días si recuerda, 2 horas si no
     );
 
     // Guardar cookie
     res.cookie("auth_token", token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: false,
-      maxAge: remember ? 7 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000, // ms
+      secure: process.env.NODE_ENV === "production",
+      maxAge: remember ? 7 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
     });
 
     return res.redirect("/dashboard");
