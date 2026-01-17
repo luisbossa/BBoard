@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", require("./routes/loginRoute"));
 app.use("/dashboard", require("./routes/dashboardRoute"));
 app.use("/", require("./routes/logoutRoute"));
+app.use("/reset", require("./routes/resetPassRoute"));
 
 const PORT = process.env.PORT || 3000;
 

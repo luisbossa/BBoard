@@ -67,8 +67,8 @@
     <!-- Form -->
     <form class="login-form" action="/" method="POST">
       <div class="form-group animate-scale" style="animation-delay: 1.2s">
-        <label for="email">Correo</label>
-        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Tu usuario" required>
       </div>
 
       <div class="form-group animate-scale" style="animation-delay: 1.3s">
@@ -78,10 +78,10 @@
 
       <div class="form-options animate-scale" style="animation-delay: 1.4s">
         <div class="remember-me">
-          <input id="remember" type="checkbox">
+          <input id="remember" name="remember" type="checkbox">
           <label for="remember">Recuerdame</label>
         </div>
-        <a href="#" class="forgot-password">Olvidaste la contraseña?</a>
+        <a href="/reset-password" class="forgot-password">Olvidaste la contraseña?</a>
       </div>
 
       <div class="form-submit animate-scale" style="animation-delay: 1.5s">

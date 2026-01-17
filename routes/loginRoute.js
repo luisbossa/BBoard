@@ -7,5 +7,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", loginController.login);
+router.get("/reset-password", loginController.resetPassword);
 
 module.exports = router;
