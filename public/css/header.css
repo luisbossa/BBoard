@@ -203,7 +203,19 @@
 }
 
 @media screen and (max-width: 500px) {
-  .logout-btn {
+  .logout-span {
     display: none;
+  }
+
+  .notification-dropdown {
+    right: 50%;
+    left: auto;
+    transform: translate(50%, -10px);
+    width: calc(100vw - 32px);
+    max-width: 360px;
+  }
+
+  .notification-button.active .notification-dropdown {
+    transform: translate(50%, 0);
   }
 }
