@@ -9,7 +9,7 @@ body.page-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100svh; 
+  min-height: 100svh;
   padding: 1rem;
   margin: 0;
   overflow: hidden;
@@ -255,7 +255,74 @@ body.page-wrapper {
   transform: translate(-50%, -50%) scale(1.2);
 }
 
-/* Responsive */
+/* Error message */
+.field-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #dc2626;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.field-error.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Input error */
+.input-error {
+  border-color: #dc2626;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+}
+
+/* Password wrapper */
+.password-wrapper {
+  position: relative;
+}
+
+/* Botón del ojo */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+/* Hover elegante */
+.toggle-password:hover {
+  color: #3b82f6;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Cuando el input está enfocado */
+.password-wrapper:focus-within .toggle-password {
+  opacity: 1;
+}
+
+/* Ícono */
+.toggle-password .material-symbols-rounded {
+  font-size: 22px;
+  pointer-events: none;
+}
+
 @media (max-width: 480px) {
   .login-container {
     padding: 1rem;

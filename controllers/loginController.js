@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: remember ? "7d" : "2h" }, // 7 días si recuerda, 2 horas si no
+      { expiresIn: remember ? "7d" : "2h" }, 
     );
 
     // Guardar cookie

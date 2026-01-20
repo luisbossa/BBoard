@@ -1,6 +1,3 @@
-// notifications.js
-
-// Función para mostrar "hace X tiempo"
 function timeAgo(dateString) {
   const date = new Date(dateString);
   const now = new Date();

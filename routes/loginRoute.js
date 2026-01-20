@@ -3,7 +3,10 @@ const router = express.Router();
 const loginController = require("../controllers/loginController");
 
 router.get("/", (req, res) => {
-  res.render("login", { layout: false });
+  res.render("login", {
+    layout: false,
+    error: null,
+  });
 });
 
 router.post("/", loginController.login);
