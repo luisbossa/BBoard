@@ -2,6 +2,7 @@
 const pool = require("../db/pool");
 const dashboardService = require("../services/dashboardService");
 const notificationService = require("../services/notificationService");
+const webhookService = require("../services/webhookService");
 
 exports.dashboard = async (req, res, next) => {
   try {
@@ -42,7 +43,7 @@ exports.adminOrders = async (req, res, next) => {
       WHERE id = $1
         AND status = 'pending'
       `,
-      [id]
+      [id],
     );
 
     if (rowCount === 0) {
@@ -52,10 +53,11 @@ exports.adminOrders = async (req, res, next) => {
       });
     }
 
-    // 🔔 notificación
     await notificationService.createActivity(req.user?.id || 1, "order_paid", {
       orderId: id,
     });
+
+    await webhookService.notifySinpePaid(id);
 
     res.json({ ok: true });
   } catch (err) {
