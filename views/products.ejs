@@ -6,13 +6,13 @@
 
             <div class="dashboard-card-header header-flex">
 
-                <span>Lista de productos</span>
+                <span class="title">Lista de productos</span>
 
                 <div class="header-actions">
 
                     <input type="text" placeholder="Buscar producto..." class="search-input">
 
-                    <a href="/dashboard/add-product" class="btn-action approve">
+                    <a href="/dashboard/add-product" class="btn-primary">
                         Agregar producto
                     </a>
 
@@ -20,20 +20,19 @@
 
             </div>
 
-
             <div class="dashboard-card-body">
 
-                <div class="table-responsive">
+                <div class="table-wrapper">
 
                     <table class="products-table">
 
                         <thead>
                             <tr>
                                 <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Estado</th>
-                                <th></th>
+                                <th class="center">Precio</th>
+                                <th class="center">Stock</th>
+                                <th class="center">Estado</th>
+                                <th class="right">Acciones</th>
                             </tr>
                         </thead>
 
@@ -41,41 +40,33 @@
 
                             <tr>
 
-                                <td class="product-info">
-
-                                    <img src="/images/swimwears/swimwear-2.webp">
-
-                                    <div>
-                                        <div class="product-name">
-                                            Vestido Floral
-                                        </div>
-
-                                        <div class="text-second">
-                                            SKU: VF-1001
-                                        </div>
-                                    </div>
-
-                                </td>
-
-                                <td>₡15,000</td>
-
-                                <td>32</td>
-
                                 <td>
-                                    <span class="status success">
-                                        Activo
-                                    </span>
+                                    <div class="product-cell">
+
+                                        <img src="/images/swimwears/swimwear-2.webp">
+
+                                        <div class="product-meta">
+                                            <span class="product-name">Vestido Floral</span>
+                                            <span class="product-sku">SKU: VF-1001</span>
+                                        </div>
+
+                                    </div>
                                 </td>
 
-                                <td class="table-actions">
+                                <td class="center">₡15,000</td>
 
-                                    <button class="btn-action">
-                                        Editar
-                                    </button>
+                                <td class="center">32</td>
 
-                                    <button class="btn-action delete">
-                                        Eliminar
-                                    </button>
+                                <td class="center">
+                                    <span class="status active">Activo</span>
+                                </td>
+
+                                <td class="right">
+
+                                    <div class="table-actions">
+                                        <button class="btn-table">Editar</button>
+                                        <button class="btn-table delete">Eliminar</button>
+                                    </div>
 
                                 </td>
 
@@ -84,41 +75,33 @@
 
                             <tr>
 
-                                <td class="product-info">
-
-                                    <img src="/images/swimwears/swimwear-1.webp">
-
-                                    <div>
-                                        <div class="product-name">
-                                            Blusa Elegante
-                                        </div>
-
-                                        <div class="text-second">
-                                            SKU: BL-2301
-                                        </div>
-                                    </div>
-
-                                </td>
-
-                                <td>₡9,500</td>
-
-                                <td>12</td>
-
                                 <td>
-                                    <span class="status pending">
-                                        Bajo stock
-                                    </span>
+                                    <div class="product-cell">
+
+                                        <img src="/images/swimwears/swimwear-1.webp">
+
+                                        <div class="product-meta">
+                                            <span class="product-name">Blusa Elegante</span>
+                                            <span class="product-sku">SKU: BL-2301</span>
+                                        </div>
+
+                                    </div>
                                 </td>
 
-                                <td class="table-actions">
+                                <td class="center">₡9,500</td>
 
-                                    <button class="btn-action">
-                                        Editar
-                                    </button>
+                                <td class="center">12</td>
 
-                                    <button class="btn-action delete">
-                                        Eliminar
-                                    </button>
+                                <td class="center">
+                                    <span class="status warning">Bajo stock</span>
+                                </td>
+
+                                <td class="right">
+
+                                    <div class="table-actions">
+                                        <button class="btn-table">Editar</button>
+                                        <button class="btn-table delete">Eliminar</button>
+                                    </div>
 
                                 </td>
 
