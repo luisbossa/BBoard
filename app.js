@@ -13,7 +13,6 @@ app.locals.process = {
 
 app.locals.ONVO_PUBLIC_KEY = process.env.ONVOPAY_PUBLIC_KEY || "";
 
-/* MIDDLEWARES */
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
