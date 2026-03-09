@@ -1,0 +1,133 @@
+<%- include("partials/header") %>
+
+    <div class="main-content">
+
+        <div class="box">
+
+            <div class="dashboard-card-header header-flex">
+
+                <span>Lista de productos</span>
+
+                <div class="header-actions">
+
+                    <input type="text" placeholder="Buscar producto..." class="search-input">
+
+                    <a href="/dashboard/add-product" class="btn-action approve">
+                        Agregar producto
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-card-body">
+
+                <table class="products-table">
+
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td class="product-info">
+
+                                <img src="/images/swimwears/swimwear-2.webp">
+
+                                <div>
+                                    <div class="product-name">
+                                        Vestido Floral
+                                    </div>
+
+                                    <div class="text-second">
+                                        SKU: VF-1001
+                                    </div>
+                                </div>
+
+                            </td>
+
+                            <td>₡15,000</td>
+
+                            <td>32</td>
+
+                            <td>
+                                <span class="status success">
+                                    Activo
+                                </span>
+                            </td>
+
+                            <td class="table-actions">
+
+                                <button class="btn-action">
+                                    Editar
+                                </button>
+
+                                <button class="btn-action delete">
+                                    Eliminar
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td class="product-info">
+
+                                <img src="/images/swimwears/swimwear-1.webp">
+
+                                <div>
+                                    <div class="product-name">
+                                        Blusa Elegante
+                                    </div>
+
+                                    <div class="text-second">
+                                        SKU: BL-2301
+                                    </div>
+                                </div>
+
+                            </td>
+
+                            <td>₡9,500</td>
+
+                            <td>12</td>
+
+                            <td>
+                                <span class="status pending">
+                                    Bajo stock
+                                </span>
+                            </td>
+
+                            <td class="table-actions">
+
+                                <button class="btn-action">
+                                    Editar
+                                </button>
+
+                                <button class="btn-action delete">
+                                    Eliminar
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>

@@ -1,0 +1,128 @@
+<%- include("partials/header") %>
+
+    <div class="main-content">
+
+        <div class="box">
+
+            <div class="dashboard-card-header">
+                Configuración de cuenta
+            </div>
+
+            <div class="settings-container">
+
+                <!-- GENERAL -->
+                <div class="settings-section">
+
+                    <h3 class="settings-title">Preferencias</h3>
+
+                    <div class="settings-grid">
+
+                        <div class="form-group">
+                            <label>Idioma</label>
+                            <select>
+                                <option>Español</option>
+                                <option>English</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Zona horaria</label>
+                            <select>
+                                <option>America/Panama</option>
+                                <option>America/Mexico_City</option>
+                                <option>America/Bogota</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOTIFICACIONES -->
+                <div class="settings-section">
+
+                    <h3 class="settings-title">Notificaciones</h3>
+
+                    <div class="settings-switch">
+
+                        <div class="switch-item">
+                            <span>Email de pedidos</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-item">
+                            <span>Alertas de pago</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-item">
+                            <span>Notificaciones del sistema</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEGURIDAD -->
+                <div class="settings-section">
+
+                    <h3 class="settings-title">Seguridad</h3>
+
+                    <div class="settings-grid">
+
+                        <div class="form-group">
+                            <label>Autenticación en dos pasos</label>
+
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ZONA PELIGRO -->
+                <div class="settings-section danger-zone">
+
+                    <h3 class="settings-title danger-title">Zona peligrosa</h3>
+
+                    <p class="danger-text">
+                        Eliminar tu cuenta borrará toda la información del sistema.
+                    </p>
+
+                    <button class="btn-delete-account">
+                        Eliminar cuenta
+                    </button>
+
+                </div>
+
+
+                <div class="settings-actions">
+
+                    <button class="btn-action approve">
+                        Guardar configuración
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>

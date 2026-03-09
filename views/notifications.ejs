@@ -1,0 +1,81 @@
+<%- include("partials/header") %>
+
+    <div class="main-content">
+
+        <div class="box">
+
+            <div class="dashboard-card-header header-flex">
+
+                <div class="notifications-title">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span>Notificaciones</span>
+                </div>
+
+                <div class="notifications-tools">
+                    <button class="btn-action">Marcar todas como leídas</button>
+                </div>
+
+            </div>
+
+
+            <div class="notifications-container">
+
+                <!-- LISTA -->
+
+                <ul class="notifications-list">
+
+                    <% if (notifications.length> 0) { %>
+
+                        <% notifications.forEach(n=> { %>
+
+                            <li class="notification-item <%= n.read ? '' : 'unread' %>">
+
+                                <div class="notification-icon">
+                                    <span class="material-symbols-rounded">
+                                        <%= n.icon || 'notifications' %>
+                                    </span>
+                                </div>
+
+                                <div class="notification-content">
+
+                                    <div class="notification-top">
+
+                                        <strong class="notification-title">
+                                            <%= n.title %>
+                                        </strong>
+
+                                        <span class="notification-time">
+                                            <%= new Date(n.date).toLocaleString() %>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="notification-text">
+                                        <%= n.message %>
+                                    </div>
+
+                                </div>
+
+                            </li>
+
+                            <% }) %>
+
+                                <% } else { %>
+
+                                    <div class="notifications-empty">
+
+                                        <span class="material-symbols-rounded">notifications_off</span>
+
+                                        <p>No hay notificaciones</p>
+
+                                    </div>
+
+                                    <% } %>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>

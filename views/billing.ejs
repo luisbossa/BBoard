@@ -1,0 +1,119 @@
+<%- include("partials/header") %>
+
+    <div class="main-content">
+
+        <div class="box">
+
+            <div class="dashboard-card-header">
+                Facturación
+            </div>
+
+            <div class="billing-container">
+
+                <!-- PLAN ACTUAL -->
+                <div class="billing-section">
+
+                    <h3 class="billing-title">Plan actual</h3>
+
+                    <div class="plan-card">
+
+                        <div class="plan-info">
+                            <h4>Plan Starter</h4>
+                            <p>₡4.000 / mes</p>
+                            <span class="plan-status active">Activo</span>
+                        </div>
+
+                        <div class="plan-actions">
+                            <button class="btn-action approve">
+                                Actualizar plan
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- METODO DE PAGO -->
+                <div class="billing-section">
+
+                    <h3 class="billing-title">Método de pago</h3>
+
+                    <div class="payment-method">
+
+                        <div class="card-info">
+
+                            <div class="card-icon">
+                                <span class="material-symbols-rounded">credit_card</span>
+                            </div>
+
+                            <div class="card-details">
+                                <p>Visa terminada en <strong>4242</strong></p>
+                                <span>Expira 12/2027</span>
+                            </div>
+
+                        </div>
+
+                        <button class="btn-action">
+                            Actualizar método
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HISTORIAL -->
+                <div class="billing-section">
+
+                    <h3 class="billing-title">Historial de facturas</h3>
+
+                    <table class="billing-table">
+
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>07 nov 2025</td>
+                                <td>Plan Starter - Marzo</td>
+                                <td>₡4.000</td>
+                                <td><span class="status paid">Pagado</span></td>
+                                <td><a href="#">Descargar</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>15 dic 2025</td>
+                                <td>Plan Starter - Marzo</td>
+                                <td>₡4.000</td>
+                                <td><span class="status paid">Pagado</span></td>
+                                <td><a href="#">Descargar</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>10 Ene 2026</td>
+                                <td>Plan Starter - Enero</td>
+                                <td>₡4.000</td>
+                                <td><span class="status paid">Pagado</span></td>
+                                <td><a href="#">Descargar</a></td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
