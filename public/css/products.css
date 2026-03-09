@@ -1,9 +1,11 @@
+/* HEADER */
+
 .header-flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
 }
 
 .header-actions {
@@ -20,6 +22,14 @@
   border-radius: 6px;
   background: var(--box-bg);
   color: var(--text-color);
+  font-size: 14px;
+}
+
+/* CONTENEDOR TABLA RESPONSIVE */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
 }
 
 /* TABLA */
@@ -28,11 +38,12 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  min-width: 650px;
 }
 
 .products-table th,
 .products-table td {
-  padding: 12px;
+  padding: 14px 12px;
   border-bottom: 1px solid var(--border-color);
   text-align: left;
 }
@@ -40,6 +51,8 @@
 .products-table th {
   font-size: 13px;
   color: var(--text-second-color);
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 /* PRODUCTO */
@@ -47,12 +60,12 @@
 .product-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .product-info img {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -61,11 +74,46 @@
   font-weight: 600;
 }
 
-/* ACTIONS */
+.text-second {
+  font-size: 12px;
+  color: var(--text-second-color);
+}
+
+/* ESTADOS */
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.status.pending {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+/* ACCIONES */
 
 .table-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text-color);
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
 }
 
 .btn-action.delete {
@@ -73,11 +121,38 @@
   color: white;
 }
 
-/* RESPONSIVE */
+.btn-action.approve {
+  background: var(--main-color);
+  color: white;
+  text-decoration: none;
+}
 
-@media (max-width: 800px) {
-  .products-table {
-    font-size: 13px;
+/* ---------------- */
+/* RESPONSIVE */
+/* ---------------- */
+
+@media (max-width: 900px) {
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .search-input {

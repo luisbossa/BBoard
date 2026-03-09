@@ -208,15 +208,15 @@
   }
 
   .notification-dropdown {
-    right: 50%;
-    left: auto;
-    transform: translate(50%, -10px);
+    position: absolute;
+    left: 55%;
+    right: auto;
+    transform: translate(-50%, -10px);
     width: calc(100vw - 32px);
     max-width: 360px;
   }
 
   .notification-button.active .notification-dropdown {
-    right: -3.8rem;
-    transform: translate(50%, 0);
+    transform: translate(-50%, 0);
   }
 }

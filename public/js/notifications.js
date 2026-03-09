@@ -37,8 +37,8 @@ function getIcon(type) {
 // Cargar notificaciones desde la API
 async function loadNotifications() {
   try {
-    const res = await fetch("/dashboard/notifications", {
-      credentials: "include", // 👈 permite enviar cookies
+    const res = await fetch("/dashboard/api/notifications", {
+      credentials: "include", 
     });
 
     if (!res.ok) throw new Error("No se pudo cargar las notificaciones");
