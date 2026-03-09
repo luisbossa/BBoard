@@ -29,6 +29,7 @@
   border: 1px solid var(--border-color);
   padding: 18px;
   border-radius: 8px;
+  gap: 20px;
 }
 
 .plan-info h4 {
@@ -61,16 +62,13 @@
   border: 1px solid var(--border-color);
   padding: 16px;
   border-radius: 8px;
+  gap: 20px;
 }
 
 .card-info {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.card-icon {
-  font-size: 22px;
 }
 
 .card-icon {
@@ -91,12 +89,20 @@
   color: var(--text-second-color);
 }
 
+/* TABLA WRAPPER (IMPORTANTE PARA MOBILE) */
+
+.billing-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 /* TABLA */
 
 .billing-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  min-width: 600px;
 }
 
 .billing-table th,
@@ -104,6 +110,7 @@
   padding: 12px;
   border-bottom: 1px solid var(--border-color);
   text-align: left;
+  white-space: nowrap;
 }
 
 .billing-table th {
@@ -111,6 +118,18 @@
   font-size: 13px;
   color: var(--text-second-color);
 }
+
+.billing-table a {
+  text-decoration: none;
+  color: var(--main-color);
+  font-weight: 500;
+}
+
+.billing-table a:hover {
+  text-decoration: underline;
+}
+
+/* STATUS */
 
 .status.paid {
   background: #16a34a20;
@@ -137,5 +156,26 @@
 
   .billing-table {
     font-size: 13px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+  .billing-container {
+    gap: 25px;
+  }
+
+  .billing-title {
+    font-size: 15px;
+  }
+
+  .plan-info h4 {
+    font-size: 16px;
+  }
+
+  .plan-card,
+  .payment-method {
+    padding: 14px;
   }
 }
