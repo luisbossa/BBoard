@@ -216,6 +216,6 @@
 }
 
   .notification-button.active .notification-dropdown {
-    transform: translate(-30%, 0);
+    transform: translate(-33%, 0);
   }
 }
