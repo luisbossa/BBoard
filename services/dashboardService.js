@@ -1,13 +1,12 @@
 const pool = require("../db/pool");
 
-// Traer estadísticas generales de pedidos
 async function getOrderStats() {
   const { rows } = await pool.query(`
     SELECT
       COUNT(*)::int AS total_orders,
-      COALESCE(SUM(total), 0) AS total_revenue,
+      COALESCE(SUM(total) FILTER (WHERE status = 'paid'), 0) AS total_revenue,
       COUNT(*) FILTER (WHERE status = 'pending')::int AS pending_orders,
-      COUNT(*) FILTER (WHERE paid_at IS NOT NULL)::int AS paid_orders
+      COUNT(*) FILTER (WHERE status = 'paid')::int AS paid_orders
     FROM orders
   `);
 
@@ -17,7 +16,7 @@ async function getOrderStats() {
     {
       title: "Total de pedidos",
       value: stats.total_orders,
-      icon: "shopping_bag", // Material Symbols Rounded
+      icon: "shopping_bag",
     },
     {
       title: "Ingresos totales",
@@ -52,7 +51,7 @@ async function getLatestProducts(limit = 10) {
     ORDER BY units_sold DESC
     LIMIT $1
     `,
-    [limit]
+    [limit],
   );
 
   return rows.map((p) => ({
@@ -111,7 +110,7 @@ async function getRecentOrders(limit = 10) {
   ORDER BY o.created_at DESC
   LIMIT $1;
       `,
-    [limit]
+    [limit],
   );
 
   return rows.map((o) => ({
@@ -159,7 +158,7 @@ async function getRecentOrdersTable(limit = 10) {
     ORDER BY o.created_at DESC
     LIMIT $1
     `,
-    [limit]
+    [limit],
   );
 
   return rows.map((o) => ({
@@ -176,8 +175,8 @@ async function getRecentOrdersTable(limit = 10) {
       o.payment_method === "sinpe"
         ? "SINPE"
         : o.payment_method === "card"
-        ? "Tarjeta"
-        : o.payment_method || "—",
+          ? "Tarjeta"
+          : o.payment_method || "—",
   }));
 }
 

@@ -99,11 +99,12 @@
                                         </span>
 
                                         <div class="order-payment">
-                                            💳 <%= order.paymentMethod || 'No definido' %>
+                                            Pago: 
+                                            <%= order.paymentMethod || 'No definido' %>
                                         </div>
 
                                         <div class="order-shipping">
-                                            🚚
+                                            Envío:
                                             <%= order.shippingCost> 0
                                                 ? `Correo + ₡ ${order.shippingCost.toLocaleString()}`
                                                 : 'Retiro en tienda ₡ 0' %>
@@ -142,13 +143,12 @@
                                                 Imprimir
                                             </button>
 
-                                            <!-- APROBAR PAGO -->
-                                            <% if (order.status==='pending' ) { %>
+                                            <!-- BTN PAGO -->
+                                            <% if (order.status==='pending' && order.paymentMethod==='sinpe' ) { %>
                                                 <button class="btn-action approve" data-order-id="<%= order.id %>"
                                                     onclick="approveOrder(this)">
                                                     Aprobar pago
                                                 </button>
-
                                                 <% } %>
                                         </div>
                                     </div>

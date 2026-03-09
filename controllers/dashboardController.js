@@ -1,4 +1,3 @@
-// dashboardController.js
 const pool = require("../db/pool");
 const dashboardService = require("../services/dashboardService");
 const notificationService = require("../services/notificationService");
@@ -14,8 +13,7 @@ exports.dashboard = async (req, res, next) => {
         dashboardService.getRecentOrdersTable(),
       ]);
 
-    // Aquí podrías hacer algo con el req.user si es necesario:
-    const user = req.user; // Información del usuario autenticado
+    const user = req.user; 
 
     res.render("main", {
       title: "Dashboard",
@@ -23,7 +21,7 @@ exports.dashboard = async (req, res, next) => {
       dashboardStats,
       orderTickets,
       recentOrdersTable,
-      user, // Pasamos la información del usuario al frontend si lo necesitas
+      user, 
     });
   } catch (err) {
     next(err);

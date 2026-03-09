@@ -18,11 +18,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://TU-DOMINIO-REAL.com",
-];
-
 app.use(cors());
 
 app.use(expressLayouts);
@@ -37,9 +32,10 @@ app.use("/", require("./routes/loginRoute"));
 app.use("/dashboard", require("./routes/dashboardRoute"));
 app.use("/", require("./routes/logoutRoute"));
 app.use("/reset", require("./routes/resetPassRoute"));
+app.use("/webhooks", require("./routes/webhookRoute"));
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
