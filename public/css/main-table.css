@@ -83,3 +83,9 @@ table td {
 .order-status {
   font-size: 14px;
 }
+
+@media (max-width: 600px) {
+  .box-table {
+    padding: 15px;
+  }
+}
