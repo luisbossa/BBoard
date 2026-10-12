@@ -493,6 +493,28 @@ button {
   padding: 12px 14px;
   border-radius: var(--radius);
   font-size: 14px;
+  animation: alert-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* El de error además se sacude un poco para llamar la atención. */
+.alert--error {
+  animation:
+    alert-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both,
+    alert-shake 0.4s 0.35s ease-in-out;
+}
+
+@keyframes alert-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes alert-shake {
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alert { animation: none; }
 }
 
 .alert--success {

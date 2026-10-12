@@ -176,6 +176,25 @@
     });
   });
 
+  /* ---------- Avisos flash: salida animada; los de éxito se van solos ---------- */
+  const dismissFlash = (flash) => {
+    if (!flash || flash.classList.contains("is-leaving")) return;
+    flash.classList.add("is-leaving");
+    flash.addEventListener("animationend", () => flash.remove(), { once: true });
+  };
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-flash-close]")) dismissFlash(e.target.closest(".flash"));
+  });
+
+  document.querySelectorAll(".flash-success").forEach((flash) => {
+    let timer;
+    const start = () => (timer = setTimeout(() => dismissFlash(flash), 6000));
+    flash.addEventListener("mouseenter", () => clearTimeout(timer));
+    flash.addEventListener("mouseleave", start);
+    start();
+  });
+
   /* ---------- Toast ---------- */
   window.showToast = (text, isError = false) => {
     const toast = $("#toast");

@@ -60,12 +60,40 @@ body.standalone { display: block; }
 .flash {
   display: flex; align-items: center; gap: 10px;
   margin: 16px 20px 0; padding: 12px 16px; border-radius: 10px; font-size: 14px;
+  overflow: hidden;
+  animation: flash-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.flash .material-symbols-rounded { color: inherit; }
+.flash .material-symbols-rounded {
+  color: inherit;
+  animation: flash-icon 0.5s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+/* Al cerrarse se desvanece y colapsa su alto, sin saltos en la página. */
+.flash.is-leaving { animation: flash-out 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+@keyframes flash-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes flash-icon {
+  from { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes flash-out {
+  from { opacity: 1; max-height: 120px; }
+  to { opacity: 0; transform: translateY(-8px); max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; }
+}
 .flash-success { background: var(--success-bg); color: var(--success-text); }
 .flash-warning { background: var(--warning-bg); color: var(--warning-text); }
 .flash-error { background: var(--danger-bg); color: var(--danger-text); }
-.flash-close { margin-left: auto; background: none; color: inherit; font-size: 20px; line-height: 1; }
+.flash-close {
+  margin-left: auto; background: none; color: inherit; font-size: 20px; line-height: 1;
+  opacity: 0.7; transition: opacity 0.2s, transform 0.2s;
+}
+.flash-close:hover { opacity: 1; transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .flash, .flash .material-symbols-rounded, .flash.is-leaving { animation-duration: 0.01ms; }
+}
 
 .hint { font-size: 13px; color: var(--text-2); margin-top: 10px; display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; }
 .hint.warning { color: var(--warning-text); }
