@@ -1,0 +1,19 @@
+<%
+  // Conserva los filtros actuales y cambia solo ?page=
+  const pageUrl = (n) => {
+    const params = new URLSearchParams(originalUrl.split("?")[1] || "");
+    params.set("page", n);
+    return `?${params}`;
+  };
+%>
+<% if (pagination.pages > 1) { %>
+    <nav class="pagination" aria-label="Paginación">
+        <% if (pagination.page > 1) { %>
+            <a href="<%= pageUrl(pagination.page - 1) %>">‹ Anterior</a>
+        <% } %>
+        <span>Página <%= pagination.page %> de <%= pagination.pages %></span>
+        <% if (pagination.page < pagination.pages) { %>
+            <a href="<%= pageUrl(pagination.page + 1) %>">Siguiente ›</a>
+        <% } %>
+    </nav>
+<% } %>

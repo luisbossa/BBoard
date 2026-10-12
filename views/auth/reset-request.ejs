@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer contraseña · Panel 100Puntadas</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="<%= asset('/css/reset-password.css') %>">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+</head>
+
+<body class="reset-page">
+    <div class="reset-container animate-reset-scale">
+        <div class="reset-header">
+            <h2 class="reset-title">Restablecer contraseña</h2>
+            <p class="reset-subtitle">Ingresa el correo de tu usuario y te enviaremos un enlace de recuperación</p>
+        </div>
+
+        <% if (message) { %>
+            <div class="reset-message"><p><%= message %></p></div>
+        <% } %>
+        <% if (error) { %>
+            <div class="reset-message error"><p><%= error %></p></div>
+        <% } %>
+
+        <% if (!message) { %>
+            <form class="reset-form" action="/reset" method="POST">
+                <div class="reset-form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="tu@correo.com" required autocomplete="email">
+                </div>
+                <div class="reset-form-submit">
+                    <button type="submit">ENVIAR ENLACE</button>
+                </div>
+            </form>
+        <% } %>
+
+        <div class="reset-form-footer">
+            <a href="/">
+                <span class="material-symbols-rounded">arrow_back</span>
+                <span class="footer-text">Volver al login</span>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

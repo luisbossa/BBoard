@@ -1,0 +1,19 @@
+<%
+  // Botones para avanzar el estado del pedido (solo admin/manager).
+  const ACTIONS = {
+    paid: { label: order.paymentMethod === "sinpe" ? "Aprobar pago SINPE" : "Marcar pagado", cls: "approve",
+            confirm: "El pedido pasará a PAGADO." + (order.paymentMethod === "sinpe" ? " Se enviará el correo de confirmación al cliente." : "") },
+    shipped: { label: "Marcar enviado", cls: "ship", confirm: "El pedido pasará a ENVIADO." },
+    delivered: { label: "Marcar entregado", cls: "deliver", confirm: "El pedido pasará a ENTREGADO." },
+    cancelled: { label: "Cancelar", cls: "cancel", confirm: "El pedido se CANCELARÁ. Esta acción no se puede deshacer." },
+  };
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+%>
+<% if (canEdit) { %>
+    <% order.nextStatuses.forEach(next => { const a = ACTIONS[next]; %>
+        <form method="POST" action="/dashboard/orders/<%= order.id %>/status" data-confirm="<%= a.confirm %>" class="inline-form">
+            <input type="hidden" name="status" value="<%= next %>">
+            <button type="submit" class="btn-action <%= a.cls %>"><%= a.label %></button>
+        </form>
+    <% }) %>
+<% } %>

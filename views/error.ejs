@@ -1,0 +1,23 @@
+<% if (!currentUser) { %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> · Panel 100Puntadas</title>
+    <link rel="stylesheet" href="<%= asset('/css/global.css') %>">
+    <link rel="stylesheet" href="<%= asset('/css/admin.css') %>">
+</head>
+<body class="standalone">
+<% } %>
+<div class="main-content error-page">
+    <div class="box narrow center">
+        <h1 class="error-code"><%= status %></h1>
+        <p><%= message %></p>
+        <a href="<%= currentUser ? '/dashboard' : '/' %>" class="btn-primary"><%= currentUser ? "Volver al panel" : "Ir al inicio" %></a>
+    </div>
+</div>
+<% if (!currentUser) { %>
+</body>
+</html>
+<% } %>

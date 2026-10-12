@@ -1,0 +1,81 @@
+<%
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const timeline = [
+    ["Creado", order.createdAt],
+    ["Pagado", order.paidAt],
+    ["Enviado", order.shippedAt],
+    ["Entregado", order.deliveredAt],
+    ["Cancelado", order.cancelledAt],
+  ].filter(([, d]) => d);
+  const ACTION_LABELS = {
+    order_paid: "marcó como pagado", order_shipped: "marcó como enviado",
+    order_delivered: "marcó como entregado", order_cancelled: "canceló el pedido",
+    order_notes: "actualizó las notas",
+  };
+%>
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/orders" class="btn-link">‹ Pedidos</a>
+        <h1>Pedido #<%= order.orderNumber || order.id %> <%- include("../partials/status", { status: order.status }) %></h1>
+    </div>
+
+    <div class="box">
+        <%- include("../partials/order-ticket", { order }) %>
+    </div>
+
+    <div class="row">
+        <!-- TOTALES -->
+        <div class="col-4 col-md-6 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Resumen</div>
+                <dl class="summary-list">
+                    <div><dt>Subtotal</dt><dd><%= fmt.money(order.subtotal) %></dd></div>
+                    <% if (order.discount) { %><div><dt>Descuento</dt><dd>−<%= fmt.money(order.discount) %></dd></div><% } %>
+                    <div><dt>Envío</dt><dd><%= order.shipping ? fmt.money(order.shipping) : "Retiro en tienda" %></dd></div>
+                    <div class="total"><dt>Total</dt><dd><%= fmt.money(order.total) %></dd></div>
+                    <div><dt>Método</dt><dd><%= fmt.payment(order.paymentMethod) %></dd></div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- SEGUIMIENTO -->
+        <div class="col-4 col-md-6 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Seguimiento</div>
+                <ul class="timeline">
+                    <% timeline.forEach(([label, date]) => { %>
+                        <li><strong><%= label %></strong><span class="text-second"><%= fmt.dateTime(date) %></span></li>
+                    <% }) %>
+                </ul>
+                <% if (order.history.length) { %>
+                    <div class="history-title">Historial del panel</div>
+                    <ul class="history">
+                        <% order.history.forEach(h => { %>
+                            <li><strong><%= h.full_name %></strong> <%= ACTION_LABELS[h.action] || h.action %>
+                                <span class="text-second">· <%= fmt.dateTime(h.created_at) %></span></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- NOTAS INTERNAS -->
+        <div class="col-4 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Notas internas</div>
+                <form method="POST" action="/dashboard/orders/<%= order.id %>/notes" class="stack-form">
+                    <label>Número de guía (Correos de CR)
+                        <input type="text" name="tracking_number" value="<%= order.trackingNumber || '' %>" maxlength="100"
+                            <%= canEdit ? "" : "disabled" %>>
+                    </label>
+                    <label>Notas (no las ve el cliente)
+                        <textarea name="admin_notes" rows="4" <%= canEdit ? "" : "disabled" %>><%= order.adminNotes || "" %></textarea>
+                    </label>
+                    <% if (canEdit) { %><button type="submit" class="btn-primary">Guardar notas</button><% } %>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<%= asset('/js/print.js') %>"></script>

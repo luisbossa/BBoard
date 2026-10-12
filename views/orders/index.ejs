@@ -1,0 +1,36 @@
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Pedidos <span class="text-second">(<%= pagination.total %>)</span></span>
+        </div>
+
+        <!-- Pestañas por estado -->
+        <nav class="tabs">
+            <% [["", "Todos"], ...Object.entries(fmt.ORDER_STATUS)].forEach(([value, label]) => {
+                 const params = new URLSearchParams({ ...filters, status: value }); params.delete("page"); %>
+                <a href="?<%= params %>" class="<%= filters.status === value ? 'active' : '' %>"><%= label %></a>
+            <% }) %>
+        </nav>
+
+        <form class="filters" method="GET">
+            <input type="hidden" name="status" value="<%= filters.status %>">
+            <input type="search" name="q" value="<%= filters.q %>" class="search-input"
+                placeholder="Buscar: # pedido, nombre, correo, teléfono, cédula">
+            <select name="method" class="search-input">
+                <option value="">Todos los pagos</option>
+                <% Object.entries(fmt.PAYMENT_METHOD).forEach(([value, label]) => { %>
+                    <option value="<%= value %>" <%= filters.method === value ? "selected" : "" %>><%= label %></option>
+                <% }) %>
+            </select>
+            <label class="inline-label">Desde <input type="date" name="from" value="<%= filters.from %>" class="search-input"></label>
+            <label class="inline-label">Hasta <input type="date" name="to" value="<%= filters.to %>" class="search-input"></label>
+            <button type="submit" class="btn-primary">Filtrar</button>
+            <% if (filters.q || filters.method || filters.from || filters.to) { %>
+                <a href="?status=<%= filters.status %>" class="btn-link">Limpiar</a>
+            <% } %>
+        </form>
+    </div>
+
+    <%- include("../partials/orders-table", { orders, heading: null }) %>
+    <%- include("../partials/pagination", { pagination }) %>
+</div>

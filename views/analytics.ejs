@@ -1,78 +1,136 @@
-<%- include("partials/header") %>
-
-    <div class="main-content">
-
-        <div class="box">
-
-            <div class="dashboard-card-header">
-                Analíticas de ventas
-            </div>
-
-            <div class="analytics-container">
-
-                <!-- GRAFICA VENTAS -->
-
-                <div class="analytics-card">
-                    <h3>Ventas por día</h3>
-                    <div class="chart-placeholder">
-                        Gráfica de ventas
-                    </div>
-                </div>
-
-
-                <!-- METODOS DE PAGO -->
-
-                <div class="analytics-card">
-                    <h3>Métodos de pago</h3>
-
-                    <ul class="analytics-list">
-                        <li>
-                            <span>Tarjeta</span>
-                            <strong>65%</strong>
-                        </li>
-
-                        <li>
-                            <span>Sinpe</span>
-                            <strong>30%</strong>
-                        </li>
-
-                        <li>
-                            <span>Efectivo</span>
-                            <strong>5%</strong>
-                        </li>
-                    </ul>
-
-                </div>
-
-
-                <!-- PROVINCIAS -->
-
-                <div class="analytics-card">
-                    <h3>Top provincias</h3>
-
-                    <ul class="analytics-list">
-
-                        <li>
-                            <span>San José</span>
-                            <strong>42 pedidos</strong>
-                        </li>
-
-                        <li>
-                            <span>Alajuela</span>
-                            <strong>21 pedidos</strong>
-                        </li>
-
-                        <li>
-                            <span>Cartago</span>
-                            <strong>18 pedidos</strong>
-                        </li>
-
-                    </ul>
-
-                </div>
-
-            </div>
-
+<%
+  const s = summary;
+  const tiles = [
+    ["Ingresos cobrados", fmt.money(s.revenue)],
+    ["Ventas", s.sales],
+    ["Ticket promedio", fmt.money(s.avg_ticket)],
+    ["Clientes", s.customers],
+  ];
+  // Barra horizontal: proporción contra el máximo de la lista.
+  const bars = (rows, key) => {
+    const max = Math.max(1, ...rows.map(r => r[key]));
+    return rows.map(r => ({ ...r, pct: Math.round((r[key] / max) * 100) }));
+  };
+%>
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Analíticas de ventas</span>
+            <nav class="tabs compact" aria-label="Rango de fechas">
+                <% ranges.forEach(r => { %>
+                    <a href="?days=<%= r %>" class="<%= range === r ? 'active' : '' %>"><%= r === 365 ? "1 año" : `${r} días` %></a>
+                <% }) %>
+            </nav>
         </div>
-
+        <p class="hint">Solo cuentan pedidos cobrados (pagados, enviados o entregados) de los últimos <%= range %> días, en hora de Costa Rica.</p>
     </div>
+
+    <div class="row">
+        <% tiles.forEach(([label, value]) => { %>
+            <div class="col-3 col-md-6 col-sm-12">
+                <div class="box">
+                    <div class="counter-title"><%= label %></div>
+                    <div class="counter-count small"><%= value %></div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="box">
+        <div class="dashboard-card-header">Ingresos por <%= bucket === "week" ? "semana" : "día" %></div>
+        <div id="daily-chart" class="chart" role="img"
+            aria-label="Ingresos por <%= bucket === 'week' ? 'semana' : 'día' %> de los últimos <%= range %> días"></div>
+        <details class="table-view">
+            <summary>Ver como tabla</summary>
+            <table class="data-table compact">
+                <thead><tr><th><%= bucket === "week" ? "Semana del" : "Día" %></th><th class="right">Ventas</th><th class="right">Ingresos</th></tr></thead>
+                <tbody>
+                    <% daily.filter(d => d.sales).reverse().forEach(d => { %>
+                        <tr><td><%= d.day %></td><td class="right"><%= d.sales %></td><td class="right"><%= fmt.money(d.revenue) %></td></tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+    <div class="row">
+        <% [
+            ["Métodos de pago", bars(methods, "revenue"), r => fmt.payment(r.method), r => `${fmt.money(r.revenue)} · ${r.sales} venta${r.sales === 1 ? '' : 's'}`],
+            ["Top provincias", bars(provinces, "sales"), r => r.province, r => `${r.sales} venta${r.sales === 1 ? '' : 's'} · ${fmt.money(r.revenue)}`],
+            ["Productos más vendidos", bars(products, "units"), r => r.name, r => `${r.units} u. · ${fmt.money(r.revenue)}`],
+        ].forEach(([heading, rows, label, value]) => { %>
+            <div class="col-4 col-md-6 col-sm-12">
+                <div class="box">
+                    <div class="dashboard-card-header"><%= heading %></div>
+                    <% if (rows.length) { %>
+                        <ul class="bar-list">
+                            <% rows.forEach(r => { %>
+                                <li>
+                                    <div class="bar-label"><span><%= label(r) %></span><span class="text-second"><%= value(r) %></span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width: <%= r.pct %>%"></div></div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        <p class="empty">Sin ventas en este rango</p>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="box">
+        <div class="dashboard-card-header">Pedidos por estado (todos los creados en el rango)</div>
+        <div class="status-summary">
+            <% Object.keys(fmt.ORDER_STATUS).forEach(st => { const row = statuses.find(x => x.status === st); %>
+                <a href="/dashboard/orders?status=<%= st %>" class="status-count">
+                    <%- include("partials/status", { status: st }) %>
+                    <strong><%= row ? row.count : 0 %></strong>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.54.1/dist/apexcharts.min.js"></script>
+<script>
+    (function () {
+        const weekly = <%- JSON.stringify(bucket === "week") %>;
+        const daily = <%- JSON.stringify(daily).replace(/</g, "\\u003c") %>;
+        const money = (n) => "₡" + Math.round(n).toLocaleString("es-CR").replace(/\s/g, ".");
+        const css = (name) => getComputedStyle(document.body).getPropertyValue(name).trim();
+
+        function render() {
+            const el = document.getElementById("daily-chart");
+            el.innerHTML = "";
+            const isDark = document.body.classList.contains("dark");
+            new ApexCharts(el, {
+                chart: { type: "bar", height: 280, toolbar: { show: false }, fontFamily: "inherit", foreColor: css("--text-second-color"), background: "transparent" },
+                theme: { mode: isDark ? "dark" : "light" },
+                series: [{ name: "Ingresos", data: daily.map((d) => ({ x: d.day, y: d.revenue, sales: d.sales })) }],
+                colors: [isDark ? "#8eaaf0" : "#507cd1"],
+                plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: "end", columnWidth: daily.length > 40 ? "80%" : "60%" } },
+                dataLabels: { enabled: false },
+                grid: { borderColor: css("--border-color"), strokeDashArray: 3, xaxis: { lines: { show: false } } },
+                xaxis: {
+                    type: "category",
+                    tickAmount: Math.min(daily.length, 10),
+                    labels: { rotate: 0, hideOverlappingLabels: true, formatter: (v) => v ? v.slice(8, 10) + "/" + v.slice(5, 7) : v },
+                    axisTicks: { show: false },
+                },
+                yaxis: { labels: { formatter: (v) => v >= 1000 ? "₡" + Math.round(v / 1000) + "k" : "₡" + v } },
+                tooltip: {
+                    custom: ({ dataPointIndex }) => {
+                        const d = daily[dataPointIndex];
+                        return `<div class="chart-tip"><strong>${weekly ? "Semana del " : ""}${d.day}</strong><br>${money(d.revenue)} · ${d.sales} venta${d.sales === 1 ? "" : "s"}</div>`;
+                    },
+                },
+                states: { hover: { filter: { type: "darken", value: 0.85 } } },
+            }).render();
+        }
+
+        render();
+        // Repinta si se cambia el modo oscuro.
+        new MutationObserver(render).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    })();
+</script>

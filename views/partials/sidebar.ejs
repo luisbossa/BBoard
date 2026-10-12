@@ -1,87 +1,55 @@
+<%
+  const role = currentUser?.role;
+  const links = [
+    { href: "/dashboard", icon: "home", label: "Panel", exact: true },
+    { href: "/dashboard/orders", icon: "receipt_long", label: "Pedidos" },
+    { href: "/dashboard/customers", icon: "group", label: "Clientes" },
+    { href: "/dashboard/products", icon: "storefront", label: "Productos" },
+    { href: "/dashboard/analytics", icon: "analytics", label: "Analíticas" },
+    { href: "/dashboard/notifications", icon: "notifications", label: "Actividad" },
+    ...(role === "admin" ? [{ href: "/dashboard/users", icon: "admin_panel_settings", label: "Usuarios" }] : []),
+    { href: "/dashboard/profile", icon: "person", label: "Mi perfil" },
+  ];
+  const isActive = (link) => link.exact ? originalUrl.split("?")[0] === link.href : originalUrl.startsWith(link.href);
+%>
 <div id="sidebar" class="sidebar">
     <div class="sidebar-logo">
-        <img class="logo-img" src="/images/logo.png" alt="Logo del dashboard">
-        <div class="sidebar-close" id="sidebar-close">
+        <img class="logo-img" src="/images/logo.png" alt="100Puntadas">
+        <button type="button" class="sidebar-close" id="sidebar-close" aria-label="Cerrar menú">
             <span class="material-symbols-rounded">close</span>
-        </div>
+        </button>
     </div>
 
-    <!-- SIDEBAR MENU -->
     <ul class="sidebar-menu">
-        <li>
-            <a href="/dashboard" class="active">
-                <span class="material-symbols-rounded">home</span>
-                <span class="sidebar-text">Panel</span>
-            </a>
-        </li>
+        <% links.forEach(link => { %>
+            <li>
+                <a href="<%= link.href %>" class="<%= isActive(link) ? 'active' : '' %>">
+                    <span class="material-symbols-rounded"><%= link.icon %></span>
+                    <span class="sidebar-text"><%= link.label %></span>
+                </a>
+            </li>
+        <% }) %>
 
         <li>
-            <a href="/dashboard/analytics">
-                <span class="material-symbols-rounded">analytics</span>
-                <span href="/dashboard/analytics" class="sidebar-text">Analíticas</span>
+            <a href="<%= storeUrl %>" target="_blank" rel="noopener">
+                <span class="material-symbols-rounded">open_in_new</span>
+                <span class="sidebar-text">Ver tienda</span>
             </a>
-        </li>
-
-        <li class="sidebar-submenu">
-            <a href="#" class="sidebar-menu-dropdown">
-                <span class="material-symbols-rounded">person</span>
-                <span class="sidebar-text">cuenta</span>
-                <div class="dropdown-icon"></div>
-            </a>
-            <ul class="sidebar-menu sidebar-menu-dropdown-content">
-                <li><a href="/dashboard/profile">editar perfil</a></li>
-                <li><a href="/dashboard/settings">configuración de cuenta</a></li>
-                <li><a href="/dashboard/billing">facturación</a></li>
-            </ul>
-        </li>
-
-        <li class="sidebar-submenu">
-            <a href="#" class="sidebar-menu-dropdown">
-                <span class="material-symbols-rounded">storefront</span>
-                <span class="sidebar-text">Tienda</span>
-                <div class="dropdown-icon"></div>
-            </a>
-            <ul class="sidebar-menu sidebar-menu-dropdown-content">
-                <li>
-                    <a href="/dashboard/products">lista de productos</a>
-                </li>
-                <li>
-                    <a href="#">pedidos</a>
-                </li>
-                <li>
-                    <a href="#">Clientes</a>
-                </li>
-            </ul>
         </li>
 
         <li>
-            <a href="/dashboard/messages">
-                <span class="material-symbols-rounded">mail</span>
-                <span class="sidebar-text">correo</span>
+            <a href="#" class="darkmode-toggle" id="darkmode-toggle">
+                <span class="material-symbols-rounded">dark_mode</span>
+                <span class="sidebar-text">Modo oscuro</span>
+                <span class="darkmode-switch"></span>
             </a>
-        </li>
-
-        <li class="sidebar-submenu">
-            <a href="#" class="sidebar-menu-dropdown">
-                <span class="material-symbols-rounded">settings</span>
-                <span class="sidebar-text">configuración</span>
-                <div class="dropdown-icon"></div>
-            </a>
-            <ul class="sidebar-menu sidebar-menu-dropdown-content">
-                <li>
-                    <a href="#" class="darkmode-toggle" id="darkmode-toggle">
-                        modo oscuro
-                        <span class="darkmode-switch"></span>
-                    </a>
-                </li>
-            </ul>
         </li>
     </ul>
 
     <footer class="footer">
         <div>
-            BBoard ©
-            <br><span class="full-text">All Rights Reserved 2025</span>
+            100Puntadas ©
+            <br><span class="full-text">Panel administrativo <%= new Date().getFullYear() %></span>
         </div>
     </footer>
 </div>

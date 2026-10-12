@@ -328,3 +328,12 @@ body.page-wrapper {
     padding: 1rem;
   }
 }
+
+.form-success {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #e6f7f1;
+  color: #0f7a45;
+  font-size: 14px;
+  text-align: center;
+}

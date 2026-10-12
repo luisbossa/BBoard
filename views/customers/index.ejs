@@ -1,0 +1,54 @@
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Clientes <span class="text-second">(<%= pagination.total %>)</span></span>
+        </div>
+        <form class="filters" method="GET">
+            <input type="search" name="q" value="<%= filters.q %>" class="search-input" placeholder="Buscar por nombre, correo o teléfono">
+            <select name="sort" class="search-input">
+                <% [["recent", "Compra más reciente"], ["spent", "Mayor gasto"], ["orders", "Más pedidos"], ["name", "Nombre"]].forEach(([value, label]) => { %>
+                    <option value="<%= value %>" <%= filters.sort === value ? "selected" : "" %>><%= label %></option>
+                <% }) %>
+            </select>
+            <button type="submit" class="btn-primary">Buscar</button>
+        </form>
+        <p class="hint">Los clientes se agrupan por correo a partir de los pedidos de la tienda. El gasto incluye solo pedidos cobrados.</p>
+    </div>
+
+    <div class="box-table">
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Teléfono</th>
+                        <th>Provincia</th>
+                        <th class="center">Pedidos</th>
+                        <th class="right">Total gastado</th>
+                        <th>Última compra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (customers.length) { %>
+                        <% customers.forEach(c => { const href = `/dashboard/customers/${encodeURIComponent(c.email)}`; %>
+                            <tr data-href="<%= href %>">
+                                <td>
+                                    <a href="<%= href %>"><strong><%= c.full_name %></strong></a>
+                                    <div class="text-second"><%= c.email %></div>
+                                </td>
+                                <td><%= c.phone %></td>
+                                <td><%= c.province %></td>
+                                <td class="center"><%= c.paid_count %> <span class="text-second">/ <%= c.orders_count %></span></td>
+                                <td class="right"><strong><%= fmt.money(c.total_spent) %></strong></td>
+                                <td><%= fmt.date(c.last_order) %></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="6" class="empty">No se encontraron clientes</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include("../partials/pagination", { pagination }) %>
+</div>

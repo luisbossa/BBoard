@@ -1,0 +1,35 @@
+<% const isNew = !editUser.id; const self = editUser.id === currentUser.id; %>
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/users" class="btn-link">‹ Usuarios</a>
+        <h1><%= isNew ? "Nuevo usuario" : editUser.full_name %></h1>
+    </div>
+
+    <div class="box narrow">
+        <form method="POST" action="<%= isNew ? '/dashboard/users' : `/dashboard/users/${editUser.id}` %>" class="stack-form">
+            <label>Nombre completo
+                <input type="text" name="full_name" value="<%= editUser.full_name %>" required maxlength="120">
+            </label>
+            <label>Usuario (para iniciar sesión)
+                <input type="text" name="username" value="<%= editUser.username %>" required pattern="[A-Za-z0-9._\-]{3,30}"
+                    <%= isNew ? "" : "disabled" %>>
+            </label>
+            <label>Correo <span class="text-second">— necesario para recuperar la contraseña</span>
+                <input type="email" name="email" value="<%= editUser.email || '' %>" maxlength="255">
+            </label>
+            <label>Rol
+                <select name="role" <%= self ? "disabled" : "" %>>
+                    <% roles.forEach(r => { %>
+                        <option value="<%= r %>" <%= editUser.role === r ? "selected" : "" %>><%= fmt.ROLE[r] %></option>
+                    <% }) %>
+                </select>
+                <% if (self) { %><span class="hint">No puedes cambiar tu propio rol.</span><% } %>
+            </label>
+            <label><%= isNew ? "Contraseña inicial" : "Nueva contraseña" %>
+                <span class="text-second"><%= isNew ? "— mínimo 8 caracteres" : "— dejar vacío para no cambiarla" %></span>
+                <input type="password" name="password" minlength="8" autocomplete="new-password" <%= isNew ? "required" : "" %>>
+            </label>
+            <button type="submit" class="btn-primary"><%= isNew ? "Crear usuario" : "Guardar cambios" %></button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="<%= asset('/css/products.css') %>">
+<% const canEdit = ["admin", "manager"].includes(currentUser.role); %>
+
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Productos <span class="text-second">(<%= pagination.total %>)</span></span>
+            <% if (canEdit) { %>
+                <a href="/dashboard/products/new" class="btn-primary">+ Agregar producto</a>
+            <% } %>
+        </div>
+
+        <form class="filters" method="GET">
+            <input type="search" name="q" value="<%= filters.q %>" placeholder="Buscar producto..." class="search-input">
+            <select name="type" class="search-input">
+                <option value="">Todos los tipos</option>
+                <% types.forEach(t => { %>
+                    <option value="<%= t %>" <%= filters.type === t ? "selected" : "" %>><%= fmt.PRODUCT_TYPE[t] %></option>
+                <% }) %>
+            </select>
+            <select name="status" class="search-input">
+                <% [["", "Todos"], ["active", "Activos"], ["inactive", "Ocultos"], ["soldout", "Agotados"]].forEach(([v, l]) => { %>
+                    <option value="<%= v %>" <%= filters.status === v ? "selected" : "" %>><%= l %></option>
+                <% }) %>
+            </select>
+            <button type="submit" class="btn-primary">Filtrar</button>
+        </form>
+
+        <p class="hint">
+            <span class="material-symbols-rounded tiny-icon">info</span>
+            El catálogo ya está en la base de datos. La tienda todavía lee su catálogo propio
+            (<code>data/catalog.js</code>): los cambios hechos aquí se verán en la tienda cuando se conecte a la base de datos.
+        </p>
+    </div>
+
+    <div class="box">
+        <div class="table-wrapper">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Tipo</th>
+                        <th class="center">Precio</th>
+                        <th class="center">Stock</th>
+                        <th class="center">Vendidos</th>
+                        <th class="center">Estado</th>
+                        <th class="right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!products.length) { %>
+                        <tr><td colspan="7" class="empty">No se encontraron productos</td></tr>
+                    <% } %>
+                    <% products.forEach(p => { %>
+                        <tr class="<%= p.active ? '' : 'row-muted' %>">
+                            <td>
+                                <a class="product-cell" href="/dashboard/products/<%= p.id %>/edit">
+                                    <img src="<%= fmt.storeImage(p.main_image) %>" alt="" loading="lazy">
+                                    <div class="product-meta">
+                                        <span class="product-name"><%= p.name %></span>
+                                        <span class="product-sku"><%= p.slug %></span>
+                                    </div>
+                                </a>
+                            </td>
+                            <td><%= fmt.PRODUCT_TYPE[p.product_type] %></td>
+                            <td class="center">
+                                <%= fmt.money(p.price) %>
+                                <% if (p.old_price) { %><div class="text-second strike"><%= fmt.money(p.old_price) %></div><% } %>
+                            </td>
+                            <td class="center">
+                                <% if (p.stock === null) { %><span class="text-second">Bajo pedido</span>
+                                <% } else if (p.stock === 0) { %><span class="status cancelled">Agotado</span>
+                                <% } else { %><%= p.stock %><% } %>
+                            </td>
+                            <td class="center"><%= p.units_sold %></td>
+                            <td class="center">
+                                <span class="status <%= p.active ? 'active' : 'inactive' %>"><%= p.active ? "Visible" : "Oculto" %></span>
+                            </td>
+                            <td class="right">
+                                <div class="table-actions">
+                                    <a class="btn-table" href="/dashboard/products/<%= p.id %>/edit"><%= canEdit ? "Editar" : "Ver" %></a>
+                                    <% if (canEdit) { %>
+                                        <form method="POST" action="/dashboard/products/<%= p.id %>/toggle" class="inline-form">
+                                            <input type="hidden" name="active" value="<%= p.active ? 0 : 1 %>">
+                                            <button class="btn-table" type="submit"><%= p.active ? "Ocultar" : "Mostrar" %></button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include("../partials/pagination", { pagination }) %>
+</div>

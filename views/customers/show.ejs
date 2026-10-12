@@ -1,0 +1,42 @@
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/customers" class="btn-link">‹ Clientes</a>
+        <h1><%= customer.full_name %></h1>
+    </div>
+
+    <div class="row">
+        <div class="col-4 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Datos de contacto</div>
+                <dl class="summary-list">
+                    <div><dt>Correo</dt><dd><a href="mailto:<%= customer.email %>"><%= customer.email %></a></dd></div>
+                    <div><dt>Teléfono</dt><dd>
+                        <a href="https://wa.me/506<%= String(customer.phone).replace(/\D/g, '') %>" target="_blank" rel="noopener"><%= customer.phone %></a>
+                    </dd></div>
+                    <div><dt>Cédula</dt><dd><%= customer.national_id %></dd></div>
+                    <div><dt>Ubicación</dt><dd><%= customer.location %></dd></div>
+                    <div><dt>Dirección</dt><dd><%= customer.address %></dd></div>
+                </dl>
+            </div>
+        </div>
+        <div class="col-8 col-md-12 col-sm-12">
+            <div class="row">
+                <% [
+                    ["Pedidos cobrados", `${customer.paid_count} de ${customer.orders_count}`],
+                    ["Total gastado", fmt.money(customer.total_spent)],
+                    ["Cliente desde", fmt.date(customer.first_order)],
+                    ["Última compra", fmt.date(customer.last_order)],
+                ].forEach(([label, value]) => { %>
+                    <div class="col-3 col-md-6 col-sm-12">
+                        <div class="box">
+                            <div class="counter-title"><%= label %></div>
+                            <div class="counter-count small"><%= value %></div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../partials/orders-table", { orders, heading: "Historial de pedidos" }) %>
+</div>

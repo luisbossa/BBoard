@@ -1,0 +1,87 @@
+<%
+  const cards = [
+    { title: "Total de pedidos", value: stats.total_orders, icon: "shopping_bag", href: "/dashboard/orders" },
+    { title: "Ingresos cobrados", value: fmt.money(stats.total_revenue), icon: "insights", href: "/dashboard/analytics" },
+    { title: "Pendientes de pago", value: stats.pending_orders, icon: "schedule", href: "/dashboard/orders?status=pending" },
+    { title: "Pagados por enviar", value: stats.to_ship_orders, icon: "local_shipping", href: "/dashboard/orders?status=paid" },
+  ];
+%>
+<div class="main-content">
+    <div class="row">
+        <% cards.forEach(card => { %>
+            <div class="col-3 col-md-6 col-sm-12">
+                <a class="box stat-link" href="<%= card.href %>">
+                    <div class="counter">
+                        <div class="counter-title"><%= card.title %></div>
+                        <div class="counter-info">
+                            <div class="counter-count"><%= card.value %></div>
+                            <span class="material-symbols-rounded main-icons"><%= card.icon %></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="row">
+        <!-- MÁS VENDIDOS -->
+        <div class="col-4 col-md-6 col-sm-12">
+            <div class="box dashcard-div tall">
+                <div class="bestseller-header">Lo más vendido</div>
+                <div class="box-body">
+                    <ul class="product-list">
+                        <% if (bestSellers.length) { %>
+                            <% bestSellers.forEach(product => { %>
+                                <li class="product-list-item">
+                                    <div class="item-info">
+                                        <img src="<%= fmt.storeImage(product.image) %>" alt="" loading="lazy">
+                                        <div>
+                                            <div class="product-name">
+                                                <% if (product.product_id) { %>
+                                                    <a href="/dashboard/products/<%= product.product_id %>/edit"><%= product.name %></a>
+                                                <% } else { %><%= product.name %><% } %>
+                                            </div>
+                                            <div class="text-second"><%= product.units_sold %> unidades vendidas</div>
+                                        </div>
+                                    </div>
+                                    <div class="item-sale-info">
+                                        <div class="text-second">Última venta</div>
+                                        <div class="product-sales"><%= fmt.date(product.last_sale) %></div>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li class="empty">Aún no hay ventas cobradas</li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POR PREPARAR -->
+        <div class="col-8 col-md-6 col-sm-12">
+            <div class="box dashcard-div tall">
+                <div class="dashboard-card-header header-flex">
+                    <span>Por atender</span>
+                    <a class="link-more" href="/dashboard/orders">Ver todos los pedidos ›</a>
+                </div>
+                <div class="dashboard-card-body">
+                    <% if (tickets.length) { %>
+                        <% tickets.forEach(order => { %>
+                            <%- include("partials/order-ticket", { order }) %>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="empty">No hay pedidos pendientes ni por enviar 🎉</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- PEDIDOS RECIENTES -->
+        <div class="col-12">
+            <%- include("partials/orders-table", { orders: recentOrders, heading: "Pedidos recientes" }) %>
+        </div>
+    </div>
+</div>
+
+<script src="<%= asset('/js/print.js') %>"></script>

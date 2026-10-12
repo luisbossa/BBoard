@@ -1,39 +1,43 @@
 const { Pool } = require("pg");
+const env = require("../config/env");
+
+/* ============================================================
+   CONEXIÓN A POSTGRESQL (misma base que la tienda 100Puntadas)
+   - Producción: Neon (requiere SSL).
+   - Desarrollo: PostgreSQL local (sin SSL).
+   Se decide por la URL; DATABASE_SSL=true/false lo fuerza.
+============================================================ */
+const isLocal = /@(localhost|127\.0\.0\.1)(:\d+)?\//.test(env.databaseUrl);
+const useSSL = process.env.DATABASE_SSL
+  ? process.env.DATABASE_SSL === "true"
+  : !isLocal;
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  connectionString: env.databaseUrl,
+  ssl: useSSL ? { rejectUnauthorized: false } : false,
+  // En Vercel cada función abre su propio pool: pocas conexiones y que se liberen rápido.
+  max: process.env.VERCEL ? 3 : 10,
+  idleTimeoutMillis: 10_000,
 });
 
+pool.on("error", (err) => {
+  console.error("POSTGRES POOL ERROR:", err.message);
+});
+
+// Ejecuta fn(client) dentro de una transacción.
+pool.transaction = async (fn) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await fn(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (err) {
+    await client.query("ROLLBACK").catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = pool;
-
-// const { Pool } = require("pg");
-
-// const pool = new Pool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-//   port: process.env.DB_PORT,
-//   ssl: false
-// });
-
-// module.exports = pool;
-
-// (async () => {
-//   try {
-//     const client = await pool.connect();
-//     const res = await client.query("SELECT NOW()");
-//     console.log("PostgreSQL conectado:", res.rows[0]);
-//     client.release();
-//   } catch (err) {
-//     console.error("Error conectando a PostgreSQL:", err.message);
-//   }
-// })();
-
-
-
-
-

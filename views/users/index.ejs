@@ -1,0 +1,47 @@
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Usuarios del panel</span>
+            <a href="/dashboard/users/new" class="btn-primary">+ Nuevo usuario</a>
+        </div>
+        <p class="hint">
+            <strong>Administrador:</strong> todo, incluida esta sección ·
+            <strong>Gestor:</strong> pedidos, productos y clientes ·
+            <strong>Solo lectura:</strong> puede ver, no modificar.
+        </p>
+    </div>
+
+    <div class="box-table">
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Rol</th><th>Último acceso</th><th>Estado</th><th class="right">Acciones</th></tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(u => { const self = u.id === currentUser.id; %>
+                        <tr class="<%= u.active ? '' : 'row-muted' %>">
+                            <td><strong><%= u.full_name %></strong><%= self ? " (tú)" : "" %></td>
+                            <td><%= u.username %></td>
+                            <td><%= u.email || "—" %></td>
+                            <td><%= fmt.ROLE[u.role] %></td>
+                            <td><%= fmt.dateTime(u.last_login_at) %></td>
+                            <td><span class="status <%= u.active ? 'active' : 'inactive' %>"><%= u.active ? "Activo" : "Inactivo" %></span></td>
+                            <td class="right">
+                                <div class="table-actions">
+                                    <a class="btn-table" href="/dashboard/users/<%= u.id %>/edit">Editar</a>
+                                    <% if (!self) { %>
+                                        <form method="POST" action="/dashboard/users/<%= u.id %>/toggle" class="inline-form"
+                                            data-confirm="<%= u.active ? 'El usuario ya no podrá entrar al panel.' : 'El usuario podrá volver a entrar.' %>">
+                                            <input type="hidden" name="active" value="<%= u.active ? 0 : 1 %>">
+                                            <button class="btn-table <%= u.active ? 'delete' : '' %>" type="submit"><%= u.active ? "Desactivar" : "Activar" %></button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="box-table">
+    <% if (typeof heading !== "undefined" && heading) { %>
+        <div class="box-header"><%= heading %></div>
+    <% } %>
+    <div class="box-body table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Fecha</th>
+                    <th>Pago</th>
+                    <th>Estado</th>
+                    <th class="right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (orders.length) { %>
+                    <% orders.forEach(order => { %>
+                        <tr data-href="/dashboard/orders/<%= order.id %>">
+                            <td><a href="/dashboard/orders/<%= order.id %>"><strong>#<%= order.orderNumber || order.id %></strong></a></td>
+                            <td>
+                                <strong><%= order.client %></strong>
+                                <div class="text-second"><%= order.email %></div>
+                            </td>
+                            <td><%= order.phone %></td>
+                            <td><%= fmt.dateTime(order.createdAt) %></td>
+                            <td><%= fmt.payment(order.paymentMethod) %></td>
+                            <td><%- include("status", { status: order.status }) %></td>
+                            <td class="right">
+                                <strong><%= fmt.money(order.total) %></strong>
+                                <div class="text-second"><%= order.totalItems %> artículo<%= order.totalItems === 1 ? "" : "s" %></div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="7" class="empty">No hay pedidos para mostrar</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,64 +1,34 @@
-const pool = require("../db/pool");
 const dashboardService = require("../services/dashboardService");
+const orderService = require("../services/orderService");
 const notificationService = require("../services/notificationService");
-const webhookService = require("../services/webhookService");
+const activityService = require("../services/activityService");
 
-exports.dashboard = async (req, res, next) => {
-  try {
-    const [products, dashboardStats, orderTickets, recentOrdersTable] =
-      await Promise.all([
-        dashboardService.getLatestProducts(),
-        dashboardService.getOrderStats(),
-        dashboardService.getRecentOrders(),
-        dashboardService.getRecentOrdersTable(),
-      ]);
+exports.index = async (req, res) => {
+  const [stats, bestSellers, tickets, recent] = await Promise.all([
+    dashboardService.getStats(),
+    dashboardService.getBestSellers(),
+    // Lo que hay que preparar: pendientes y pagados sin enviar.
+    orderService.listWithItems({ limit: 6, statuses: ["pending", "paid"] }),
+    orderService.list({ limit: 10 }),
+  ]);
 
-    const user = req.user; 
-
-    res.render("main", {
-      title: "Dashboard",
-      products,
-      dashboardStats,
-      orderTickets,
-      recentOrdersTable,
-      user, 
-    });
-  } catch (err) {
-    next(err);
-  }
+  res.render("dashboard", {
+    title: "Panel",
+    stats,
+    bestSellers,
+    tickets,
+    recentOrders: recent.orders,
+  });
 };
 
-exports.adminOrders = async (req, res, next) => {
-  try {
-    const { id } = req.params;
+exports.notifications = async (req, res) => {
+  const [notifications, activity] = await Promise.all([
+    notificationService.getNotifications(50),
+    activityService.recent(30),
+  ]);
+  res.render("notifications", { title: "Notificaciones", notifications, activity });
+};
 
-    const { rowCount } = await pool.query(
-      `
-      UPDATE orders
-      SET
-        status = 'paid',
-        paid_at = NOW()
-      WHERE id = $1
-        AND status = 'pending'
-      `,
-      [id],
-    );
-
-    if (rowCount === 0) {
-      return res.status(400).json({
-        ok: false,
-        message: "El pedido no existe o ya fue aprobado",
-      });
-    }
-
-    await notificationService.createActivity(req.user?.id || 1, "order_paid", {
-      orderId: id,
-    });
-
-    await webhookService.notifySinpePaid(id);
-
-    res.json({ ok: true });
-  } catch (err) {
-    next(err);
-  }
+exports.notificationsApi = async (req, res) => {
+  res.json(await notificationService.getNotifications(10));
 };

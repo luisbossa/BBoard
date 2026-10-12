@@ -1,81 +1,54 @@
-<%- include("partials/header") %>
-
-    <div class="main-content">
-
-        <div class="box">
-
-            <div class="dashboard-card-header header-flex">
-
-                <div class="notifications-title">
-                    <span class="material-symbols-rounded">notifications</span>
-                    <span>Notificaciones</span>
-                </div>
-
-                <div class="notifications-tools">
-                    <button class="btn-action">Marcar todas como leídas</button>
-                </div>
-
-            </div>
-
-
-            <div class="notifications-container">
-
-                <!-- LISTA -->
-
-                <ul class="notifications-list">
-
-                    <% if (notifications.length> 0) { %>
-
-                        <% notifications.forEach(n=> { %>
-
-                            <li class="notification-item <%= n.read ? '' : 'unread' %>">
-
-                                <div class="notification-icon">
-                                    <span class="material-symbols-rounded">
-                                        <%= n.icon || 'notifications' %>
-                                    </span>
+<%
+  const ACTION_LABELS = {
+    order_paid: "marcó como pagado el pedido", order_shipped: "marcó como enviado el pedido",
+    order_delivered: "marcó como entregado el pedido", order_cancelled: "canceló el pedido",
+    order_notes: "actualizó las notas del pedido",
+    product_created: "creó el producto", product_updated: "editó el producto", product_deleted: "eliminó el producto",
+    product_activated: "mostró el producto", product_deactivated: "ocultó el producto",
+    user_created: "creó un usuario", user_updated: "editó un usuario",
+    user_activated: "activó un usuario", user_deactivated: "desactivó un usuario",
+  };
+  const describe = (a) => {
+    const m = a.metadata || {};
+    if (m.orderId) return `<a href="/dashboard/orders/${m.orderId}">#${m.orderNumber || m.orderId}</a>`;
+    if (m.productId) return `<a href="/dashboard/products/${m.productId}/edit">${String(m.name || m.productId).replace(/</g, "&lt;")}</a>`;
+    return "";
+  };
+%>
+<div class="main-content">
+    <div class="row">
+        <div class="col-6 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Pedidos (últimos movimientos)</div>
+                <ul class="notification-page-list">
+                    <% notifications.items.forEach(n => { %>
+                        <li>
+                            <a href="/dashboard/orders/<%= n.orderId %>" class="notification-item <%= n.type %>">
+                                <span class="material-symbols-rounded"><%= n.icon %></span>
+                                <div>
+                                    <p><strong><%= n.message %></strong></p>
+                                    <small><%= fmt.money(n.total) %> · <%= fmt.payment(n.paymentMethod) %> · <%= fmt.dateTime(n.date) %></small>
                                 </div>
-
-                                <div class="notification-content">
-
-                                    <div class="notification-top">
-
-                                        <strong class="notification-title">
-                                            <%= n.title %>
-                                        </strong>
-
-                                        <span class="notification-time">
-                                            <%= new Date(n.date).toLocaleString() %>
-                                        </span>
-
-                                    </div>
-
-                                    <div class="notification-text">
-                                        <%= n.message %>
-                                    </div>
-
-                                </div>
-
-                            </li>
-
-                            <% }) %>
-
-                                <% } else { %>
-
-                                    <div class="notifications-empty">
-
-                                        <span class="material-symbols-rounded">notifications_off</span>
-
-                                        <p>No hay notificaciones</p>
-
-                                    </div>
-
-                                    <% } %>
-
+                            </a>
+                        </li>
+                    <% }) %>
                 </ul>
-
             </div>
-
         </div>
-
+        <div class="col-6 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="dashboard-card-header">Actividad del equipo</div>
+                <% if (activity.length) { %>
+                    <ul class="history">
+                        <% activity.forEach(a => { %>
+                            <li><strong><%= a.full_name %></strong> <%= ACTION_LABELS[a.action] || a.action %> <%- describe(a) %>
+                                <span class="text-second">· <%= fmt.dateTime(a.created_at) %></span></li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p class="empty">Sin actividad registrada</p>
+                <% } %>
+            </div>
+        </div>
     </div>
+</div>

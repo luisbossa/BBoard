@@ -1,23 +1,28 @@
 const nodemailer = require("nodemailer");
+const env = require("../config/env");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, // app password
-  },
-});
+/* ============================================================
+   CORREO (Gmail con contraseña de aplicación)
+   El transporte se crea al primer envío: en Vercel no conviene
+   abrir conexiones SMTP al importar el módulo.
+============================================================ */
+let transporter;
 
-transporter.verify((error) => {
-  if (error) {
-    console.error("❌ SMTP ERROR:", error);
-  } else {
-    console.log("✅ SMTP listo para enviar correos");
+function getTransporter() {
+  if (!env.mail.user || !env.mail.pass) {
+    throw new Error("Faltan MAIL_USER / MAIL_PASS para enviar correos");
   }
-});
+  transporter ??= nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: env.mail.user, pass: env.mail.pass },
+  });
+  return transporter;
+}
 
-module.exports = transporter;
-
+exports.send = ({ to, subject, html }) =>
+  getTransporter().sendMail({
+    from: `"100Puntadas · Panel" <${env.mail.user}>`,
+    to,
+    subject,
+    html,
+  });

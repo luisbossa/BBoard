@@ -1,0 +1,156 @@
+<link rel="stylesheet" href="<%= asset('/css/products.css') %>">
+<%
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const isNew = !product.id;
+  const action = isNew ? "/dashboard/products" : `/dashboard/products/${product.id}`;
+  const disabled = canEdit ? "" : "disabled";
+%>
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/products" class="btn-link">‹ Productos</a>
+        <h1><%= isNew ? "Nuevo producto" : product.name %></h1>
+    </div>
+
+    <form method="POST" action="<%= action %>" enctype="multipart/form-data" class="product-form" id="product-form">
+        <fieldset <%= disabled %> class="row">
+
+            <!-- DATOS -->
+            <div class="col-8 col-md-12 col-sm-12">
+                <div class="box stack-form">
+                    <div class="dashboard-card-header">Información</div>
+                    <div class="form-grid">
+                        <label>Nombre
+                            <input type="text" name="name" value="<%= product.name %>" required maxlength="120">
+                        </label>
+                        <label>Slug (URL en la tienda)
+                            <input type="text" name="slug" value="<%= product.slug %>" maxlength="60" placeholder="se genera del nombre">
+                        </label>
+                        <label>Tipo
+                            <select name="product_type" id="product-type">
+                                <% types.forEach(t => { %>
+                                    <option value="<%= t %>" <%= product.product_type === t ? "selected" : "" %>><%= fmt.PRODUCT_TYPE[t] %></option>
+                                <% }) %>
+                            </select>
+                        </label>
+                        <label>Precio (₡)
+                            <input type="number" name="price" value="<%= product.price %>" min="0" step="1" required>
+                        </label>
+                        <label>Precio anterior (₡) <span class="text-second">— si está en oferta</span>
+                            <input type="number" name="old_price" value="<%= product.old_price ?? '' %>" min="0" step="1">
+                        </label>
+                        <label class="check">
+                            <input type="checkbox" name="discount" value="1" <%= product.discount === 1 ? "checked" : "" %>>
+                            Oferta especial (no aplica la promo "lleva 2 y ahorra 15%")
+                        </label>
+                    </div>
+                    <label>Descripción
+                        <textarea name="description" rows="3"><%= product.description || "" %></textarea>
+                    </label>
+                    <label>Descripción secundaria
+                        <textarea name="description2" rows="2"><%= product.description2 || "" %></textarea>
+                    </label>
+                </div>
+
+                <!-- IMÁGENES -->
+                <div class="box stack-form">
+                    <div class="dashboard-card-header">Imágenes <span class="text-second">— la primera es la principal; arrastra para ordenar</span></div>
+                    <ul class="gallery" id="gallery">
+                        <% product.images.forEach(img => { %>
+                            <li draggable="true">
+                                <img src="<%= fmt.storeImage(img) %>" alt="">
+                                <input type="hidden" name="images" value="<%= img %>">
+                                <button type="button" class="gallery-remove" aria-label="Quitar imagen">×</button>
+                            </li>
+                        <% }) %>
+                    </ul>
+                    <label class="upload">
+                        <span class="material-symbols-rounded">add_photo_alternate</span>
+                        Agregar imágenes (JPG, PNG, WEBP · máx. 4 MB c/u)
+                        <input type="file" name="new_images" accept="image/jpeg,image/png,image/webp,image/avif" multiple id="new-images">
+                    </label>
+                    <div class="gallery new" id="new-preview"></div>
+                </div>
+
+                <!-- ESTILOS (solo bikini) -->
+                <div class="box stack-form" id="styles-box" <%= product.product_type === "bikini" ? "" : "hidden" %>>
+                    <div class="dashboard-card-header">Coberturas del bottom</div>
+                    <div id="styles-list">
+                        <% product.styles.forEach(s => { %>
+                            <div class="style-row">
+                                <input type="text" name="style_label" value="<%= s.label %>" placeholder="Nombre (ej. REGULAR)">
+                                <input type="text" name="style_image" value="<%= s.image || '' %>" placeholder="Imagen (/images/regular.png)">
+                                <button type="button" class="btn-table delete" data-remove-row>Quitar</button>
+                            </div>
+                        <% }) %>
+                    </div>
+                    <button type="button" class="btn-table" id="add-style">+ Agregar cobertura</button>
+                </div>
+            </div>
+
+            <!-- LATERAL -->
+            <div class="col-4 col-md-12 col-sm-12">
+                <div class="box stack-form">
+                    <div class="dashboard-card-header">Publicación</div>
+                    <label class="check">
+                        <input type="checkbox" name="active" value="1" <%= product.active ? "checked" : "" %>>
+                        Visible en la tienda
+                    </label>
+
+                    <div class="field-title">Inventario</div>
+                    <label class="check">
+                        <input type="radio" name="stock_mode" value="unlimited" <%= product.stock === null ? "checked" : "" %>>
+                        Bajo pedido (sin límite)
+                    </label>
+                    <label class="check">
+                        <input type="radio" name="stock_mode" value="tracked" <%= product.stock !== null ? "checked" : "" %>>
+                        Controlar unidades
+                    </label>
+                    <input type="number" name="stock" min="0" value="<%= product.stock ?? 0 %>" id="stock-input"
+                        aria-label="Unidades en stock">
+                    <p class="hint">0 unidades = agotado.</p>
+
+                    <div class="field-title">Tallas</div>
+                    <div class="chips">
+                        <% sizes.forEach(s => { %>
+                            <label class="chip"><input type="checkbox" name="sizes" value="<%= s %>" <%= product.sizes.includes(s) ? "checked" : "" %>> <%= s %></label>
+                        <% }) %>
+                    </div>
+
+                    <div class="field-title">Colecciones</div>
+                    <% collections.forEach(c => { %>
+                        <label class="check">
+                            <input type="checkbox" name="collections" value="<%= c.id %>" <%= product.collectionIds.includes(c.id) ? "checked" : "" %>>
+                            <%= c.name %> <span class="text-second">(<%= c.products %>)</span>
+                        </label>
+                    <% }) %>
+                </div>
+
+                <% if (canEdit) { %>
+                    <div class="box form-actions">
+                        <button type="submit" class="btn-primary">Guardar</button>
+                        <% if (!isNew) { %>
+                            <a href="<%= storeUrl %>/product/<%= product.slug %>" target="_blank" rel="noopener" class="btn-link">Ver en tienda ↗</a>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </fieldset>
+    </form>
+
+    <% if (canEdit && !isNew) { %>
+        <form method="POST" action="/dashboard/products/<%= product.id %>/delete" class="danger-zone"
+            data-confirm="Si el producto tiene ventas se ocultará en lugar de eliminarse. ¿Continuar?">
+            <button type="submit" class="btn-table delete">Eliminar producto</button>
+        </form>
+    <% } %>
+</div>
+
+<template id="style-template">
+    <div class="style-row">
+        <input type="text" name="style_label" placeholder="Nombre (ej. REGULAR)">
+        <input type="text" name="style_image" placeholder="Imagen (/images/regular.png)">
+        <button type="button" class="btn-table delete" data-remove-row>Quitar</button>
+    </div>
+</template>
+
+<script src="<%= asset('/js/product-form.js') %>"></script>

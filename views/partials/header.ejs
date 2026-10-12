@@ -1,44 +1,39 @@
 <div class="main-header">
     <div class="mobile-toggle" id="mobile-toggle">
-        <button id="mobile-btn" class="mobile-btn">
+        <button type="button" id="mobile-btn" class="mobile-btn" aria-label="Abrir menú">
             <span class="material-symbols-rounded">menu</span>
         </button>
     </div>
 
-    <button id="sidebar-btn" class="sidebar-btn">
+    <button type="button" id="sidebar-btn" class="sidebar-btn" aria-label="Contraer menú">
         <span class="material-symbols-rounded">menu</span>
     </button>
 
     <div class="user-div">
-
-        <!-- NOTIFICATIONS -->
-        <div class="notification-button" id="notificationBtn">
+        <!-- NOTIFICACIONES (se cargan desde /dashboard/api/notifications) -->
+        <div class="notification-button" id="notificationBtn" role="button" tabindex="0" aria-label="Notificaciones">
             <span class="material-symbols-rounded">notifications</span>
-            <div class="notification-badge">0</div>
+            <div class="notification-badge hidden">0</div>
 
-            <!-- DROPDOWN -->
             <div class="notification-dropdown">
                 <div class="notification-header">
                     <span>Notificaciones</span>
-                    <small>0 nuevas</small>
+                    <small></small>
                 </div>
-
                 <ul class="notification-list"></ul>
-
-                <a href="/dashboard/notifications" class="notification-footer">
-                    Ver todas
-                </a>
+                <a href="/dashboard/notifications" class="notification-footer">Ver toda la actividad</a>
             </div>
         </div>
 
-        <span class="user-name">100Puntadas</span>
-
-        <div class="user-img" style="background-image: url(/images/user-img.jpg)"></div>
+        <a href="/dashboard/profile" class="user-link">
+            <span class="user-name"><%= currentUser.full_name %></span>
+            <div class="user-img"
+                style="background-image: url('<%= currentUser.avatar || '/images/user-default.webp' %>')"></div>
+        </a>
 
         <a class="logout-btn" href="/logout">
             <span class="material-symbols-rounded tiny-icon">logout</span>
             <span class="logout-span">Salir</span>
         </a>
-
     </div>
 </div>
