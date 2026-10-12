@@ -1,0 +1,59 @@
+<%#
+  Gráfico de barras en SVG, generado en el servidor (sin librerías de JS).
+  Parámetros:
+    points: [{ label, title, values: [n, …] }]   — un grupo de barras por punto
+    series: [{ name, className }]                — una barra por serie (misma escala: un solo eje)
+    yFormat: "number" | "money"                  — formato del eje Y
+    labelEvery: n                                — mostrar 1 de cada n etiquetas del eje X
+    ariaLabel: texto para lectores de pantalla
+    width, height (opcionales)
+%>
+<%
+  const W = locals.width || 440, H = locals.height || 210;
+  const pad = { top: 10, right: 4, bottom: 26, left: yFormat === "money" ? 40 : 26 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // Eje Y con valores "redondos" (4 divisiones).
+  const rawMax = Math.max(1, ...points.flatMap(p => p.values));
+  const magnitude = 10 ** Math.floor(Math.log10(rawMax / 4));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * magnitude).find(s => s * 4 >= rawMax) || magnitude * 10;
+  const max = step * Math.ceil(rawMax / step);
+  const ticks = []; for (let v = 0; v <= max + step / 2; v += step) ticks.push(v);
+  const yLabel = (v) => yFormat === "money" ? (v >= 1000 ? `₡${Math.round(v / 1000)}k` : `₡${v}`) : v;
+
+  const y = (v) => pad.top + plotH - (v / max) * plotH;
+  const group = plotW / points.length;
+  const gap = series.length > 1 ? 3 : 0;
+  const barW = Math.max(2, Math.min(14, (group * (series.length > 1 ? 0.64 : 0.6)) / series.length));
+  const every = locals.labelEvery || 1;
+
+  // Barra con esquinas superiores redondeadas, apoyada en la base.
+  const bar = (x, value) => {
+    if (!value) return "";
+    const top = y(value), base = y(0), r = Math.min(4, barW / 2, base - top);
+    return `M${x},${base}V${top + r}Q${x},${top} ${x + r},${top}H${x + barW - r}Q${x + barW},${top} ${x + barW},${top + r}V${base}Z`;
+  };
+%>
+<svg class="chart__svg" viewBox="0 0 <%= W %> <%= H %>" role="img" aria-label="<%= ariaLabel %>">
+    <% ticks.forEach(v => { %>
+        <line class="chart__grid" x1="<%= pad.left %>" x2="<%= W - pad.right %>" y1="<%= y(v) %>" y2="<%= y(v) %>"></line>
+        <text class="chart__axis" x="<%= pad.left - 6 %>" y="<%= y(v) + 4 %>" text-anchor="end"><%= yLabel(v) %></text>
+    <% }) %>
+
+    <% points.forEach((p, i) => {
+         const gx = pad.left + i * group;
+         const start = gx + group / 2 - (series.length * barW + (series.length - 1) * gap) / 2; %>
+        <g class="chart__group" tabindex="0">
+            <title><%= p.title %></title>
+            <rect class="chart__hit" x="<%= gx %>" y="<%= pad.top %>" width="<%= group %>" height="<%= plotH %>" rx="4"></rect>
+            <% series.forEach((s, k) => { %>
+                <path class="chart__bar <%= s.className %>" d="<%= bar(start + k * (barW + gap), p.values[k]) %>"></path>
+            <% }) %>
+            <% if (i % every === 0) { %>
+                <text class="chart__axis" x="<%= gx + group / 2 %>" y="<%= H - 8 %>" text-anchor="middle"><%= p.label %></text>
+            <% } %>
+        </g>
+    <% }) %>
+    <line class="chart__baseline" x1="<%= pad.left %>" x2="<%= W - pad.right %>" y1="<%= y(0) %>" y2="<%= y(0) %>"></line>
+</svg>

@@ -31,6 +31,18 @@
             Los cambios se publican en la tienda en menos de 30 segundos. "Ocultar" quita el producto de la tienda
             sin borrarlo; el inventario se descuenta solo cuando un pedido pasa a pagado.
         </p>
+        <% if (campaign) { const day = (d) => new Date(`${d}T12:00:00Z`).toLocaleDateString("es-CR", { day: "numeric", month: "long", timeZone: "UTC" }); %>
+            <div class="promo-banner" role="status">
+                <span class="material-symbols-rounded" aria-hidden="true">sell</span>
+                <span>
+                    <strong><%= campaign.name %> (-<%= campaign.percent %>%)</strong>
+                    <%= campaign.status === "running" ? "activa" : "programada" %>
+                    del <%= day(campaign.start_date) %><%= campaign.ends_at ? ` al ${day(campaign.end_date)}` : "" %>.
+                    Los precios de esta lista son los normales; la tienda aplica el descuento.
+                </span>
+                <a href="/dashboard/promotions/<%= campaign.id %>/edit">Ver promoción</a>
+            </div>
+        <% } %>
     </div>
 
     <div class="box">
@@ -55,7 +67,7 @@
                         <tr class="<%= p.active ? '' : 'row-muted' %>">
                             <td>
                                 <a class="product-cell" href="/dashboard/products/<%= p.id %>/edit">
-                                    <img src="<%= fmt.storeImage(p.main_image) %>" alt="" loading="lazy">
+                                    <img src="<%= fmt.storeImage(p.main_image, 160) %>" alt="" width="46" height="46" loading="lazy" decoding="async">
                                     <div class="product-meta">
                                         <span class="product-name"><%= p.name %></span>
                                         <span class="product-sku"><%= p.slug %></span>

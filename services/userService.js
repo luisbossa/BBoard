@@ -38,10 +38,18 @@ function uniqueError(err) {
   return err;
 }
 
+/* Usuario de la sesión (lo usa requireAuth en cada petición). En la misma
+   consulta trae los contadores del menú lateral: un viaje a la base de
+   datos menos por página. */
 async function findActiveById(id) {
   if (!Number.isInteger(Number(id))) return null;
   const { rows } = await pool.query(
-    `SELECT ${PUBLIC_FIELDS} FROM users u
+    `SELECT ${PUBLIC_FIELDS},
+            (SELECT json_build_object(
+                      'pending', count(*) FILTER (WHERE status = 'pending'),
+                      'to_ship', count(*) FILTER (WHERE status = 'paid'))
+             FROM orders) AS nav_counts
+     FROM users u
      LEFT JOIN user_profiles up ON up.user_id = u.id
      WHERE u.id = $1 AND u.active`,
     [id],

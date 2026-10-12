@@ -102,4 +102,12 @@ async function expireAbandonedCardOrders() {
   return summary;
 }
 
-module.exports = { getIntent, listIntents, isPaidFor, verifyCardOrder, expireAbandonedCardOrders, ABANDON_HOURS };
+module.exports = {
+  request,
+  getIntent,
+  listIntents,
+  isPaidFor,
+  verifyCardOrder,
+  expireAbandonedCardOrders,
+  ABANDON_HOURS,
+};

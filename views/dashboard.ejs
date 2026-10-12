@@ -31,6 +31,7 @@
     const m = a.metadata || {};
     if (m.orderId) return { text: `#${m.orderNumber || m.orderId}`, href: `/dashboard/orders/${m.orderId}` };
     if (m.productId) return { text: m.name || `#${m.productId}`, href: `/dashboard/products/${m.productId}/edit` };
+    if (m.collectionId) return { text: m.name || `#${m.collectionId}`, href: `/dashboard/collections/${m.collectionId}/edit` };
     return null;
   };
 
@@ -219,7 +220,7 @@
                         <% bestSellers.forEach((p, i) => { %>
                             <li class="ranking__item">
                                 <span class="ranking__pos"><%= i + 1 %></span>
-                                <img class="ranking__img" src="<%= fmt.storeImage(p.image) %>" alt="" width="40" height="40" loading="lazy">
+                                <img class="ranking__img" src="<%= fmt.storeImage(p.image, 160) %>" alt="" width="40" height="40" loading="lazy" decoding="async">
                                 <div class="ranking__body">
                                     <% if (p.product_id) { %>
                                         <a class="ranking__name" href="/dashboard/products/<%= p.product_id %>/edit"><%= p.name %></a>

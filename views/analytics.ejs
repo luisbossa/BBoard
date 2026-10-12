@@ -38,8 +38,25 @@
 
     <div class="box">
         <div class="dashboard-card-header">Ingresos por <%= bucket === "week" ? "semana" : "día" %></div>
-        <div id="daily-chart" class="apex-chart" role="img"
-            aria-label="Ingresos por <%= bucket === 'week' ? 'semana' : 'día' %> de los últimos <%= range %> días"></div>
+        <%
+          const dayLabel = (d) => `${d.slice(8, 10)}/${d.slice(5, 7)}`;
+          const points = daily.map(d => ({
+            label: dayLabel(d.day),
+            title: `${bucket === "week" ? "Semana del " : ""}${dayLabel(d.day)}: ${fmt.money(d.revenue)} · ${d.sales} venta${d.sales === 1 ? "" : "s"}`,
+            values: [d.revenue],
+          }));
+        %>
+        <figure class="chart">
+            <%- include("partials/bar-chart", {
+                points,
+                series: [{ name: "Ingresos", className: "chart__bar--single" }],
+                yFormat: "money",
+                labelEvery: Math.max(1, Math.ceil(points.length / 8)),
+                width: 1100,
+                height: 300,
+                ariaLabel: `Ingresos por ${bucket === "week" ? "semana" : "día"} de los últimos ${range} días. Ver tabla para los valores.`,
+            }) %>
+        </figure>
         <details class="table-view">
             <summary>Ver como tabla</summary>
             <table class="data-table compact">
@@ -91,46 +108,3 @@
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.54.1/dist/apexcharts.min.js"></script>
-<script>
-    (function () {
-        const weekly = <%- JSON.stringify(bucket === "week") %>;
-        const daily = <%- JSON.stringify(daily).replace(/</g, "\\u003c") %>;
-        const money = (n) => "₡" + Math.round(n).toLocaleString("es-CR").replace(/\s/g, ".");
-        const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-
-        function render() {
-            const el = document.getElementById("daily-chart");
-            el.innerHTML = "";
-            const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-            new ApexCharts(el, {
-                chart: { type: "bar", height: 280, toolbar: { show: false }, fontFamily: "inherit", foreColor: css("--text-2"), background: "transparent" },
-                theme: { mode: isDark ? "dark" : "light" },
-                series: [{ name: "Ingresos", data: daily.map((d) => ({ x: d.day, y: d.revenue, sales: d.sales })) }],
-                colors: [css("--accent")],
-                plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: "end", columnWidth: daily.length > 40 ? "80%" : "60%" } },
-                dataLabels: { enabled: false },
-                grid: { borderColor: css("--border"), strokeDashArray: 3, xaxis: { lines: { show: false } } },
-                xaxis: {
-                    type: "category",
-                    tickAmount: Math.min(daily.length, 10),
-                    labels: { rotate: 0, hideOverlappingLabels: true, formatter: (v) => v ? v.slice(8, 10) + "/" + v.slice(5, 7) : v },
-                    axisTicks: { show: false },
-                },
-                yaxis: { labels: { formatter: (v) => v >= 1000 ? "₡" + Math.round(v / 1000) + "k" : "₡" + v } },
-                tooltip: {
-                    custom: ({ dataPointIndex }) => {
-                        const d = daily[dataPointIndex];
-                        return `<div class="chart-tip"><strong>${weekly ? "Semana del " : ""}${d.day}</strong><br>${money(d.revenue)} · ${d.sales} venta${d.sales === 1 ? "" : "s"}</div>`;
-                    },
-                },
-                states: { hover: { filter: { type: "darken", value: 0.85 } } },
-            }).render();
-        }
-
-        render();
-        // Repinta al cambiar de tema (claro / oscuro).
-        new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    })();
-</script>

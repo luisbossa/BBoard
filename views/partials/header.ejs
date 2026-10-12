@@ -1,4 +1,7 @@
 <%
+  // Contador de la campana: lo que requiere acción (mismo dato que el menú lateral).
+  const nav = locals.navCounts || { pending: 0, to_ship: 0 };
+  const actionable = nav.pending + nav.to_ship;
   const initials = currentUser.full_name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
   const themes = [["light", "light_mode", "Claro"], ["dark", "dark_mode", "Oscuro"], ["system", "contrast", "Según el sistema"]];
 %>
@@ -41,12 +44,12 @@
             <button type="button" class="icon-btn" data-dropdown-toggle aria-haspopup="true" aria-expanded="false"
                 aria-label="Notificaciones" title="Notificaciones">
                 <span class="material-symbols-rounded" aria-hidden="true">notifications</span>
-                <span class="icon-btn__badge" data-notif-badge hidden></span>
+                <span class="icon-btn__badge" data-notif-badge <%= actionable ? "" : "hidden" %>><%= actionable > 99 ? "99+" : actionable %></span>
             </button>
             <div class="dropdown__panel dropdown__panel--wide">
                 <div class="dropdown__header">
                     <strong>Notificaciones</strong>
-                    <small data-notif-summary></small>
+                    <small data-notif-summary><%= nav.pending %> por cobrar · <%= nav.to_ship %> por enviar</small>
                 </div>
                 <ul class="notif-list" data-notif-list>
                     <li class="notif-list__empty">Cargando…</li>

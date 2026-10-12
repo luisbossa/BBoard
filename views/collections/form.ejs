@@ -1,0 +1,111 @@
+<%
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const isNew = !collection.id;
+  const badge = (p) => !p.active ? ["inactive", "Oculto"] : p.stock === 0 ? ["cancelled", "Agotado"] : null;
+%>
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/collections" class="btn-link">‹ Colecciones</a>
+        <h1><%= isNew ? "Nueva colección" : collection.name %></h1>
+    </div>
+
+    <form method="POST" action="<%= isNew ? '/dashboard/collections' : `/dashboard/collections/${collection.id}` %>"
+        id="collection-form">
+        <fieldset <%= canEdit ? "" : "disabled" %> class="collection-grid">
+
+            <!-- Datos -->
+            <div class="box stack-form">
+                <div class="dashboard-card-header">Datos</div>
+                <label>Nombre
+                    <input type="text" name="name" value="<%= collection.name %>" required maxlength="120"
+                        placeholder="Ej. Nueva temporada">
+                </label>
+                <label>Slug <span class="text-second">— ancla del menú de la tienda (/#slug)</span>
+                    <input type="text" name="slug" value="<%= collection.slug %>" maxlength="60" placeholder="se genera del nombre">
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="active" value="1" <%= collection.active ? "checked" : "" %>>
+                    Visible en la tienda
+                </label>
+                <% if (!isNew) { %>
+                    <a class="btn-link" href="<%= storeUrl %>/#<%= collection.slug %>" target="_blank" rel="noopener">Ver en la tienda ↗</a>
+                <% } %>
+            </div>
+
+            <!-- Productos -->
+            <div class="box stack-form">
+                <div class="dashboard-card-header header-flex">
+                    <span>Productos <span class="text-second" data-count>(<%= collection.products.length %>)</span></span>
+                    <span class="text-second">Arrastra o usa las flechas para ordenar</span>
+                </div>
+
+                <ol class="sortable" id="collection-products" data-sortable>
+                    <% collection.products.forEach(p => { const b = badge(p); %>
+                        <li class="sortable__item" draggable="<%= canEdit %>" data-id="<%= p.id %>">
+                            <span class="sortable__handle material-symbols-rounded" aria-hidden="true">drag_indicator</span>
+                            <img class="sortable__img" src="<%= fmt.storeImage(p.main_image, 160) %>" alt="" width="40" height="40" loading="lazy" decoding="async">
+                            <span class="sortable__title"><%= p.name %></span>
+                            <% if (b) { %><span class="status <%= b[0] %>"><%= b[1] %></span><% } %>
+                            <input type="hidden" name="product_ids" value="<%= p.id %>">
+                            <div class="sortable__actions">
+                                <button type="button" class="icon-btn icon-btn--sm" data-move="up" aria-label="Subir <%= p.name %>">
+                                    <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_up</span></button>
+                                <button type="button" class="icon-btn icon-btn--sm" data-move="down" aria-label="Bajar <%= p.name %>">
+                                    <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_down</span></button>
+                                <button type="button" class="icon-btn icon-btn--sm" data-remove aria-label="Quitar <%= p.name %> de la colección">
+                                    <span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+                            </div>
+                        </li>
+                    <% }) %>
+                </ol>
+                <p class="empty" data-empty <%= collection.products.length ? "hidden" : "" %>>
+                    Esta colección no tiene productos: no aparecerá en la tienda.
+                </p>
+
+                <div class="add-product">
+                    <label class="visually-hidden" for="add-product-select">Agregar producto</label>
+                    <select id="add-product-select" class="search-input">
+                        <option value="">Agregar un producto…</option>
+                        <% collection.available.forEach(p => { %>
+                            <option value="<%= p.id %>" data-image="<%= fmt.storeImage(p.main_image, 160) %>"
+                                data-active="<%= p.active %>" data-stock="<%= p.stock ?? '' %>">
+                                <%= p.name %><%= p.active ? "" : " (oculto)" %>
+                            </option>
+                        <% }) %>
+                    </select>
+                    <button type="button" class="btn btn--ghost" id="add-product-btn">
+                        <span class="material-symbols-rounded" aria-hidden="true">add</span> Agregar
+                    </button>
+                </div>
+                <p class="hint">Los productos ocultos no aparecen en la tienda aunque estén en la colección.</p>
+            </div>
+        </fieldset>
+
+        <% if (canEdit) { %>
+            <div class="form-actions sticky-actions">
+                <button type="submit" class="btn btn--primary">Guardar colección</button>
+                <a href="/dashboard/collections" class="btn-link">Cancelar</a>
+            </div>
+        <% } %>
+    </form>
+</div>
+
+<template id="product-row-template">
+    <li class="sortable__item" draggable="true">
+        <span class="sortable__handle material-symbols-rounded" aria-hidden="true">drag_indicator</span>
+        <img class="sortable__img" alt="" width="40" height="40">
+        <span class="sortable__title"></span>
+        <span class="status" hidden></span>
+        <input type="hidden" name="product_ids">
+        <div class="sortable__actions">
+            <button type="button" class="icon-btn icon-btn--sm" data-move="up" aria-label="Subir">
+                <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_up</span></button>
+            <button type="button" class="icon-btn icon-btn--sm" data-move="down" aria-label="Bajar">
+                <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_down</span></button>
+            <button type="button" class="icon-btn icon-btn--sm" data-remove aria-label="Quitar de la colección">
+                <span class="material-symbols-rounded" aria-hidden="true">close</span></button>
+        </div>
+    </li>
+</template>
+
+<script src="<%= asset('/js/collection-form.js') %>"></script>

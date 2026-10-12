@@ -1,0 +1,72 @@
+<% const canEdit = ["admin", "manager"].includes(currentUser.role); %>
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Colecciones <span class="text-second">(<%= collections.length %>)</span></span>
+            <% if (canEdit) { %>
+                <a href="/dashboard/collections/new" class="btn btn--primary">
+                    <span class="material-symbols-rounded" aria-hidden="true">add</span> Nueva colección
+                </a>
+            <% } %>
+        </div>
+        <p class="hint">
+            <span class="material-symbols-rounded tiny-icon" aria-hidden="true">info</span>
+            Son las secciones de la página principal de 100puntadas y los enlaces de su menú, en este orden.
+            La tienda solo muestra las colecciones visibles que tengan productos visibles. Los cambios se ven en menos de 30 segundos.
+        </p>
+    </div>
+
+    <% if (!collections.length) { %>
+        <div class="box empty">Todavía no hay colecciones.</div>
+    <% } else { %>
+        <ol class="sortable sortable--static">
+            <% collections.forEach((c, i) => { const shown = c.active && c.visible > 0; %>
+                <li class="sortable__item <%= shown ? '' : 'row-muted' %>">
+                    <% if (canEdit) { %>
+                        <div class="sortable__order">
+                            <form method="POST" action="/dashboard/collections/<%= c.id %>/move" class="inline-form">
+                                <input type="hidden" name="direction" value="up">
+                                <button class="icon-btn icon-btn--sm" type="submit" <%= i === 0 ? "disabled" : "" %>
+                                    aria-label="Subir <%= c.name %>" title="Subir">
+                                    <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_up</span>
+                                </button>
+                            </form>
+                            <form method="POST" action="/dashboard/collections/<%= c.id %>/move" class="inline-form">
+                                <input type="hidden" name="direction" value="down">
+                                <button class="icon-btn icon-btn--sm" type="submit" <%= i === collections.length - 1 ? "disabled" : "" %>
+                                    aria-label="Bajar <%= c.name %>" title="Bajar">
+                                    <span class="material-symbols-rounded" aria-hidden="true">keyboard_arrow_down</span>
+                                </button>
+                            </form>
+                        </div>
+                    <% } %>
+                    <span class="sortable__pos"><%= i + 1 %></span>
+                    <div class="sortable__body">
+                        <a class="sortable__title" href="/dashboard/collections/<%= c.id %>/edit"><%= c.name %></a>
+                        <span class="text-second">
+                            <%= fmt.plural(c.products, "producto", "productos") %>
+                            <% if (c.products !== c.visible) { %>· <%= c.visible %> visibles<% } %>
+                            · <a href="<%= storeUrl %>/#<%= c.slug %>" target="_blank" rel="noopener">/#<%= c.slug %></a>
+                        </span>
+                    </div>
+                    <span class="status <%= shown ? 'active' : 'inactive' %>">
+                        <%= !c.active ? "Oculta" : c.visible ? "Visible" : "Sin productos visibles" %>
+                    </span>
+                    <div class="table-actions">
+                        <a class="btn-table" href="/dashboard/collections/<%= c.id %>/edit"><%= canEdit ? "Editar" : "Ver" %></a>
+                        <% if (canEdit) { %>
+                            <form method="POST" action="/dashboard/collections/<%= c.id %>/toggle" class="inline-form">
+                                <input type="hidden" name="active" value="<%= c.active ? 0 : 1 %>">
+                                <button class="btn-table" type="submit"><%= c.active ? "Ocultar" : "Mostrar" %></button>
+                            </form>
+                            <form method="POST" action="/dashboard/collections/<%= c.id %>/delete" class="inline-form"
+                                data-confirm="Se eliminará la colección &quot;<%= c.name %>&quot; de la tienda. Sus productos no se borran.">
+                                <button class="btn-table delete" type="submit">Eliminar</button>
+                            </form>
+                        <% } %>
+                    </div>
+                </li>
+            <% }) %>
+        </ol>
+    <% } %>
+</div>

@@ -49,6 +49,8 @@ npm run dev                     # http://localhost:3001
 | `npm run migrate -- --status` | Lista migraciones aplicadas y pendientes |
 | `npm run migrate -- --dry-run` | Prueba las pendientes y revierte (no guarda nada) |
 | `npm run create-admin -- usuario clave "Nombre" correo` | Crea o restablece un administrador |
+| `npm run icons` | Regenera `config/icons.json` (íconos que se piden a Google Fonts). Correrlo al usar un ícono nuevo; en desarrollo el servidor avisa si falta alguno |
+| `npm run reconcile-onvo [-- --dry-run]` | Concilia pedidos con tarjeta contra ONVO |
 
 **Antes de migrar en producción:** `npm run backup` y, si es posible, un branch de Neon.
 

@@ -1,0 +1,274 @@
+/* ============================================================
+   ACTIVIDAD (views/activity.ejs) — línea de tiempo agrupada por día.
+   Bloques: .activity · .today · .day · .timeline-feed · .event
+============================================================ */
+.activity {
+  display: grid;
+  gap: 18px;
+  max-width: 980px;
+}
+
+.activity__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Resumen de hoy ---------- */
+.today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.today__label {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.today__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.today__chip strong {
+  color: var(--text);
+}
+
+.today__icon {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+/* ---------- Filtros ---------- */
+.activity__filters {
+  justify-self: start;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.activity__filters .segmented__option {
+  white-space: nowrap;
+}
+
+.activity__filters .segmented__option .material-symbols-rounded {
+  font-size: 18px;
+  color: inherit;
+}
+
+.segmented__option[aria-current="page"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.segmented__option[aria-current="page"] .segmented__count {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------- Días ---------- */
+.day__label {
+  position: sticky;
+  top: 64px; /* debajo del header fijo */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 0;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+
+.day__count {
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--muted-bg);
+  color: var(--muted-text);
+  font-size: 11px;
+}
+
+/* ---------- Línea de tiempo ---------- */
+.timeline-feed {
+  list-style: none;
+  position: relative;
+  padding: 6px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.event {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+  padding: 12px 18px;
+}
+
+/* Línea vertical que une los íconos */
+.event:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 35px;
+  top: 48px;
+  bottom: -12px;
+  width: 2px;
+  background: var(--border);
+}
+
+.event:hover {
+  background: var(--surface-hover);
+}
+
+.event__icon {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 19px;
+}
+
+/* Tonos (compartidos con .today__icon) */
+.event__icon--accent, .today__icon--accent { background: var(--accent-soft); color: var(--accent); }
+.event__icon--info, .today__icon--info { background: var(--info-bg); color: var(--info-text); }
+.event__icon--success, .today__icon--success { background: var(--success-bg); color: var(--success-text); }
+.event__icon--warning, .today__icon--warning { background: var(--warning-bg); color: var(--warning-text); }
+.event__icon--danger, .today__icon--danger { background: var(--danger-bg); color: var(--danger-text); }
+.event__icon--muted, .today__icon--muted { background: var(--muted-bg); color: var(--muted-text); }
+
+.event__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.event__text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.event__actor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+
+.event__actor strong {
+  color: var(--text);
+}
+
+.event__avatar {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  color: var(--on-accent);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.event__avatar.material-symbols-rounded {
+  font-size: 14px;
+}
+
+.event__avatar--store {
+  background: var(--info-bg);
+  color: var(--info-text);
+}
+
+.event__avatar--system {
+  background: var(--muted-bg);
+  color: var(--muted-text);
+}
+
+.event__target {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.event__target:hover {
+  text-decoration: underline;
+}
+
+.event__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.event__reason {
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+}
+
+.event__time {
+  padding-top: 8px;
+  font-size: 12px;
+  color: var(--text-3);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Paginación ---------- */
+.activity__pager {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .event {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .event:not(:last-child)::before {
+    left: 27px;
+  }
+
+  .event__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .event__time {
+    grid-column: 2;
+    padding-top: 0;
+  }
+}

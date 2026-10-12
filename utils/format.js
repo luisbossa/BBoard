@@ -112,6 +112,16 @@ const ACTIVITY = {
   product_deleted: "eliminó el producto",
   product_activated: "mostró el producto",
   product_deactivated: "ocultó el producto",
+  collection_created: "creó la colección",
+  collection_updated: "editó la colección",
+  collection_deleted: "eliminó la colección",
+  collection_activated: "mostró la colección",
+  collection_deactivated: "ocultó la colección",
+  collection_reordered: "cambió el orden de la colección",
+  campaign_created: "creó la promoción",
+  campaign_updated: "editó la promoción",
+  campaign_deleted: "eliminó la promoción",
+  campaign_deactivated: "desactivó la promoción",
   user_created: "creó un usuario",
   user_updated: "editó un usuario",
   user_activated: "activó un usuario",
@@ -124,10 +134,12 @@ const payment = (value) => PAYMENT_METHOD[value] || value || "—";
 // Las imágenes del catálogo son rutas de la tienda (/images/...) y se sirven
 // a través del panel (/media/images/...), ver routes/mediaRoute.js.
 // Las subidas desde el panel ya son URLs absolutas de Vercel Blob.
-const storeImage = (src) => {
+// width (160 | 400): pide la versión WebP reducida que genera la tienda
+// (public/images/opt) en vez de la foto original de cientos de KB.
+const storeImage = (src, width) => {
   if (!src) return "/images/user-default.webp";
   if (/^https?:\/\//.test(src)) return src;
-  return `/media${src.startsWith("/") ? "" : "/"}${src}`;
+  return `/media${src.startsWith("/") ? "" : "/"}${src}${width ? `?w=${width}` : ""}`;
 };
 
 module.exports = {

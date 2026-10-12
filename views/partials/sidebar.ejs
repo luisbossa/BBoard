@@ -10,11 +10,16 @@
       { href: "/dashboard/orders", icon: "receipt_long", label: "Pedidos", badge: toHandle,
         badgeLabel: `${counts.pending} por cobrar, ${counts.to_ship} por enviar` },
       { href: "/dashboard/products", icon: "apparel", label: "Productos" },
+      { href: "/dashboard/collections", icon: "collections_bookmark", label: "Colecciones" },
+      { href: "/dashboard/promotions", icon: "sell", label: "Promociones" },
       { href: "/dashboard/customers", icon: "group", label: "Clientes" },
     ] },
     { title: "Equipo", links: [
       { href: "/dashboard/notifications", icon: "history", label: "Actividad" },
-      ...(currentUser.role === "admin" ? [{ href: "/dashboard/users", icon: "admin_panel_settings", label: "Usuarios" }] : []),
+      ...(currentUser.role === "admin" ? [
+        { href: "/dashboard/users", icon: "admin_panel_settings", label: "Usuarios" },
+        { href: "/dashboard/settings/integrations", icon: "hub", label: "Integraciones" },
+      ] : []),
     ] },
   ];
   const path = originalUrl.split("?")[0];
@@ -23,8 +28,8 @@
 <aside id="sidebar" class="sidebar" aria-label="Navegación principal">
     <div class="sidebar__brand">
         <a href="/dashboard" class="sidebar__home" aria-label="BBoard, ir al panel">
-            <img class="sidebar__logo" src="/images/logo.png" alt="" width="150" height="23">
-            <img class="sidebar__logo-mini" src="/images/minilogo.png" alt="" width="36" height="30">
+            <img class="sidebar__logo" src="/images/logo.webp" alt="" width="150" height="23">
+            <img class="sidebar__logo-mini" src="/images/minilogo.webp" alt="" width="36" height="30">
         </a>
         <button type="button" class="icon-btn sidebar__close" id="sidebar-close" aria-label="Cerrar menú">
             <span class="material-symbols-rounded" aria-hidden="true">close</span>

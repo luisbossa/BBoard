@@ -1,0 +1,45 @@
+<%
+  const ICON = { true: "check_circle", false: "error", null: "help" };
+  const failing = checks.filter(c => c.ok === false).length;
+%>
+<div class="main-content">
+    <div class="page-head">
+        <h1>Estado de integraciones</h1>
+        <p class="text-second">
+            Comprueba que la tienda, la base de datos, ONVO, el correo y las tareas automáticas estén conectados.
+            Ningún chequeo modifica datos ni envía correos.
+        </p>
+    </div>
+
+    <div class="callout-status <%= allOk ? 'is-ok' : 'is-error' %>" role="status">
+        <span class="material-symbols-rounded" aria-hidden="true"><%= allOk ? "verified" : "warning" %></span>
+        <div>
+            <strong><%= allOk ? "Todo funciona correctamente." : `${failing} ${failing === 1 ? "integración necesita" : "integraciones necesitan"} atención.` %></strong>
+            <span class="text-second">Revisado <%= fmt.dateTime(checkedAt) %></span>
+        </div>
+        <a class="btn btn--ghost btn--sm" href="/dashboard/settings/integrations">
+            <span class="material-symbols-rounded" aria-hidden="true">refresh</span> Volver a revisar
+        </a>
+    </div>
+
+    <ul class="checks">
+        <% checks.forEach(c => { %>
+            <li class="check check--<%= c.ok === true ? 'ok' : c.ok === false ? 'error' : 'unknown' %>">
+                <span class="check__icon material-symbols-rounded" aria-hidden="true"><%= ICON[c.ok] %></span>
+                <div class="check__body">
+                    <strong class="check__title"><%= c.title %></strong>
+                    <span class="check__detail"><%= c.detail %></span>
+                    <% if (c.fix) { %>
+                        <span class="check__fix"><strong>Cómo arreglarlo:</strong> <%= c.fix %></span>
+                    <% } %>
+                </div>
+                <span class="visually-hidden"><%= c.ok === true ? "Correcto" : c.ok === false ? "Con error" : "Sin determinar" %></span>
+            </li>
+        <% }) %>
+    </ul>
+
+    <p class="hint">
+        Las variables de entorno se cambian en Vercel (Settings → Environment Variables) y solo aplican
+        después de volver a desplegar el proyecto.
+    </p>
+</div>

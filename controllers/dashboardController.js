@@ -27,12 +27,10 @@ exports.index = async (req, res) => {
   });
 };
 
+// Línea de tiempo: pedidos de la tienda + acciones del equipo y del sistema.
 exports.notifications = async (req, res) => {
-  const [notifications, activity] = await Promise.all([
-    notificationService.getNotifications(50),
-    activityService.recent(30),
-  ]);
-  res.render("notifications", { title: "Notificaciones", notifications, activity });
+  const feed = await activityService.feed({ type: req.query.type, page: req.query.page });
+  res.render("activity", { title: "Actividad", ...feed });
 };
 
 exports.notificationsApi = async (req, res) => {

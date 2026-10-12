@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="<%= asset('/css/activity.css') %>">
+<%
+
+  const tabs = [
+    ["all", "Todo", "view_timeline"],
+    ["orders", "Pedidos", "receipt_long"],
+    ["catalog", "Catálogo", "apparel"],
+    ["team", "Equipo", "group"],
+    ["system", "Sistema", "smart_toy"],
+  ];
+  const summary = [
+    ["shopping_bag", "info", today.received, "pedidos nuevos"],
+    ["payments", "success", today.paid, "pagos confirmados"],
+    ["local_shipping", "info", today.shipped, "envíos"],
+    ["group", "accent", today.team, "acciones del equipo"],
+  ];
+  const url = (params) => {
+    const q = new URLSearchParams({ ...(filter !== "all" && { type: filter }), ...params });
+    return `/dashboard/notifications${q.size ? `?${q}` : ""}`;
+  };
+  const initials = (name) => name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  const EMPTY = {
+    all: "Todavía no hay actividad registrada.",
+    orders: "No hay movimientos de pedidos.",
+    catalog: "Nadie ha creado ni editado productos o colecciones todavía.",
+    team: "El equipo todavía no ha hecho cambios desde el panel.",
+    system: "El sistema todavía no ha hecho cambios automáticos (verificaciones con ONVO, cancelaciones).",
+  };
+%>
+<div class="main-content activity">
+    <header class="activity__head">
+        <div>
+            <h1 class="activity__title">Actividad</h1>
+            <p class="text-second">Lo que pasa en la tienda y lo que hace el equipo en el panel.</p>
+        </div>
+    </header>
+
+    <!-- Resumen de hoy -->
+    <section class="today" aria-label="Resumen de hoy">
+        <span class="today__label">Hoy</span>
+        <% summary.forEach(([icon, tone, value, label]) => { %>
+            <span class="today__chip">
+                <span class="today__icon today__icon--<%= tone %> material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+                <strong><%= value %></strong> <%= label %>
+            </span>
+        <% }) %>
+    </section>
+
+    <!-- Filtros -->
+    <nav class="segmented activity__filters" aria-label="Filtrar actividad">
+        <% tabs.forEach(([key, label, icon]) => { %>
+            <a class="segmented__option" href="<%= key === 'all' ? '/dashboard/notifications' : `/dashboard/notifications?type=${key}` %>"
+                <%- filter === key ? 'aria-current="page"' : "" %>>
+                <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+                <%= label %>
+                <span class="segmented__count"><%= counts[key] %></span>
+            </a>
+        <% }) %>
+    </nav>
+
+    <!-- Línea de tiempo -->
+    <% if (!items.length) { %>
+        <div class="panel empty-state">
+            <span class="material-symbols-rounded" aria-hidden="true">history</span>
+            <%= EMPTY[filter] %>
+        </div>
+    <% } else { %>
+        <% activityUi.groupByDay(items).forEach(group => { %>
+            <section class="day" aria-label="<%= group.label %>">
+                <h2 class="day__label"><%= group.label %> <span class="day__count"><%= group.items.length %></span></h2>
+                <ol class="timeline-feed">
+                    <% group.items.forEach(event => { const e = activityUi.present(event); %>
+                        <li class="event">
+                            <span class="event__icon event__icon--<%= e.tone %> material-symbols-rounded" aria-hidden="true"><%= e.icon %></span>
+                            <div class="event__body">
+                                <p class="event__text">
+                                    <span class="event__actor">
+                                        <% if (e.isStore) { %>
+                                            <span class="event__avatar event__avatar--store material-symbols-rounded" aria-hidden="true">storefront</span>
+                                        <% } else if (e.isSystem) { %>
+                                            <span class="event__avatar event__avatar--system material-symbols-rounded" aria-hidden="true">smart_toy</span>
+                                        <% } else { %>
+                                            <span class="event__avatar" aria-hidden="true"><%= initials(e.actor) %></span>
+                                        <% } %>
+                                        <strong><%= e.actor %></strong>
+                                    </span>
+                                    <%= e.text %>
+                                    <% if (e.target) { %><a class="event__target" href="<%= e.target.href %>"><%= e.target.label %></a><% } %>
+                                </p>
+                                <% if (e.detail || e.reason) { %>
+                                    <p class="event__meta">
+                                        <% if (e.detail) { %><span><%= e.detail %></span><% } %>
+                                        <% if (e.reason) { %><span class="event__reason"><%= e.reason %></span><% } %>
+                                    </p>
+                                <% } %>
+                            </div>
+                            <time class="event__time" datetime="<%= new Date(event.at).toISOString() %>" title="<%= fmt.dateTime(event.at) %>">
+                                <%= activityUi.time(event.at) %>
+                            </time>
+                        </li>
+                    <% }) %>
+                </ol>
+            </section>
+        <% }) %>
+
+        <nav class="activity__pager" aria-label="Paginación">
+            <% if (page > 1) { %>
+                <a class="btn btn--ghost btn--sm" href="<%= url(page > 2 ? { page: page - 1 } : {}) %>">
+                    <span class="material-symbols-rounded" aria-hidden="true">arrow_upward</span> Más recientes
+                </a>
+            <% } %>
+            <% if (hasMore) { %>
+                <a class="btn btn--ghost btn--sm" href="<%= url({ page: page + 1 }) %>">
+                    Ver más antiguas <span class="material-symbols-rounded" aria-hidden="true">arrow_downward</span>
+                </a>
+            <% } %>
+        </nav>
+    <% } %>
+</div>

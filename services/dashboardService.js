@@ -70,14 +70,4 @@ async function getBestSellers(limit = 5) {
   return rows;
 }
 
-// Contadores para el menú lateral (se consultan en cada página del panel).
-async function getNavCounts() {
-  const { rows } = await pool.query(`
-    SELECT count(*) FILTER (WHERE status = 'pending')::int AS pending,
-           count(*) FILTER (WHERE status = 'paid')::int AS to_ship
-    FROM orders
-  `);
-  return rows[0];
-}
-
-module.exports = { getStats, getMonthly, getBestSellers, getNavCounts };
+module.exports = { getStats, getMonthly, getBestSellers };

@@ -77,7 +77,7 @@
         <% if (order.items.length) { %>
             <% order.items.forEach(item => { %>
                 <div class="ticket-item">
-                    <img src="<%= fmt.storeImage(item.image) %>" alt="" loading="lazy">
+                    <img src="<%= fmt.storeImage(item.image, 160) %>" alt="" width="44" height="54" loading="lazy" decoding="async">
                     <div>
                         <strong><%= item.productName %></strong>
                         <div><%= item.quantity %> × <%= fmt.money(item.price) %></div>

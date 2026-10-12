@@ -1,5 +1,6 @@
 const productService = require("../services/productService");
 const blobService = require("../services/blobService");
+const campaignService = require("../services/campaignService");
 
 const formOptions = async () => ({
   types: productService.TYPES,
@@ -39,13 +40,17 @@ exports.index = async (req, res) => {
     status: req.query.status || "",
     page: req.query.page,
   };
-  const { products, pagination } = await productService.list(filters);
+  const [{ products, pagination }, campaign] = await Promise.all([
+    productService.list(filters),
+    campaignService.currentOrNext(),
+  ]);
   res.render("products/index", {
     title: "Productos",
     products,
     pagination,
     filters,
     types: productService.TYPES,
+    campaign,
   });
 };
 

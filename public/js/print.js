@@ -20,7 +20,7 @@ document.addEventListener("click", (e) => {
       <body>
         <div class="print-page">
           <header class="print-header">
-            <img src="/images/logo.png" class="print-logo" alt="100Puntadas" />
+            <img src="/images/logo.webp" class="print-logo" alt="100Puntadas" />
             <div class="print-header-info">
               <h1>Orden de pedido</h1>
               <span>Documento interno</span>

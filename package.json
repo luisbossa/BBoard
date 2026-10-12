@@ -9,7 +9,8 @@
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup.js",
     "create-admin": "node scripts/create-admin.js",
-    "reconcile-onvo": "node scripts/reconcile-onvo.js"
+    "reconcile-onvo": "node scripts/reconcile-onvo.js",
+    "icons": "node scripts/icons.js"
   },
   "author": "",
   "license": "ISC",

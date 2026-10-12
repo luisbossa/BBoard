@@ -200,8 +200,6 @@ fieldset.row { margin: 0; }
 .style-row input { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); }
 
 /* ---------- Analíticas ---------- */
-.apex-chart { min-height: 280px; margin-top: 12px; }
-.chart-tip { padding: 8px 10px; font-size: 13px; }
 .table-view { margin-top: 10px; font-size: 13px; }
 .table-view summary { cursor: pointer; color: var(--accent); }
 .bar-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
@@ -220,15 +218,6 @@ fieldset.row { margin: 0; }
 .user-link { display: flex; align-items: center; gap: 10px; }
 .notification-badge.hidden { display: none !important; }
 .notification-list li { list-style: none; }
-.notification-item { color: var(--text); }
-.notification-item.pending span { color: var(--warning-text); }
-.notification-item.paid span { color: var(--success-text); }
-.notification-item.shipped span { color: var(--info-text); }
-.notification-item.delivered span { color: var(--muted-text); }
-.notification-item.cancelled span { color: var(--danger-text); }
-.notification-page-list { list-style: none; margin-top: 10px; }
-.notification-page-list .notification-item { display: flex; gap: 12px; padding: 12px 6px; border-bottom: 1px solid var(--border); }
-.notification-page-list small { color: var(--text-2); }
 
 /* Nada debe ensanchar la página: las tablas hacen scroll dentro de su caja. */
 .main { min-width: 0; overflow-x: hidden; }
@@ -256,3 +245,292 @@ details:not([open]) > :not(summary) { display: none; }
 
 .verify-onvo { margin-top: 14px; display: grid; gap: 6px; justify-items: start; }
 .summary-list code { font-size: 12px; word-break: break-all; }
+
+/* ---------- Estado de integraciones ---------- */
+.callout-status {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 16px; padding: 14px 16px; border-radius: 12px;
+}
+.callout-status > div { display: grid; gap: 2px; flex: 1; }
+.callout-status .material-symbols-rounded { font-size: 26px; color: inherit; }
+.callout-status.is-ok { background: var(--success-bg); color: var(--success-text); }
+.callout-status.is-error { background: var(--warning-bg); color: var(--warning-text); }
+.callout-status .text-second { color: inherit; opacity: 0.85; font-size: 13px; }
+
+.checks { list-style: none; display: grid; gap: 10px; }
+.check {
+  display: flex; gap: 14px; align-items: flex-start; padding: 16px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+}
+.check__icon { font-size: 24px; flex-shrink: 0; }
+.check--ok .check__icon { color: var(--success-text); }
+.check--error { border-color: var(--danger-text); }
+.check--error .check__icon { color: var(--danger-text); }
+.check--unknown .check__icon { color: var(--text-3); }
+.check__body { display: grid; gap: 4px; font-size: 14px; }
+.check__detail { color: var(--text-2); }
+.check__fix { margin-top: 4px; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); font-size: 13px; }
+
+/* ---------- Listas ordenables (colecciones) ---------- */
+.sortable { list-style: none; display: grid; gap: 8px; }
+.sortable--static { margin-top: 4px; }
+.sortable__item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+}
+.sortable__item[draggable="true"] { cursor: grab; }
+.sortable__item.is-dragging { opacity: 0.45; border-style: dashed; }
+.sortable__handle { color: var(--text-3); }
+.sortable__img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: var(--surface-2); flex-shrink: 0; }
+.sortable__pos {
+  width: 26px; height: 26px; display: grid; place-items: center; flex-shrink: 0;
+  border-radius: 50%; background: var(--surface-2); color: var(--text-2); font-size: 12px; font-weight: 700;
+}
+.sortable__body { display: grid; gap: 2px; flex: 1; min-width: 0; font-size: 13px; }
+.sortable__title { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--text); }
+a.sortable__title:hover { color: var(--accent); }
+.sortable__body a:not(.sortable__title) { color: var(--accent); }
+.sortable__order, .sortable__actions { display: flex; gap: 2px; }
+.sortable__item .status { margin-top: 0; }
+.icon-btn--sm { width: 30px; height: 30px; border-radius: 8px; }
+.icon-btn:disabled { opacity: 0.35; cursor: default; background: transparent; }
+
+.collection-grid { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); gap: 20px; align-items: start; }
+.add-product { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-product .search-input { flex: 1 1 220px; }
+.sticky-actions {
+  position: sticky; bottom: 0; z-index: 5; margin-top: 20px; padding: 12px 0;
+  background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px);
+}
+
+@media (max-width: 900px) {
+  .collection-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .sortable__item { flex-wrap: wrap; }
+  .sortable__handle { display: none; }
+}
+/* Las dos cajas del formulario de colección van lado a lado: sin el separador entre formularios. */
+.collection-grid > .stack-form + .stack-form { margin-top: 0; padding-top: 20px; border-top: 1px solid var(--border); }
+
+/* ---------- Paneles, estados vacíos y pestañas segmentadas (compartidos) ---------- */
+.panel {
+  min-width: 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.panel__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.panel__subtitle {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.panel__link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.panel__link:hover {
+  text-decoration: underline;
+}
+
+.panel__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.panel__more:hover {
+  background: var(--accent-softer);
+}
+
+.panel__more .material-symbols-rounded {
+  font-size: 18px;
+  color: inherit;
+}
+
+/* Tablas dentro de paneles: más compactas que las de las páginas de listado. */
+.panel .data-table {
+  min-width: 560px;
+}
+
+.panel__note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.empty-state .material-symbols-rounded {
+  font-size: 32px;
+  color: var(--success-text);
+}
+
+/* ---------- Pestañas segmentadas ---------- */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.segmented__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.segmented__option[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.segmented__count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--muted-bg);
+  color: var(--muted-text);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.segmented__option[aria-selected="true"] .segmented__count {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+
+/* ---------- Gráficos de barras SVG (dashboard y analíticas) ---------- */
+.chart__legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.chart__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.chart__swatch--orders,
+.chart__bar--orders { background: var(--border-strong); fill: var(--border-strong); }
+.chart__swatch--paid,
+.chart__bar--paid { background: var(--accent); fill: var(--accent); }
+
+.chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart__grid {
+  stroke: var(--border);
+  stroke-dasharray: 3 4;
+}
+
+.chart__baseline {
+  stroke: var(--border-strong);
+}
+
+.chart__axis {
+  fill: var(--text-2);
+  font-size: 12px;
+}
+
+.chart__hit {
+  fill: transparent;
+  transition: fill 0.15s ease;
+}
+
+.chart__group {
+  outline: none;
+}
+
+.chart__group:hover .chart__hit,
+.chart__group:focus-visible .chart__hit {
+  fill: var(--surface-hover);
+}
+
+.chart__table {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.chart__table summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.chart__bar--single { fill: var(--accent); }
+
+/* ---------- Promociones ---------- */
+.promo-percent {
+  min-width: 58px; padding: 6px 10px; border-radius: 10px; text-align: center;
+  background: var(--danger-bg); color: var(--danger-text); font-weight: 800; font-size: 15px;
+}
+.promo-preview { max-height: 520px; overflow-y: auto; }
+.promo-product { display: inline-flex; align-items: center; gap: 10px; }
+.promo-product img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; background: var(--surface-2); }
+.promo-product .status { margin-top: 0; }
+.promo-banner {
+  display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px;
+  border-radius: 10px; background: var(--danger-bg); color: var(--danger-text); font-size: 14px;
+}
+.promo-banner .material-symbols-rounded { color: inherit; }
+.promo-banner a { margin-left: auto; color: inherit; font-weight: 600; text-decoration: underline; }

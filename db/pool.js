@@ -17,7 +17,9 @@ const pool = new Pool({
   ssl: useSSL ? { rejectUnauthorized: false } : false,
   // En Vercel cada función abre su propio pool: pocas conexiones y que se liberen rápido.
   max: process.env.VERCEL ? 3 : 10,
-  idleTimeoutMillis: 10_000,
+  // Conexiones abiertas 30 s entre peticiones: reutilizarlas evita repetir
+  // el saludo TLS con Neon (varios viajes de red) en cada página.
+  idleTimeoutMillis: 30_000,
 });
 
 pool.on("error", (err) => {

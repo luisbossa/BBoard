@@ -1,0 +1,66 @@
+<%
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const STATUS = {
+    running: ["active", "Activa ahora"],
+    scheduled: ["shipped", "Programada"],
+    finished: ["inactive", "Finalizada"],
+    disabled: ["inactive", "Desactivada"],
+  };
+  const day = (d) => d ? new Date(`${d}T12:00:00Z`).toLocaleDateString("es-CR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }) : null;
+%>
+<div class="main-content">
+    <div class="box">
+        <div class="dashboard-card-header header-flex">
+            <span class="title">Promociones <span class="text-second">(<%= campaigns.length %>)</span></span>
+            <% if (canEdit) { %>
+                <a href="/dashboard/promotions/new" class="btn btn--primary">
+                    <span class="material-symbols-rounded" aria-hidden="true">add</span> Nueva promoción
+                </a>
+            <% } %>
+        </div>
+        <p class="hint">
+            <span class="material-symbols-rounded tiny-icon" aria-hidden="true">info</span>
+            Una promoción rebaja un % los precios de la tienda entre dos fechas (hora de Costa Rica). Empieza y termina sola:
+            los precios normales de los productos no se modifican. La tienda la muestra en menos de 30 segundos.
+        </p>
+    </div>
+
+    <% if (!campaigns.length) { %>
+        <div class="panel empty-state">
+            <span class="material-symbols-rounded" aria-hidden="true">sell</span>
+            Todavía no hay promociones.
+        </div>
+    <% } else { %>
+        <ul class="sortable sortable--static">
+            <% campaigns.forEach(c => { const [cls, label] = STATUS[c.status]; %>
+                <li class="sortable__item <%= ['finished', 'disabled'].includes(c.status) ? 'row-muted' : '' %>">
+                    <span class="promo-percent">-<%= c.percent %>%</span>
+                    <div class="sortable__body">
+                        <a class="sortable__title" href="/dashboard/promotions/<%= c.id %>/edit"><%= c.name %></a>
+                        <span class="text-second">
+                            <%= day(c.start_date) %> → <%= c.ends_at ? day(c.end_date) : "sin fecha de fin" %>
+                            <% if (c.suspend_bundle_promo) { %>· suspende «lleva 2 y ahorra»<% } %>
+                        </span>
+                    </div>
+                    <span class="status <%= cls %>"><%= label %></span>
+                    <div class="table-actions">
+                        <a class="btn-table" href="/dashboard/promotions/<%= c.id %>/edit"><%= canEdit ? "Editar" : "Ver" %></a>
+                        <% if (canEdit && c.status !== "finished") { %>
+                            <form method="POST" action="/dashboard/promotions/<%= c.id %>/toggle" class="inline-form"
+                                <% if (c.active) { %>data-confirm="Se desactivará &quot;<%= c.name %>&quot;: la tienda vuelve a los precios normales."<% } %>>
+                                <input type="hidden" name="active" value="<%= c.active ? 0 : 1 %>">
+                                <button class="btn-table" type="submit"><%= c.active ? "Desactivar" : "Activar" %></button>
+                            </form>
+                        <% } %>
+                        <% if (canEdit) { %>
+                            <form method="POST" action="/dashboard/promotions/<%= c.id %>/delete" class="inline-form"
+                                data-confirm="Se eliminará la promoción &quot;<%= c.name %>&quot;.">
+                                <button class="btn-table delete" type="submit">Eliminar</button>
+                            </form>
+                        <% } %>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+</div>

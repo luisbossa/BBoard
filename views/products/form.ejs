@@ -57,7 +57,7 @@
                     <ul class="gallery" id="gallery">
                         <% product.images.forEach(img => { %>
                             <li draggable="true">
-                                <img src="<%= fmt.storeImage(img) %>" alt="">
+                                <img src="<%= fmt.storeImage(img, 400) %>" alt="" width="96" height="120" loading="lazy" decoding="async">
                                 <input type="hidden" name="images" value="<%= img %>">
                                 <button type="button" class="gallery-remove" aria-label="Quitar imagen">×</button>
                             </li>
@@ -116,7 +116,7 @@
                         <% }) %>
                     </div>
 
-                    <div class="field-title">Colecciones</div>
+                    <div class="field-title header-flex">Colecciones <a class="btn-link" href="/dashboard/collections">Ordenar en Colecciones ›</a></div>
                     <% collections.forEach(c => { %>
                         <label class="check">
                             <input type="checkbox" name="collections" value="<%= c.id %>" <%= product.collectionIds.includes(c.id) ? "checked" : "" %>>

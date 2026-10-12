@@ -18,12 +18,10 @@ const profile = require("../controllers/profileController");
 const router = express.Router();
 router.use(requireAuth);
 
-// Contadores del menú lateral (solo páginas, no la API).
-const dashboardService = require("../services/dashboardService");
-router.use(async (req, res, next) => {
-  if (req.method === "GET" && !req.path.startsWith("/api/")) {
-    res.locals.navCounts = await dashboardService.getNavCounts();
-  }
+// Contadores del menú lateral
+// (vienen en la misma consulta del usuario de la sesión: ver userService.findActiveById)
+router.use((req, res, next) => {
+  res.locals.navCounts = req.user.nav_counts;
   next();
 });
 
@@ -51,6 +49,27 @@ router.post("/products/:id", canEdit, upload.array("new_images", 10), products.s
 router.post("/products/:id/toggle", canEdit, products.toggle);
 router.post("/products/:id/delete", canEdit, products.destroy);
 
+// Colecciones (secciones de la home de la tienda)
+const collections = require("../controllers/collectionsController");
+router.get("/collections", collections.index);
+router.get("/collections/new", canEdit, collections.new);
+router.post("/collections", canEdit, collections.save);
+router.get("/collections/:id/edit", collections.edit);
+router.post("/collections/:id", canEdit, collections.save);
+router.post("/collections/:id/move", canEdit, collections.move);
+router.post("/collections/:id/toggle", canEdit, collections.toggle);
+router.post("/collections/:id/delete", canEdit, collections.destroy);
+
+// Promociones (campañas de descuento de la tienda)
+const promotions = require("../controllers/promotionsController");
+router.get("/promotions", promotions.index);
+router.get("/promotions/new", canEdit, promotions.new);
+router.post("/promotions", canEdit, promotions.save);
+router.get("/promotions/:id/edit", promotions.edit);
+router.post("/promotions/:id", canEdit, promotions.save);
+router.post("/promotions/:id/toggle", canEdit, promotions.toggle);
+router.post("/promotions/:id/delete", canEdit, promotions.destroy);
+
 // Analíticas
 router.get("/analytics", analytics.index);
 
@@ -62,6 +81,9 @@ router.post("/users", adminOnly, users.create);
 router.get("/users/:id/edit", adminOnly, users.edit);
 router.post("/users/:id", adminOnly, users.update);
 router.post("/users/:id/toggle", adminOnly, users.toggle);
+
+// Estado de integraciones (tienda, ONVO, correo, cron)
+router.get("/settings/integrations", adminOnly, require("../controllers/settingsController").integrations);
 
 // Perfil propio
 router.get("/profile", profile.show);

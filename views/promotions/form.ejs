@@ -1,0 +1,124 @@
+<%
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const isNew = !campaign.id;
+  const noEnd = !isNew && !campaign.ends_at;
+%>
+<div class="main-content">
+    <div class="page-head">
+        <a href="/dashboard/promotions" class="btn-link">‹ Promociones</a>
+        <h1><%= isNew ? "Nueva promoción" : campaign.name %></h1>
+    </div>
+
+    <form method="POST" action="<%= isNew ? '/dashboard/promotions' : `/dashboard/promotions/${campaign.id}` %>" id="promo-form">
+        <fieldset <%= canEdit ? "" : "disabled" %> class="collection-grid">
+
+            <div class="box stack-form">
+                <div class="dashboard-card-header">Promoción</div>
+                <label>Nombre <span class="text-second">— aparece en la barra de promoción de la tienda</span>
+                    <input type="text" name="name" value="<%= campaign.name %>" required maxlength="120" placeholder="Ej. Mes negro">
+                </label>
+                <label>Descuento (%)
+                    <input type="number" name="percent" value="<%= campaign.percent %>" min="1" max="90" step="1" required data-percent>
+                </label>
+                <div class="form-grid">
+                    <label>Desde
+                        <input type="date" name="start_date" value="<%= campaign.start_date %>" required>
+                    </label>
+                    <label>Hasta (incluido)
+                        <input type="date" name="end_date" value="<%= noEnd ? '' : campaign.end_date %>" <%= noEnd ? "disabled" : "required" %> data-end-date>
+                    </label>
+                </div>
+                <label class="check">
+                    <input type="checkbox" name="no_end" value="1" <%= noEnd ? "checked" : "" %> data-no-end>
+                    Sin fecha de fin (la desactivo yo)
+                </label>
+                <label>Texto de la barra de promoción <span class="text-second">— opcional</span>
+                    <input type="text" name="banner_text" value="<%= campaign.banner_text || '' %>" maxlength="160"
+                        placeholder="Ej. 15% de descuento en toda la tienda">
+                </label>
+
+                <div class="field-title">Reglas</div>
+                <label class="check">
+                    <input type="checkbox" name="skip_on_sale" value="1" <%= campaign.skip_on_sale ? "checked" : "" %> data-skip-on-sale>
+                    No aplicar a productos que ya están en oferta
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="suspend_bundle_promo" value="1" <%= campaign.suspend_bundle_promo ? "checked" : "" %>>
+                    Suspender «Lleva 2 prendas y ahorra 15%» mientras dure (no se acumulan)
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="active" value="1" <%= campaign.active ? "checked" : "" %>>
+                    Activa (se aplica automáticamente en las fechas indicadas)
+                </label>
+            </div>
+
+            <!-- Vista previa -->
+            <div class="box stack-form">
+                <div class="dashboard-card-header header-flex">
+                    <span>Vista previa de precios</span>
+                    <span class="text-second" data-preview-summary></span>
+                </div>
+                <div class="table-wrapper promo-preview">
+                    <table class="data-table compact">
+                        <thead><tr><th>Producto</th><th class="right">Precio normal</th><th class="right">Con la promoción</th></tr></thead>
+                        <tbody>
+                            <% preview.items.forEach(p => { const onSale = p.discount === 1 || (p.old_price && p.old_price > p.price); %>
+                                <tr data-price="<%= p.price %>" data-on-sale="<%= onSale %>">
+                                    <td>
+                                        <span class="promo-product">
+                                            <img src="<%= fmt.storeImage(p.main_image, 160) %>" alt="" width="32" height="32" loading="lazy" decoding="async">
+                                            <%= p.name %>
+                                            <% if (onSale) { %><span class="status pending">Ya en oferta</span><% } %>
+                                        </span>
+                                    </td>
+                                    <td class="right"><%= fmt.money(p.price) %></td>
+                                    <td class="right"><strong data-final><%= fmt.money(p.final_price) %></strong></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </fieldset>
+
+        <% if (canEdit) { %>
+            <div class="form-actions sticky-actions">
+                <button type="submit" class="btn btn--primary"><%= isNew ? "Crear promoción" : "Guardar cambios" %></button>
+                <a href="/dashboard/promotions" class="btn-link">Cancelar</a>
+            </div>
+        <% } %>
+    </form>
+</div>
+
+<script>
+    /* Vista previa en vivo: misma regla que la tienda (redondeo al colón). */
+    (function () {
+        const form = document.getElementById("promo-form");
+        const percent = form.querySelector("[data-percent]");
+        const skip = form.querySelector("[data-skip-on-sale]");
+        const noEnd = form.querySelector("[data-no-end]");
+        const endDate = form.querySelector("[data-end-date]");
+        const summary = document.querySelector("[data-preview-summary]");
+        const money = (n) => "₡" + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        function update() {
+            const pct = Math.min(90, Math.max(0, Number(percent.value) || 0));
+            let affected = 0;
+            document.querySelectorAll("tr[data-price]").forEach((row) => {
+                const price = Number(row.dataset.price);
+                const applies = !(skip.checked && row.dataset.onSale === "true");
+                if (applies) affected++;
+                row.classList.toggle("row-muted", !applies);
+                row.querySelector("[data-final]").textContent = money(applies ? Math.round((price * (100 - pct)) / 100) : price);
+            });
+            summary.textContent = `${affected} productos con -${pct}%`;
+        }
+
+        noEnd.addEventListener("change", () => {
+            endDate.disabled = noEnd.checked;
+            endDate.required = !noEnd.checked;
+        });
+        form.addEventListener("input", update);
+        update();
+    })();
+</script>

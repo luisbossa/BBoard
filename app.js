@@ -48,11 +48,26 @@ app.use((req, res, next) => {
   }
   next();
 });
+// CSS común del panel en un solo archivo minificado (utils/cssBundle.js).
+const cssBundle = require("./utils/cssBundle");
+app.get("/css/panel.css", (req, res) => {
+  const { css, hash } = cssBundle.get();
+  res.type("text/css");
+  res.set("Cache-Control", req.query.v === hash ? "public, max-age=31536000, immutable" : "no-cache");
+  res.send(css);
+});
+app.locals.panelCss = () => `/css/panel.css?v=${cssBundle.get().hash}`;
+
 app.use(express.static(path.join(__dirname, "public"), { cacheControl: false }));
 
 /* ---------- Helpers disponibles en todas las vistas ---------- */
 app.locals.asset = (file) => `${file}?v=${ASSET_VERSION}`;
 app.locals.fmt = fmt;
+// Fuente de íconos con solo los íconos usados (npm run icons regenera la lista).
+app.locals.iconFontUrl =
+  "https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400,0..1,0" +
+  `&icon_names=${require("./config/icons.json").names.join(",")}&display=block`;
+app.locals.activityUi = require("./utils/activity");
 app.locals.storeUrl = env.storeUrl;
 app.locals.storeWhatsapp = env.storeWhatsapp;
 

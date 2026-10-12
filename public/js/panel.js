@@ -299,8 +299,8 @@
     }
   }
 
-  loadNotifications();
-  // Refresca cada minuto y al volver a la pestaña.
-  setInterval(() => document.visibilityState === "visible" && loadNotifications(), 60_000);
-  document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && loadNotifications());
+  // El contador llega renderizado desde el servidor: la lista se pide solo al abrir
+  // la campana, y el contador se refresca cada 2 min mientras la pestaña está visible.
+  notifications?.addEventListener("dropdown:open", loadNotifications);
+  setInterval(() => document.visibilityState === "visible" && loadNotifications(), 120_000);
 })();
