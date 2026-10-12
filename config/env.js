@@ -33,6 +33,11 @@ module.exports = {
   sinpeWebhookSecret:
     process.env.SINPE_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || "",
 
+  // ONVO Pay (solo lectura desde el panel: verificar pagos con tarjeta).
+  onvoSecretKey: process.env.ONVOPAY_SECRET_KEY || "",
+  // Vercel Cron envía "Authorization: Bearer <CRON_SECRET>".
+  cronSecret: process.env.CRON_SECRET || "",
+
   blobToken: process.env.BLOB_READ_WRITE_TOKEN || "",
 
   mail: {

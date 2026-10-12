@@ -253,3 +253,6 @@ fieldset.row { margin: 0; }
 
 /* <details> cerrado: no reservar espacio para su contenido (algunos navegadores lo hacen). */
 details:not([open]) > :not(summary) { display: none; }
+
+.verify-onvo { margin-top: 14px; display: grid; gap: 6px; justify-items: start; }
+.summary-list code { font-size: 12px; word-break: break-all; }

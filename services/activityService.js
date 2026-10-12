@@ -13,9 +13,9 @@ async function log(userId, action, metadata = {}, db = pool) {
 
 async function recent(limit = 30) {
   const { rows } = await pool.query(
-    `SELECT a.id, a.action, a.metadata, a.created_at, u.full_name
+    `SELECT a.id, a.action, a.metadata, a.created_at, COALESCE(u.full_name, 'Sistema') AS full_name
      FROM user_activity a
-     JOIN users u ON u.id = a.user_id
+     LEFT JOIN users u ON u.id = a.user_id
      ORDER BY a.created_at DESC
      LIMIT $1`,
     [limit],

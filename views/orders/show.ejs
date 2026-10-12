@@ -7,11 +7,8 @@
     ["Entregado", order.deliveredAt],
     ["Cancelado", order.cancelledAt],
   ].filter(([, d]) => d);
-  const ACTION_LABELS = {
-    order_paid: "marcó como pagado", order_shipped: "marcó como enviado",
-    order_delivered: "marcó como entregado", order_cancelled: "canceló el pedido",
-    order_notes: "actualizó las notas",
-  };
+  const ACTION_LABELS = fmt.ACTIVITY;
+  const isPendingCard = order.status === "pending" && order.paymentMethod === "card";
 %>
 <div class="main-content">
     <div class="page-head">
@@ -34,7 +31,18 @@
                     <div><dt>Envío</dt><dd><%= order.shipping ? fmt.money(order.shipping) : "Retiro en tienda" %></dd></div>
                     <div class="total"><dt>Total</dt><dd><%= fmt.money(order.total) %></dd></div>
                     <div><dt>Método</dt><dd><%= fmt.payment(order.paymentMethod) %></dd></div>
+                    <% if (order.paymentMethod === "card") { %>
+                        <div><dt>Pago en ONVO</dt><dd><code><%= order.paymentIntentId || "No iniciado" %></code></dd></div>
+                    <% } %>
                 </dl>
+                <% if (isPendingCard && canEdit) { %>
+                    <form method="POST" action="/dashboard/orders/<%= order.id %>/verify-onvo" class="verify-onvo">
+                        <button type="submit" class="btn btn--ghost btn--sm">
+                            <span class="material-symbols-rounded" aria-hidden="true">sync</span> Verificar pago en ONVO
+                        </button>
+                        <p class="hint">Los pedidos con tarjeta sin pago se cancelan solos a las 48 h.</p>
+                    </form>
+                <% } %>
             </div>
         </div>
 
@@ -52,6 +60,7 @@
                     <ul class="history">
                         <% order.history.forEach(h => { %>
                             <li><strong><%= h.full_name %></strong> <%= ACTION_LABELS[h.action] || h.action %>
+                                <% if (h.metadata?.reason) { %><span class="text-second">(<%= h.metadata.reason %>)</span><% } %>
                                 <span class="text-second">· <%= fmt.dateTime(h.created_at) %></span></li>
                         <% }) %>
                     </ul>

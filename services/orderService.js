@@ -57,6 +57,7 @@ const toOrder = (o) => ({
   nationalId: o.national_id,
   status: o.status,
   paymentMethod: o.payment_method,
+  paymentIntentId: o.payment_intent_id,
   subtotal: Number(o.subtotal),
   discount: Number(o.discount),
   shipping: Number(o.shipping),
@@ -147,8 +148,8 @@ async function getById(id) {
   if (!rows[0]) throw new HttpError(404, "Pedido no encontrado");
 
   const { rows: history } = await pool.query(
-    `SELECT a.action, a.metadata, a.created_at, u.full_name
-     FROM user_activity a JOIN users u ON u.id = a.user_id
+    `SELECT a.action, a.metadata, a.created_at, COALESCE(u.full_name, 'Sistema') AS full_name
+     FROM user_activity a LEFT JOIN users u ON u.id = a.user_id
      WHERE a.metadata->>'orderId' = $1::text
      ORDER BY a.created_at DESC`,
     [id],
@@ -159,8 +160,10 @@ async function getById(id) {
 
 /* Cambia el estado si la transición es válida. El UPDATE incluye
    el estado anterior en el WHERE: si otro usuario (o el webhook de
-   ONVO) lo cambió entretanto, no se pisa. */
-async function updateStatus(id, nextStatus, user, { trackingNumber } = {}) {
+   ONVO) lo cambió entretanto, no se pisa.
+   user = null → acción del sistema (verificación ONVO automática, cron).
+   notifyStore = false → no pedir a la tienda el correo (p. ej. pedidos antiguos). */
+async function updateStatus(id, nextStatus, user, { trackingNumber, reason, notifyStore = true } = {}) {
   const order = await getById(id);
 
   if (!order.nextStatuses.includes(nextStatus)) {
@@ -181,17 +184,18 @@ async function updateStatus(id, nextStatus, user, { trackingNumber } = {}) {
     if (!rowCount) throw new HttpError(409, "El pedido cambió mientras lo editabas. Recarga la página.");
 
     await activityService.log(
-      user.id,
+      user?.id ?? null,
       `order_${nextStatus}`,
-      { orderId: order.id, orderNumber: order.orderNumber, from: order.status },
+      { orderId: order.id, orderNumber: order.orderNumber, from: order.status, ...(reason && { reason }) },
       client,
     );
   });
 
-  // Pago SINPE aprobado a mano → la tienda envía el correo al cliente.
+  // Pedido cobrado (SINPE aprobado o tarjeta verificada en ONVO) → la tienda
+  // envía al cliente el correo con el detalle de la compra.
   let customerNotified = null;
-  if (nextStatus === "paid" && order.paymentMethod === "sinpe") {
-    customerNotified = await storeService.notifySinpePaid(order.id);
+  if (nextStatus === "paid" && notifyStore) {
+    customerNotified = await storeService.notifyOrderPaid(order.id);
   }
 
   return { from: order.status, to: nextStatus, customerNotified };

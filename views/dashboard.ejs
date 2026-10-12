@@ -133,6 +133,10 @@
                                                 <input type="hidden" name="status" value="paid">
                                                 <button type="submit" class="btn btn--sm btn--primary">Aprobar pago</button>
                                             </form>
+                                        <% } else if (canEdit && t.id === "collect" && o.paymentIntentId) { %>
+                                            <form method="POST" action="/dashboard/orders/<%= o.id %>/verify-onvo">
+                                                <button type="submit" class="btn btn--sm btn--ghost" title="Consultar a ONVO si el pago ya se cobró">Verificar</button>
+                                            </form>
                                         <% } else if (canEdit && t.id === "ship") { %>
                                             <form method="POST" action="/dashboard/orders/<%= o.id %>/status"
                                                 data-confirm="El pedido #<%= o.orderNumber %> pasará a ENVIADO.">

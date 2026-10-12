@@ -2,18 +2,19 @@ const env = require("../config/env");
 
 /* ============================================================
    INTEGRACIÓN CON LA TIENDA (100puntadas)
-   Cuando el panel aprueba un pago SINPE, avisa a la tienda para
-   que envíe el correo de confirmación al cliente.
+   Cuando un pedido pasa a "pagado" desde el panel (SINPE aprobado o
+   tarjeta verificada en ONVO), avisa a la tienda para que envíe el
+   correo de confirmación al cliente.
    La tienda valida el header X-Webhook-Secret = SINPE_WEBHOOK_SECRET.
 ============================================================ */
-async function notifySinpePaid(orderId) {
+async function notifyOrderPaid(orderId) {
   if (!env.sinpeWebhookSecret) {
     console.warn("STORE WEBHOOK: falta SINPE_WEBHOOK_SECRET, no se avisa a la tienda");
     return false;
   }
 
   try {
-    const response = await fetch(`${env.storeUrl}/webhooks/sinpe-paid`, {
+    const response = await fetch(`${env.storeUrl}/webhooks/order-paid`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,4 +54,4 @@ async function fetchImage(path) {
   return { type, body: Buffer.from(await response.arrayBuffer()) };
 }
 
-module.exports = { notifySinpePaid, fetchImage };
+module.exports = { notifyOrderPaid, fetchImage };

@@ -36,6 +36,7 @@ router.get("/orders", orders.index);
 router.get("/orders/:id", orders.show);
 router.post("/orders/:id/status", canEdit, orders.updateStatus);
 router.post("/orders/:id/notes", canEdit, orders.updateNotes);
+router.post("/orders/:id/verify-onvo", canEdit, orders.verifyOnvo);
 
 // Clientes
 router.get("/customers", customers.index);

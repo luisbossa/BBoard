@@ -1,4 +1,5 @@
 const orderService = require("../services/orderService");
+const onvoService = require("../services/onvoService");
 const fmt = require("../utils/format");
 
 exports.index = async (req, res) => {
@@ -34,6 +35,29 @@ exports.updateStatus = async (req, res) => {
   if (req.is("application/json")) return res.json({ ok: true, ...result, message });
 
   res.flash(result.customerNotified === false ? "warning" : "success", message);
+  res.redirect(req.get("referer") || `/dashboard/orders/${req.params.id}`);
+};
+
+// Pedido con tarjeta pendiente: consulta a ONVO si ya se cobró.
+const INTENT_STATUS = {
+  requires_payment_method: "el cliente no ha ingresado una tarjeta válida",
+  requires_action: "el cliente no completó la verificación de la tarjeta",
+  processing: "ONVO todavía está procesando el pago",
+  canceled: "el pago fue cancelado en ONVO",
+};
+
+exports.verifyOnvo = async (req, res) => {
+  const result = await onvoService.verifyCardOrder(req.params.id, req.user);
+
+  if (result.status === "paid") {
+    res.flash("success", "ONVO confirmó el pago: el pedido quedó pagado y se envió el correo al cliente.");
+  } else if (result.status === "no-intent") {
+    res.flash("warning", "Este pedido no tiene un pago iniciado en ONVO: el cliente no llegó al formulario de tarjeta.");
+  } else if (result.status === "pending") {
+    res.flash("warning", `ONVO aún no registra el pago: ${INTENT_STATUS[result.intentStatus] || result.intentStatus}.`);
+  } else {
+    res.flash("success", `El pedido ya está ${fmt.status(result.status).toLowerCase()}.`);
+  }
   res.redirect(req.get("referer") || `/dashboard/orders/${req.params.id}`);
 };
 

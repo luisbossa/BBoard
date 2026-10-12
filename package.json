@@ -8,7 +8,8 @@
     "dev": "nodemon server.js --ext js,ejs,sql --ignore public/",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup.js",
-    "create-admin": "node scripts/create-admin.js"
+    "create-admin": "node scripts/create-admin.js",
+    "reconcile-onvo": "node scripts/reconcile-onvo.js"
   },
   "author": "",
   "license": "ISC",

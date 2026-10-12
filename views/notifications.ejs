@@ -1,13 +1,5 @@
 <%
-  const ACTION_LABELS = {
-    order_paid: "marcó como pagado el pedido", order_shipped: "marcó como enviado el pedido",
-    order_delivered: "marcó como entregado el pedido", order_cancelled: "canceló el pedido",
-    order_notes: "actualizó las notas del pedido",
-    product_created: "creó el producto", product_updated: "editó el producto", product_deleted: "eliminó el producto",
-    product_activated: "mostró el producto", product_deactivated: "ocultó el producto",
-    user_created: "creó un usuario", user_updated: "editó un usuario",
-    user_activated: "activó un usuario", user_deactivated: "desactivó un usuario",
-  };
+  const ACTION_LABELS = fmt.ACTIVITY;
   const describe = (a) => {
     const m = a.metadata || {};
     if (m.orderId) return `<a href="/dashboard/orders/${m.orderId}">#${m.orderNumber || m.orderId}</a>`;
@@ -42,6 +34,7 @@
                     <ul class="history">
                         <% activity.forEach(a => { %>
                             <li><strong><%= a.full_name %></strong> <%= ACTION_LABELS[a.action] || a.action %> <%- describe(a) %>
+                                <% if (a.metadata?.reason) { %><span class="text-second">(<%= a.metadata.reason %>)</span><% } %>
                                 <span class="text-second">· <%= fmt.dateTime(a.created_at) %></span></li>
                         <% }) %>
                     </ul>
