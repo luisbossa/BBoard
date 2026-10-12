@@ -119,7 +119,7 @@ async function list(filters = {}) {
        LEFT JOIN order_items oi ON oi.order_id = o.id
        ${where}
        GROUP BY o.id
-       ORDER BY o.created_at DESC
+       ORDER BY ${filters.sort === "oldest" ? "COALESCE(o.paid_at, o.created_at) ASC" : "o.created_at DESC"}
        LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
       params,
     ),
@@ -131,21 +131,6 @@ async function list(filters = {}) {
     orders: rows.map(toOrder),
     pagination: { page, pages: Math.max(1, Math.ceil(total / limit)), total },
   };
-}
-
-// Pedidos con sus ítems (tickets del dashboard / impresión).
-async function listWithItems({ limit = 10, statuses } = {}) {
-  const { rows } = await pool.query(
-    `SELECT o.*, COALESCE(SUM(oi.quantity), 0) AS total_items, ${ITEMS_JSON}
-     FROM orders o
-     LEFT JOIN order_items oi ON oi.order_id = o.id
-     ${statuses ? "WHERE o.status = ANY($2)" : ""}
-     GROUP BY o.id
-     ORDER BY o.created_at DESC
-     LIMIT $1`,
-    statuses ? [limit, statuses] : [limit],
-  );
-  return rows.map(toOrder);
 }
 
 async function getById(id) {
@@ -225,7 +210,6 @@ module.exports = {
   STATUSES,
   TRANSITIONS,
   list,
-  listWithItems,
   getById,
   updateStatus,
   updateNotes,

@@ -150,7 +150,8 @@
 }
 
 /* El degradado azul del logo pierde contraste sobre fondo oscuro. */
-:root[data-theme="dark"] .logo-img,
+:root[data-theme="dark"] .sidebar__logo,
+:root[data-theme="dark"] .sidebar__logo-mini,
 :root[data-theme="dark"] .card__logo {
   filter: brightness(1.35) saturate(1.1);
 }

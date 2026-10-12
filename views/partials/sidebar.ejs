@@ -1,47 +1,70 @@
 <%
-  const role = currentUser?.role;
-  const links = [
-    { href: "/dashboard", icon: "home", label: "Panel", exact: true },
-    { href: "/dashboard/orders", icon: "receipt_long", label: "Pedidos" },
-    { href: "/dashboard/customers", icon: "group", label: "Clientes" },
-    { href: "/dashboard/products", icon: "storefront", label: "Productos" },
-    { href: "/dashboard/analytics", icon: "analytics", label: "Analíticas" },
-    { href: "/dashboard/notifications", icon: "notifications", label: "Actividad" },
-    ...(role === "admin" ? [{ href: "/dashboard/users", icon: "admin_panel_settings", label: "Usuarios" }] : []),
-    { href: "/dashboard/profile", icon: "person", label: "Mi perfil" },
+  const counts = locals.navCounts || { pending: 0, to_ship: 0 };
+  const toHandle = counts.pending + counts.to_ship;
+  const sections = [
+    { title: "General", links: [
+      { href: "/dashboard", icon: "space_dashboard", label: "Panel", exact: true },
+      { href: "/dashboard/analytics", icon: "monitoring", label: "Analíticas" },
+    ] },
+    { title: "Tienda", links: [
+      { href: "/dashboard/orders", icon: "receipt_long", label: "Pedidos", badge: toHandle,
+        badgeLabel: `${counts.pending} por cobrar, ${counts.to_ship} por enviar` },
+      { href: "/dashboard/products", icon: "apparel", label: "Productos" },
+      { href: "/dashboard/customers", icon: "group", label: "Clientes" },
+    ] },
+    { title: "Equipo", links: [
+      { href: "/dashboard/notifications", icon: "history", label: "Actividad" },
+      ...(currentUser.role === "admin" ? [{ href: "/dashboard/users", icon: "admin_panel_settings", label: "Usuarios" }] : []),
+    ] },
   ];
-  const isActive = (link) => link.exact ? originalUrl.split("?")[0] === link.href : originalUrl.startsWith(link.href);
+  const path = originalUrl.split("?")[0];
+  const isActive = (link) => (link.exact ? path === link.href : path.startsWith(link.href));
 %>
-<div id="sidebar" class="sidebar">
-    <div class="sidebar-logo">
-        <img class="logo-img" src="/images/logo.png" alt="100Puntadas">
-        <button type="button" class="sidebar-close" id="sidebar-close" aria-label="Cerrar menú">
-            <span class="material-symbols-rounded">close</span>
+<aside id="sidebar" class="sidebar" aria-label="Navegación principal">
+    <div class="sidebar__brand">
+        <a href="/dashboard" class="sidebar__home" aria-label="BBoard, ir al panel">
+            <img class="sidebar__logo" src="/images/logo.png" alt="" width="150" height="23">
+            <img class="sidebar__logo-mini" src="/images/minilogo.png" alt="" width="36" height="30">
+        </a>
+        <button type="button" class="icon-btn sidebar__close" id="sidebar-close" aria-label="Cerrar menú">
+            <span class="material-symbols-rounded" aria-hidden="true">close</span>
         </button>
     </div>
 
-    <ul class="sidebar-menu">
-        <% links.forEach(link => { %>
-            <li>
-                <a href="<%= link.href %>" class="<%= isActive(link) ? 'active' : '' %>">
-                    <span class="material-symbols-rounded"><%= link.icon %></span>
-                    <span class="sidebar-text"><%= link.label %></span>
-                </a>
-            </li>
+    <nav class="sidebar__nav">
+        <% sections.forEach(section => { if (!section.links.length) return; %>
+            <p class="sidebar__section"><%= section.title %></p>
+            <ul class="sidebar__list">
+                <% section.links.forEach(link => { const active = isActive(link); %>
+                    <li>
+                        <a href="<%= link.href %>" class="sidebar__link<%= active ? ' is-active' : '' %>"
+                            data-tooltip="<%= link.label %>" <%- active ? 'aria-current="page"' : "" %>>
+                            <span class="sidebar__icon material-symbols-rounded" aria-hidden="true"><%= link.icon %></span>
+                            <span class="sidebar__text"><%= link.label %></span>
+                            <% if (link.badge) { %>
+                                <span class="sidebar__badge" title="<%= link.badgeLabel %>">
+                                    <span aria-hidden="true"><%= link.badge > 99 ? "99+" : link.badge %></span>
+                                    <span class="visually-hidden"><%= link.badgeLabel %></span>
+                                </span>
+                            <% } %>
+                        </a>
+                    </li>
+                <% }) %>
+            </ul>
         <% }) %>
+    </nav>
 
-        <li>
-            <a href="<%= storeUrl %>" target="_blank" rel="noopener">
-                <span class="material-symbols-rounded">open_in_new</span>
-                <span class="sidebar-text">Ver tienda</span>
-            </a>
-        </li>
-    </ul>
-
-    <footer class="footer">
-        <div>
-            100Puntadas ©
-            <br><span class="full-text">Panel administrativo <%= new Date().getFullYear() %></span>
-        </div>
-    </footer>
-</div>
+    <div class="sidebar__footer">
+        <a href="<%= storeUrl %>" class="sidebar__link" target="_blank" rel="noopener" data-tooltip="Ver tienda">
+            <span class="sidebar__icon material-symbols-rounded" aria-hidden="true">storefront</span>
+            <span class="sidebar__text">Ver tienda</span>
+            <span class="sidebar__external material-symbols-rounded" aria-hidden="true">open_in_new</span>
+        </a>
+        <button type="button" class="sidebar__link sidebar__collapse" id="sidebar-btn"
+            aria-pressed="false" aria-label="Contraer menú" data-tooltip="Expandir menú">
+            <span class="sidebar__icon material-symbols-rounded" aria-hidden="true">left_panel_close</span>
+            <span class="sidebar__text">Contraer menú</span>
+        </button>
+    </div>
+</aside>
+<div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>

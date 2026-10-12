@@ -19,6 +19,21 @@
 .status.cancelled { background: var(--danger-bg); color: var(--danger-text); }
 .status.inactive { background: var(--muted-bg); color: var(--muted-text); }
 
+/* ---------- Botones (componente .btn) ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: 10px;
+  font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer;
+  transition: background 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
+}
+.btn .material-symbols-rounded { font-size: 20px; color: inherit; }
+.btn--primary { background: var(--accent-solid); color: var(--on-accent); }
+.btn--primary:hover { filter: brightness(1.08); }
+.btn--ghost { background: var(--surface); border-color: var(--border); color: var(--text); }
+.btn--ghost:hover { background: var(--surface-hover); }
+.btn--sm { height: 32px; padding: 0 12px; border-radius: 8px; font-size: 13px; }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+
 /* ---------- Encabezado de página ---------- */
 .header-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
 .title { font-weight: 600; font-size: 16px; }
@@ -185,7 +200,7 @@ fieldset.row { margin: 0; }
 .style-row input { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); }
 
 /* ---------- Analíticas ---------- */
-.chart { min-height: 280px; margin-top: 12px; }
+.apex-chart { min-height: 280px; margin-top: 12px; }
 .chart-tip { padding: 8px 10px; font-size: 13px; }
 .table-view { margin-top: 10px; font-size: 13px; }
 .table-view summary { cursor: pointer; color: var(--accent); }
@@ -235,3 +250,6 @@ fieldset.row { margin: 0; }
 }
 
 .img-missing { object-fit: cover; }
+
+/* <details> cerrado: no reservar espacio para su contenido (algunos navegadores lo hacen). */
+details:not([open]) > :not(summary) { display: none; }

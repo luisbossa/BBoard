@@ -1,87 +1,264 @@
+<link rel="stylesheet" href="<%= asset('/css/dashboard.css') %>">
 <%
-  const cards = [
-    { title: "Total de pedidos", value: stats.total_orders, icon: "shopping_bag", href: "/dashboard/orders" },
-    { title: "Ingresos cobrados", value: fmt.money(stats.total_revenue), icon: "insights", href: "/dashboard/analytics" },
-    { title: "Pendientes de pago", value: stats.pending_orders, icon: "schedule", href: "/dashboard/orders?status=pending" },
-    { title: "Pagados por enviar", value: stats.to_ship_orders, icon: "local_shipping", href: "/dashboard/orders?status=paid" },
+  const canEdit = ["admin", "manager"].includes(currentUser.role);
+  const firstName = currentUser.full_name.split(/\s+/)[0];
+  const monthLabel = (offset) => {
+    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + offset);
+    return d.toLocaleDateString("es-CR", { month: "long", timeZone: "America/Costa_Rica" });
+  };
+  const revenueDelta = fmt.delta(stats.revenue_month, stats.revenue_prev);
+  const ordersDelta = fmt.delta(stats.orders_month, stats.orders_prev);
+
+  const kpis = [
+    { icon: "payments", tone: "accent", label: `Ingresos de ${monthLabel(0)}`, value: fmt.money(stats.revenue_month),
+      delta: revenueDelta, foot: `vs ${monthLabel(-1)} · histórico ${fmt.money(stats.revenue_total)}`, href: "/dashboard/analytics" },
+    { icon: "shopping_bag", tone: "info", label: `Pedidos de ${monthLabel(0)}`, value: stats.orders_month,
+      delta: ordersDelta, foot: `vs ${monthLabel(-1)} · ${fmt.plural(stats.paid_month, "cobrado", "cobrados")}`, href: "/dashboard/orders" },
+    { icon: "hourglass_top", tone: "warning", label: "Por cobrar", value: stats.pending,
+      foot: `${fmt.money(stats.pending_amount)} pendientes de pago`, href: "/dashboard/orders?status=pending" },
+    { icon: "local_shipping", tone: "success", label: "Por enviar", value: stats.to_ship,
+      foot: stats.oldest_to_ship ? `El más antiguo, pagado ${fmt.ago(stats.oldest_to_ship)}` : "Nada pendiente de envío",
+      href: "/dashboard/orders?status=paid" },
+  ];
+
+  const daysWaiting = stats.oldest_to_ship ? (Date.now() - new Date(stats.oldest_to_ship)) / 86400000 : 0;
+  const totalOrders = monthly.reduce((s, m) => s + m.orders, 0);
+  const totalPaid = monthly.reduce((s, m) => s + m.paid, 0);
+  const conversion = totalOrders ? Math.round((totalPaid / totalOrders) * 100) : 0;
+  const maxUnits = Math.max(1, ...bestSellers.map(p => p.units));
+  const initials = (name) => name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  const describe = (a) => {
+    const m = a.metadata || {};
+    if (m.orderId) return { text: `#${m.orderNumber || m.orderId}`, href: `/dashboard/orders/${m.orderId}` };
+    if (m.productId) return { text: m.name || `#${m.productId}`, href: `/dashboard/products/${m.productId}/edit` };
+    return null;
+  };
+
+  const taskTabs = [
+    { id: "collect", label: "Por cobrar", count: stats.pending, orders: toCollect, href: "/dashboard/orders?status=pending",
+      empty: "No hay pedidos esperando pago." },
+    { id: "ship", label: "Por enviar", count: stats.to_ship, orders: toShip, href: "/dashboard/orders?status=paid",
+      empty: "Todos los pedidos pagados ya se enviaron." },
   ];
 %>
-<div class="main-content">
-    <div class="row">
-        <% cards.forEach(card => { %>
-            <div class="col-3 col-md-6 col-sm-12">
-                <a class="box stat-link" href="<%= card.href %>">
-                    <div class="counter">
-                        <div class="counter-title"><%= card.title %></div>
-                        <div class="counter-info">
-                            <div class="counter-count"><%= card.value %></div>
-                            <span class="material-symbols-rounded main-icons"><%= card.icon %></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        <% }) %>
-    </div>
+<div class="main-content dashboard">
 
-    <div class="row">
-        <!-- MÁS VENDIDOS -->
-        <div class="col-4 col-md-6 col-sm-12">
-            <div class="box dashcard-div tall">
-                <div class="bestseller-header">Lo más vendido</div>
-                <div class="box-body">
-                    <ul class="product-list">
-                        <% if (bestSellers.length) { %>
-                            <% bestSellers.forEach(product => { %>
-                                <li class="product-list-item">
-                                    <div class="item-info">
-                                        <img src="<%= fmt.storeImage(product.image) %>" alt="" loading="lazy">
-                                        <div>
-                                            <div class="product-name">
-                                                <% if (product.product_id) { %>
-                                                    <a href="/dashboard/products/<%= product.product_id %>/edit"><%= product.name %></a>
-                                                <% } else { %><%= product.name %><% } %>
-                                            </div>
-                                            <div class="text-second"><%= product.units_sold %> unidades vendidas</div>
-                                        </div>
+    <!-- Bienvenida -->
+    <section class="welcome">
+        <div>
+            <h1 class="welcome__title"><%= fmt.greeting() %>, <%= firstName %></h1>
+            <p class="welcome__date"><%= fmt.longDate() %></p>
+        </div>
+        <div class="welcome__actions">
+            <a class="btn btn--ghost" href="/dashboard/analytics">
+                <span class="material-symbols-rounded" aria-hidden="true">monitoring</span> Analíticas
+            </a>
+            <% if (canEdit) { %>
+                <a class="btn btn--primary" href="/dashboard/products/new">
+                    <span class="material-symbols-rounded" aria-hidden="true">add</span> Nuevo producto
+                </a>
+            <% } %>
+        </div>
+    </section>
+
+    <% if (stats.to_ship && daysWaiting > 3) { %>
+        <a class="callout callout--warning" href="/dashboard/orders?status=paid">
+            <span class="material-symbols-rounded" aria-hidden="true">schedule</span>
+            <span>
+                <strong><%= fmt.plural(stats.to_ship, "pedido pagado espera", "pedidos pagados esperan") %> envío.</strong>
+                El más antiguo se pagó <%= fmt.ago(stats.oldest_to_ship) %>.
+            </span>
+            <span class="callout__action">Revisar <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></span>
+        </a>
+    <% } %>
+
+    <!-- Indicadores -->
+    <section class="kpis" aria-label="Indicadores">
+        <% kpis.forEach(k => { %>
+            <a class="kpi" href="<%= k.href %>">
+                <span class="kpi__icon kpi__icon--<%= k.tone %> material-symbols-rounded" aria-hidden="true"><%= k.icon %></span>
+                <span class="kpi__label"><%= k.label %></span>
+                <strong class="kpi__value"><%= k.value %></strong>
+                <span class="kpi__foot">
+                    <% if (k.delta) { %><span class="trend trend--<%= k.delta.trend %>"><%= k.delta.label %></span><% } %>
+                    <%= k.foot %>
+                </span>
+            </a>
+        <% }) %>
+    </section>
+
+    <div class="dashboard__grid">
+
+        <!-- Por atender -->
+        <section class="panel panel--tasks" aria-labelledby="tasks-title">
+            <header class="panel__header">
+                <h2 class="panel__title" id="tasks-title">Por atender</h2>
+                <div class="segmented" role="tablist" aria-label="Tipo de tarea" data-tabs>
+                    <% taskTabs.forEach((t, i) => { %>
+                        <button type="button" class="segmented__option" role="tab" id="tab-<%= t.id %>"
+                            aria-controls="tasks-<%= t.id %>" aria-selected="<%= i === 0 %>" tabindex="<%= i === 0 ? 0 : -1 %>">
+                            <%= t.label %> <span class="segmented__count"><%= t.count %></span>
+                        </button>
+                    <% }) %>
+                </div>
+            </header>
+
+            <% taskTabs.forEach((t, i) => { %>
+                <div id="tasks-<%= t.id %>" role="tabpanel" aria-labelledby="tab-<%= t.id %>" <%= i ? "hidden" : "" %>>
+                    <% if (!t.orders.length) { %>
+                        <p class="empty-state">
+                            <span class="material-symbols-rounded" aria-hidden="true">task_alt</span>
+                            <%= t.empty %>
+                        </p>
+                    <% } else { %>
+                        <ul class="tasks">
+                            <% t.orders.forEach(o => { const sinpe = o.paymentMethod === "sinpe"; %>
+                                <li class="task">
+                                    <span class="task__icon material-symbols-rounded" aria-hidden="true"
+                                        title="<%= fmt.payment(o.paymentMethod) %>"><%= sinpe ? "phone_iphone" : "credit_card" %></span>
+                                    <div class="task__body">
+                                        <a class="task__title" href="/dashboard/orders/<%= o.id %>">
+                                            #<%= o.orderNumber || o.id %> · <%= o.client %>
+                                        </a>
+                                        <span class="task__meta">
+                                            <%= fmt.payment(o.paymentMethod) %> ·
+                                            <%= t.id === "ship" ? `pagado ${fmt.ago(o.paidAt)}` : fmt.ago(o.createdAt) %>
+                                        </span>
                                     </div>
-                                    <div class="item-sale-info">
-                                        <div class="text-second">Última venta</div>
-                                        <div class="product-sales"><%= fmt.date(product.last_sale) %></div>
+                                    <strong class="task__amount"><%= fmt.money(o.total) %></strong>
+                                    <div class="task__action">
+                                        <% if (canEdit && t.id === "collect" && sinpe) { %>
+                                            <form method="POST" action="/dashboard/orders/<%= o.id %>/status"
+                                                data-confirm="El pedido #<%= o.orderNumber %> pasará a PAGADO y se enviará el correo de confirmación al cliente.">
+                                                <input type="hidden" name="status" value="paid">
+                                                <button type="submit" class="btn btn--sm btn--primary">Aprobar pago</button>
+                                            </form>
+                                        <% } else if (canEdit && t.id === "ship") { %>
+                                            <form method="POST" action="/dashboard/orders/<%= o.id %>/status"
+                                                data-confirm="El pedido #<%= o.orderNumber %> pasará a ENVIADO.">
+                                                <input type="hidden" name="status" value="shipped">
+                                                <button type="submit" class="btn btn--sm btn--primary">Marcar enviado</button>
+                                            </form>
+                                        <% } else { %>
+                                            <a class="btn btn--sm btn--ghost" href="/dashboard/orders/<%= o.id %>">Ver</a>
+                                        <% } %>
                                     </div>
                                 </li>
                             <% }) %>
-                        <% } else { %>
-                            <li class="empty">Aún no hay ventas cobradas</li>
+                        </ul>
+                        <% if (t.count > t.orders.length) { %>
+                            <a class="panel__more" href="<%= t.href %>">
+                                Ver los <%= t.count %> pedidos <%= t.label.toLowerCase() %>
+                                <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+                            </a>
                         <% } %>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- POR PREPARAR -->
-        <div class="col-8 col-md-6 col-sm-12">
-            <div class="box dashcard-div tall">
-                <div class="dashboard-card-header header-flex">
-                    <span>Por atender</span>
-                    <a class="link-more" href="/dashboard/orders">Ver todos los pedidos ›</a>
-                </div>
-                <div class="dashboard-card-body">
-                    <% if (tickets.length) { %>
-                        <% tickets.forEach(order => { %>
-                            <%- include("partials/order-ticket", { order }) %>
-                        <% }) %>
-                    <% } else { %>
-                        <p class="empty">No hay pedidos pendientes ni por enviar 🎉</p>
                     <% } %>
                 </div>
-            </div>
-        </div>
+            <% }) %>
+        </section>
 
-        <!-- PEDIDOS RECIENTES -->
-        <div class="col-12">
-            <%- include("partials/orders-table", { orders: recentOrders, heading: "Pedidos recientes" }) %>
+        <!-- Pedidos vs cobrados -->
+        <section class="panel panel--chart" aria-labelledby="chart-title">
+            <header class="panel__header">
+                <div>
+                    <h2 class="panel__title" id="chart-title">Pedidos vs cobrados</h2>
+                    <p class="panel__subtitle">Últimos 12 meses</p>
+                </div>
+                <div class="stat-inline">
+                    <strong><%= conversion %>%</strong>
+                    <span>se cobra</span>
+                </div>
+            </header>
+            <%- include("partials/monthly-chart", { monthly }) %>
+            <p class="panel__note">
+                <%= totalPaid %> de <%= fmt.plural(totalOrders, "pedido", "pedidos") %> se cobraron.
+                <% if (stats.pending) { %>Los <%= stats.pending %> pendientes suman <%= fmt.money(stats.pending_amount) %>.<% } %>
+            </p>
+        </section>
+
+        <!-- Pedidos recientes -->
+        <section class="panel panel--recent" aria-labelledby="recent-title">
+            <header class="panel__header">
+                <h2 class="panel__title" id="recent-title">Pedidos recientes</h2>
+                <a class="panel__link" href="/dashboard/orders">Ver todos</a>
+            </header>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Pedido</th><th>Cliente</th><th>Fecha</th><th>Pago</th><th>Estado</th><th class="right">Total</th></tr>
+                    </thead>
+                    <tbody>
+                        <% recentOrders.forEach(o => { %>
+                            <tr data-href="/dashboard/orders/<%= o.id %>">
+                                <td><a href="/dashboard/orders/<%= o.id %>"><strong>#<%= o.orderNumber || o.id %></strong></a></td>
+                                <td><%= o.client %></td>
+                                <td title="<%= fmt.dateTime(o.createdAt) %>"><%= fmt.ago(o.createdAt) %></td>
+                                <td><%= fmt.payment(o.paymentMethod) %></td>
+                                <td><%- include("partials/status", { status: o.status }) %></td>
+                                <td class="right"><strong><%= fmt.money(o.total) %></strong></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="dashboard__side">
+            <!-- Más vendidos -->
+            <section class="panel" aria-labelledby="best-title">
+                <header class="panel__header">
+                    <h2 class="panel__title" id="best-title">Lo más vendido</h2>
+                    <a class="panel__link" href="/dashboard/analytics">Detalle</a>
+                </header>
+                <% if (bestSellers.length) { %>
+                    <ol class="ranking">
+                        <% bestSellers.forEach((p, i) => { %>
+                            <li class="ranking__item">
+                                <span class="ranking__pos"><%= i + 1 %></span>
+                                <img class="ranking__img" src="<%= fmt.storeImage(p.image) %>" alt="" width="40" height="40" loading="lazy">
+                                <div class="ranking__body">
+                                    <% if (p.product_id) { %>
+                                        <a class="ranking__name" href="/dashboard/products/<%= p.product_id %>/edit"><%= p.name %></a>
+                                    <% } else { %>
+                                        <span class="ranking__name"><%= p.name %></span>
+                                    <% } %>
+                                    <span class="ranking__bar"><span style="width: <%= Math.round(p.units / maxUnits * 100) %>%"></span></span>
+                                </div>
+                                <span class="ranking__value">
+                                    <strong><%= fmt.plural(p.units, "u.", "u.") %></strong>
+                                    <small><%= fmt.money(p.revenue) %></small>
+                                </span>
+                            </li>
+                        <% }) %>
+                    </ol>
+                <% } else { %>
+                    <p class="empty-state">Aún no hay ventas cobradas.</p>
+                <% } %>
+            </section>
+
+            <!-- Actividad -->
+            <section class="panel" aria-labelledby="activity-title">
+                <header class="panel__header">
+                    <h2 class="panel__title" id="activity-title">Actividad del equipo</h2>
+                    <a class="panel__link" href="/dashboard/notifications">Ver todo</a>
+                </header>
+                <% if (activity.length) { %>
+                    <ul class="feed">
+                        <% activity.forEach(a => { const target = describe(a); %>
+                            <li class="feed__item">
+                                <span class="avatar avatar--initials avatar--sm" aria-hidden="true"><%= initials(a.full_name) %></span>
+                                <p class="feed__text">
+                                    <strong><%= a.full_name %></strong> <%= fmt.ACTIVITY[a.action] || a.action %>
+                                    <% if (target) { %><a href="<%= target.href %>"><%= target.text %></a><% } %>
+                                    <time class="feed__time" datetime="<%= new Date(a.created_at).toISOString() %>"><%= fmt.ago(a.created_at) %></time>
+                                </p>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p class="empty-state">Sin actividad registrada.</p>
+                <% } %>
+            </section>
         </div>
     </div>
 </div>
-
-<script src="<%= asset('/js/print.js') %>"></script>

@@ -18,6 +18,15 @@ const profile = require("../controllers/profileController");
 const router = express.Router();
 router.use(requireAuth);
 
+// Contadores del menú lateral (solo páginas, no la API).
+const dashboardService = require("../services/dashboardService");
+router.use(async (req, res, next) => {
+  if (req.method === "GET" && !req.path.startsWith("/api/")) {
+    res.locals.navCounts = await dashboardService.getNavCounts();
+  }
+  next();
+});
+
 router.get("/", dashboard.index);
 router.get("/notifications", dashboard.notifications);
 router.get("/api/notifications", dashboard.notificationsApi);

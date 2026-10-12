@@ -38,31 +38,6 @@ button {
   cursor: pointer;
 }
 
-.btn {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  color: var(--accent);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-}
-
-.btn i {
-  font-size: 1.25rem;
-}
-
-.btn-outline {
-  border: 0.5px solid var(--border);
-  transition: background-color 0.2s ease-in-out;
-}
-
-.btn-outline:hover {
-  background-color: var(--accent-solid);
-  color: var(--on-accent);
-}
 
 
 

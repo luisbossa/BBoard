@@ -3,12 +3,13 @@
    confirmación y toast. Colores solo desde theme.css.
 ============================================================ */
 .main {
-  padding-left: 260px;
-  transition: padding-left 0.3s ease;
+  min-height: 100dvh;
+  padding-left: var(--sidebar-width);
+  transition: padding-left 0.25s ease;
 }
 
-.main.sidebar-collapsed {
-  padding-left: 90px;
+[data-sidebar="collapsed"] .main {
+  padding-left: var(--sidebar-collapsed);
 }
 
 .main-content {
@@ -162,9 +163,9 @@
   background: var(--danger);
 }
 
-@media only screen and (max-width: 1280px) {
+@media (max-width: 1024px) {
   .main,
-  .main.sidebar-collapsed {
+  [data-sidebar="collapsed"] .main {
     padding-left: 0;
   }
 }

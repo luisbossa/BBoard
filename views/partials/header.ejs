@@ -1,56 +1,91 @@
-<div class="main-header">
-    <div class="mobile-toggle" id="mobile-toggle">
-        <button type="button" id="mobile-btn" class="mobile-btn" aria-label="Abrir menú">
-            <span class="material-symbols-rounded">menu</span>
-        </button>
-    </div>
-
-    <button type="button" id="sidebar-btn" class="sidebar-btn" aria-label="Contraer menú">
-        <span class="material-symbols-rounded">menu</span>
+<%
+  const initials = currentUser.full_name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  const themes = [["light", "light_mode", "Claro"], ["dark", "dark_mode", "Oscuro"], ["system", "contrast", "Según el sistema"]];
+%>
+<header class="topbar">
+    <button type="button" class="icon-btn topbar__menu" id="mobile-btn" aria-label="Abrir menú"
+        aria-controls="sidebar" aria-expanded="false">
+        <span class="material-symbols-rounded" aria-hidden="true">menu</span>
     </button>
 
-    <div class="user-div">
-        <!-- TEMA: claro / oscuro / sistema (lógica en panel.js) -->
-        <div class="theme-menu" id="themeMenu">
-            <button type="button" class="icon-btn" id="themeBtn" aria-haspopup="menu" aria-expanded="false"
-                aria-controls="themeOptions" aria-label="Cambiar tema" title="Tema">
+    <p class="topbar__title"><%= title %></p>
+
+    <!-- Búsqueda rápida de pedidos (Ctrl/⌘ + K) -->
+    <form class="search" action="/dashboard/orders" method="GET" role="search">
+        <span class="search__icon material-symbols-rounded" aria-hidden="true">search</span>
+        <input class="search__input" type="search" name="q" id="global-search"
+            placeholder="Buscar pedido, cliente o correo" aria-label="Buscar pedidos" autocomplete="off">
+        <kbd class="search__kbd" aria-hidden="true">Ctrl K</kbd>
+    </form>
+
+    <div class="topbar__actions">
+        <!-- Tema -->
+        <div class="dropdown" data-dropdown>
+            <button type="button" class="icon-btn" data-dropdown-toggle aria-haspopup="menu" aria-expanded="false"
+                id="themeBtn" aria-label="Cambiar tema" title="Tema">
                 <span class="material-symbols-rounded" id="themeIcon" aria-hidden="true">contrast</span>
             </button>
-            <div class="menu-dropdown" id="themeOptions" role="menu" aria-label="Tema">
-                <% [["light", "light_mode", "Claro"], ["dark", "dark_mode", "Oscuro"], ["system", "contrast", "Según el sistema"]].forEach(([value, icon, label]) => { %>
-                    <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="<%= value %>">
+            <div class="dropdown__panel dropdown__panel--menu" role="menu" aria-label="Tema">
+                <% themes.forEach(([value, icon, label]) => { %>
+                    <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-theme-choice="<%= value %>">
                         <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
                         <span><%= label %></span>
-                        <span class="material-symbols-rounded menu-check" aria-hidden="true">check</span>
+                        <span class="material-symbols-rounded menu-item__check" aria-hidden="true">check</span>
                     </button>
                 <% }) %>
             </div>
         </div>
 
-        <!-- NOTIFICACIONES (se cargan desde /dashboard/api/notifications) -->
-        <div class="notification-button" id="notificationBtn" role="button" tabindex="0" aria-label="Notificaciones">
-            <span class="material-symbols-rounded">notifications</span>
-            <div class="notification-badge hidden">0</div>
-
-            <div class="notification-dropdown">
-                <div class="notification-header">
-                    <span>Notificaciones</span>
-                    <small></small>
+        <!-- Notificaciones (se cargan desde /dashboard/api/notifications) -->
+        <div class="dropdown" data-dropdown id="notifications">
+            <button type="button" class="icon-btn" data-dropdown-toggle aria-haspopup="true" aria-expanded="false"
+                aria-label="Notificaciones" title="Notificaciones">
+                <span class="material-symbols-rounded" aria-hidden="true">notifications</span>
+                <span class="icon-btn__badge" data-notif-badge hidden></span>
+            </button>
+            <div class="dropdown__panel dropdown__panel--wide">
+                <div class="dropdown__header">
+                    <strong>Notificaciones</strong>
+                    <small data-notif-summary></small>
                 </div>
-                <ul class="notification-list"></ul>
-                <a href="/dashboard/notifications" class="notification-footer">Ver toda la actividad</a>
+                <ul class="notif-list" data-notif-list>
+                    <li class="notif-list__empty">Cargando…</li>
+                </ul>
+                <a href="/dashboard/notifications" class="dropdown__footer">Ver toda la actividad</a>
             </div>
         </div>
 
-        <a href="/dashboard/profile" class="user-link">
-            <span class="user-name"><%= currentUser.full_name %></span>
-            <div class="user-img"
-                style="background-image: url('<%= currentUser.avatar || '/images/user-default.webp' %>')"></div>
-        </a>
-
-        <a class="logout-btn" href="/logout">
-            <span class="material-symbols-rounded tiny-icon">logout</span>
-            <span class="logout-span">Salir</span>
-        </a>
+        <!-- Usuario -->
+        <div class="dropdown" data-dropdown>
+            <button type="button" class="user-chip" data-dropdown-toggle aria-haspopup="menu" aria-expanded="false"
+                aria-label="Cuenta de <%= currentUser.full_name %>">
+                <% if (currentUser.avatar) { %>
+                    <img class="avatar" src="<%= currentUser.avatar %>" alt="" width="36" height="36">
+                <% } else { %>
+                    <span class="avatar avatar--initials" aria-hidden="true"><%= initials %></span>
+                <% } %>
+                <span class="user-chip__text">
+                    <span class="user-chip__name"><%= currentUser.full_name %></span>
+                    <span class="user-chip__role"><%= fmt.ROLE[currentUser.role] %></span>
+                </span>
+                <span class="user-chip__chevron material-symbols-rounded" aria-hidden="true">expand_more</span>
+            </button>
+            <div class="dropdown__panel dropdown__panel--menu" role="menu">
+                <div class="dropdown__header dropdown__header--stacked">
+                    <strong><%= currentUser.full_name %></strong>
+                    <small><%= currentUser.email || `@${currentUser.username}` %></small>
+                </div>
+                <a class="menu-item" role="menuitem" href="/dashboard/profile">
+                    <span class="material-symbols-rounded" aria-hidden="true">person</span> Mi perfil
+                </a>
+                <a class="menu-item" role="menuitem" href="<%= storeUrl %>" target="_blank" rel="noopener">
+                    <span class="material-symbols-rounded" aria-hidden="true">storefront</span> Ver tienda
+                </a>
+                <hr class="menu-divider">
+                <a class="menu-item menu-item--danger" role="menuitem" href="/logout">
+                    <span class="material-symbols-rounded" aria-hidden="true">logout</span> Cerrar sesión
+                </a>
+            </div>
+        </div>
     </div>
-</div>
+</header>

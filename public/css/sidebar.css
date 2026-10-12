@@ -1,149 +1,283 @@
 /* ============================================================
-   SIDEBAR — navegación principal. Colores desde theme.css.
+   SIDEBAR — navegación principal (views/partials/sidebar.ejs)
+   Estados: <html data-sidebar="collapsed"> (escritorio, se guarda)
+            .sidebar.is-open (móvil, con fondo oscuro detrás)
 ============================================================ */
+:root {
+  --sidebar-width: 256px;
+  --sidebar-collapsed: 76px;
+}
+
 .sidebar {
-  width: 260px;
-  height: 100vh;
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0 auto 0 0;
+  z-index: 100;
+  width: var(--sidebar-width);
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  background-color: var(--surface);
+  background: var(--surface);
   border-right: 1px solid var(--border);
-  overflow-y: auto;
   transition:
-    width 0.3s ease,
-    transform 0.3s ease;
+    width 0.25s ease,
+    transform 0.25s ease;
 }
 
-/* ---------- Colapsado ---------- */
-.sidebar.collapsed {
-  width: 90px;
+/* ---------- Marca ---------- */
+.sidebar__brand {
+  height: 72px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 22px;
 }
 
-.sidebar.collapsed .sidebar-menu > li > a .sidebar-text {
+.sidebar__home {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar__logo {
+  width: 132px;
+  height: auto;
+}
+
+.sidebar__logo-mini {
+  display: none;
+  width: 34px;
+  height: auto;
+}
+
+.sidebar__close {
   display: none;
 }
 
-.sidebar.collapsed .sidebar-menu > li > a {
-  justify-content: center;
+/* ---------- Navegación ---------- */
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 12px 12px;
 }
 
-/* ---------- Logo ---------- */
-.sidebar-logo {
-  width: 100%;
-  height: 80px;
+.sidebar__section {
+  margin: 18px 12px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.sidebar__list {
+  list-style: none;
+  display: grid;
+  gap: 2px;
+}
+
+.sidebar__link {
   position: relative;
-  padding: 10px 5px 10px 23px;
-  margin: 10px 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.sidebar-logo img {
-  width: 150px;
-  height: auto;
-  margin-right: auto;
-  transition: all 0.3s ease;
-}
-
-.sidebar.collapsed .sidebar-logo {
-  justify-content: center;
-}
-
-.sidebar.collapsed .sidebar-logo img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-
-.sidebar.collapsed .logo-img {
-  content: url("/images/minilogo.png");
-}
-
-/* ---------- Enlaces ---------- */
-.sidebar-menu {
-  padding: 10px 0;
-  list-style-type: none;
-}
-
-.sidebar-menu > li > a {
   width: 100%;
-  height: 52px;
-  padding: 15px 18px 15px 10px;
+  height: 42px;
   display: flex;
   align-items: center;
-  font-size: 0.95rem;
+  gap: 12px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-2);
-  position: relative;
+  background: transparent;
+  border: none;
+  white-space: nowrap;
+  text-align: left;
+  cursor: pointer;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
-  gap: 8px;
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
-.sidebar-menu > li > a .material-symbols-rounded {
+.sidebar__link:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.sidebar__link.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Marca a la izquierda del enlace activo */
+.sidebar__link.is-active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+.sidebar__icon {
+  flex-shrink: 0;
+  font-size: 22px;
   color: inherit;
 }
 
-.sidebar-menu > li > a:hover {
-  background-color: var(--surface-hover);
-  color: var(--text);
+.sidebar__link.is-active .sidebar__icon {
+  font-variation-settings: "FILL" 1;
 }
 
-.sidebar-menu > li > a::before {
-  width: 0;
-  height: 100%;
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: var(--accent);
-  transition: width 0.2s ease;
+.sidebar__text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.sidebar-menu > li > a.active::before {
-  width: 3px;
+.sidebar__badge {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.sidebar-menu > li > a.active {
-  color: var(--accent);
-  background: linear-gradient(90deg, var(--accent-soft), var(--accent-softer), transparent);
+.sidebar__external {
+  font-size: 16px;
+  color: var(--text-3);
 }
 
-/* ---------- Botones de menú (header) ---------- */
-.mobile-btn,
-.sidebar-btn {
-  width: auto;
-  font-size: 1.5rem;
-  background-color: var(--surface);
-  padding: 6px 9px 1px 9px;
+/* ---------- Pie ---------- */
+.sidebar__footer {
+  flex-shrink: 0;
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Contraído (escritorio) ---------- */
+@media (min-width: 1025px) {
+  [data-sidebar="collapsed"] .sidebar {
+    width: var(--sidebar-collapsed);
+  }
+
+  [data-sidebar="collapsed"] .sidebar__brand {
+    justify-content: center;
+    padding: 0;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__logo {
+    display: none;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__logo-mini {
+    display: block;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__section {
+    height: 1px;
+    margin: 14px 10px;
+    background: var(--border);
+    font-size: 0;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__link {
+    justify-content: center;
+    padding: 0;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__text,
+  [data-sidebar="collapsed"] .sidebar__external {
+    display: none;
+  }
+
+  /* El contador queda como punto sobre el ícono */
+  [data-sidebar="collapsed"] .sidebar__badge {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    min-width: 8px;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    background: var(--warning-text);
+  }
+
+  [data-sidebar="collapsed"] .sidebar__badge > [aria-hidden] {
+    display: none;
+  }
+
+  [data-sidebar="collapsed"] .sidebar__collapse .sidebar__icon {
+    transform: scaleX(-1);
+  }
+
+}
+
+/* Tooltip del menú contraído (uno solo, posicionado por panel.js:
+   fuera del sidebar para que el scroll no lo recorte). */
+.sidebar-tooltip {
+  position: fixed;
+  z-index: 200;
+  padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  transition: background-color 0.15s ease;
+  background: var(--neutral-solid);
+  color: var(--on-accent);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
-.mobile-btn:hover,
-.sidebar-btn:hover {
-  background-color: var(--surface-hover);
+.sidebar-tooltip[hidden] {
+  display: none;
 }
 
-@media only screen and (max-width: 1280px) {
+/* ---------- Móvil / tablet: panel deslizable ---------- */
+@media (max-width: 1024px) {
   .sidebar {
-    transition: transform 0.3s ease-in-out;
-    max-width: 100%;
-    z-index: 99;
     transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
     box-shadow: var(--shadow-lg);
   }
 
-  .sidebar.active {
-    transform: translateX(0);
+  .sidebar__close {
+    display: grid;
   }
+
+  .sidebar__collapse {
+    display: none;
+  }
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--overlay);
+  backdrop-filter: blur(2px);
+  animation: fade-in 0.2s ease;
+}
+
+.sidebar-backdrop[hidden] {
+  display: none;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
 }
