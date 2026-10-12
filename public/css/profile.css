@@ -29,7 +29,7 @@
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--border-color);
+  border: 3px solid var(--border);
 }
 
 /* OVERLAY FOTO */
@@ -38,7 +38,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background: var(--main-color);
+  background: var(--accent-solid);
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -46,13 +46,14 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--surface);
 }
 
 .avatar-overlay span {
   font-size: 20px;
-  color: #f8fafc;
+  color: var(--on-accent);
 }
 
 /* ROLE */
@@ -96,9 +97,9 @@
 .form-group textarea {
   padding: 10px 12px;
   border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: var(--box-bg);
-  color: var(--text-color);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   font-size: 14px;
 }
 
@@ -124,7 +125,7 @@
   right: 10px;
   cursor: pointer;
   font-size: 20px;
-  color: var(--text-second-color);
+  color: var(--text-2);
 }
 
 /* BIO */

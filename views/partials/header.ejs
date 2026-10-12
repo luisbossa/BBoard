@@ -10,6 +10,23 @@
     </button>
 
     <div class="user-div">
+        <!-- TEMA: claro / oscuro / sistema (lógica en panel.js) -->
+        <div class="theme-menu" id="themeMenu">
+            <button type="button" class="icon-btn" id="themeBtn" aria-haspopup="menu" aria-expanded="false"
+                aria-controls="themeOptions" aria-label="Cambiar tema" title="Tema">
+                <span class="material-symbols-rounded" id="themeIcon" aria-hidden="true">contrast</span>
+            </button>
+            <div class="menu-dropdown" id="themeOptions" role="menu" aria-label="Tema">
+                <% [["light", "light_mode", "Claro"], ["dark", "dark_mode", "Oscuro"], ["system", "contrast", "Según el sistema"]].forEach(([value, icon, label]) => { %>
+                    <button type="button" role="menuitemradio" aria-checked="false" data-theme-choice="<%= value %>">
+                        <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+                        <span><%= label %></span>
+                        <span class="material-symbols-rounded menu-check" aria-hidden="true">check</span>
+                    </button>
+                <% }) %>
+            </div>
+        </div>
+
         <!-- NOTIFICACIONES (se cargan desde /dashboard/api/notifications) -->
         <div class="notification-button" id="notificationBtn" role="button" tabindex="0" aria-label="Notificaciones">
             <span class="material-symbols-rounded">notifications</span>

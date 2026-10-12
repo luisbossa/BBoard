@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title ? `${title} · ` : "" %>Panel 100Puntadas</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <%- include("../partials/theme-head") %>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
 
@@ -16,16 +17,12 @@
     <link rel="stylesheet" href="<%= asset('/css/grid.css') %>">
     <link rel="stylesheet" href="<%= asset('/css/cards.css') %>">
     <link rel="stylesheet" href="<%= asset('/css/main-table.css') %>">
-    <link rel="stylesheet" href="<%= asset('/css/notifications.css') %>">
     <link rel="stylesheet" href="<%= asset('/css/footer.css') %>">
     <link rel="stylesheet" href="<%= asset('/css/admin.css') %>">
     <%- style %>
 </head>
 
 <body>
-    <!-- Aplica el tema guardado antes de pintar (evita el parpadeo claro→oscuro). -->
-    <script>try { if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark"); } catch (e) {}</script>
-
     <%- include("../partials/sidebar") %>
 
     <main class="main">
@@ -49,6 +46,7 @@
     <div id="toast" class="approve-msg hidden" role="status"></div>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
+    <script src="<%= asset('/js/theme.js') %>"></script>
     <script src="<%= asset('/js/panel.js') %>"></script>
     <%- script %>
 </body>

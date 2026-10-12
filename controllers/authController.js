@@ -5,10 +5,33 @@ const { signIn, signOut, COOKIE } = require("../middlewares/auth");
 
 const RESET_SENT = "Si el correo está registrado, te enviamos un enlace para restablecer la contraseña.";
 
+/* Páginas de acceso: layout propio (layouts/auth) y valores por defecto
+   para que cada vista reciba siempre las mismas variables. */
+const VIEWS = {
+  login: { view: "auth/login", title: "Iniciar sesión" },
+  resetRequest: { view: "auth/reset-request", title: "Recuperar contraseña" },
+  resetNew: { view: "auth/reset-new", title: "Nueva contraseña" },
+};
+
+function renderAuth(res, page, data = {}, status = 200) {
+  const { view, title } = VIEWS[page];
+  res.status(status).render(view, {
+    layout: "layouts/auth",
+    title,
+    error: null,
+    success: null,
+    message: null,
+    username: "",
+    ...data,
+  });
+}
+
+exports.renderAuth = renderAuth;
+
 exports.loginPage = (req, res) => {
   // Con sesión iniciada no tiene sentido ver el login.
   if (req.cookies[COOKIE]) return res.redirect("/dashboard");
-  res.render("auth/login", { layout: false, error: null, username: "" });
+  renderAuth(res, "login");
 };
 
 exports.login = async (req, res) => {
@@ -16,11 +39,15 @@ exports.login = async (req, res) => {
   const user = await userService.authenticate(username, password);
 
   if (!user) {
-    return res.status(401).render("auth/login", {
-      layout: false,
-      error: "Usuario o contraseña incorrectos",
-      username: typeof username === "string" ? username : "",
-    });
+    return renderAuth(
+      res,
+      "login",
+      {
+        error: "Usuario o contraseña incorrectos",
+        username: typeof username === "string" ? username : "",
+      },
+      401,
+    );
   }
 
   signIn(res, user, Boolean(remember));
@@ -34,7 +61,7 @@ exports.logout = (req, res) => {
 
 /* ---------- Recuperación de contraseña ---------- */
 exports.resetRequestPage = (req, res) => {
-  res.render("auth/reset-request", { layout: false, message: null, error: null });
+  renderAuth(res, "resetRequest");
 };
 
 exports.resetRequest = async (req, res) => {
@@ -53,26 +80,19 @@ exports.resetRequest = async (req, res) => {
       });
     } catch (err) {
       console.error("RESET MAIL ERROR:", err.message);
-      return res.render("auth/reset-request", {
-        layout: false,
-        message: null,
+      return renderAuth(res, "resetRequest", {
         error: "No se pudo enviar el correo. Intenta más tarde.",
       });
     }
   }
 
   // Misma respuesta exista o no el correo (no revela usuarios).
-  res.render("auth/reset-request", { layout: false, message: RESET_SENT, error: null });
+  renderAuth(res, "resetRequest", { message: RESET_SENT });
 };
 
 exports.resetPage = async (req, res) => {
   const user = await userService.findByResetToken(req.params.token);
-  res.render("auth/reset-new", {
-    layout: false,
-    token: req.params.token,
-    invalid: !user,
-    error: null,
-  });
+  renderAuth(res, "resetNew", { token: req.params.token, invalid: !user });
 };
 
 exports.resetSubmit = async (req, res) => {
@@ -80,8 +100,7 @@ exports.resetSubmit = async (req, res) => {
   const { password, confirm } = req.body;
   const user = await userService.findByResetToken(token);
 
-  const fail = (error) =>
-    res.status(400).render("auth/reset-new", { layout: false, token, invalid: !user, error });
+  const fail = (error) => renderAuth(res, "resetNew", { token, invalid: !user, error }, 400);
 
   if (!user) return fail(null);
   if (password !== confirm) return fail("Las contraseñas no coinciden");
@@ -93,10 +112,5 @@ exports.resetSubmit = async (req, res) => {
     throw err;
   }
 
-  res.render("auth/login", {
-    layout: false,
-    error: null,
-    success: "Contraseña actualizada. Ya puedes iniciar sesión.",
-    username: "",
-  });
+  renderAuth(res, "login", { success: "Contraseña actualizada. Ya puedes iniciar sesión." });
 };

@@ -1,0 +1,156 @@
+/* ============================================================
+   TEMA (día / noche) — única fuente de colores del panel.
+   - <html data-theme="light|dark"> lo pone el script del <head>
+     (preferencia guardada o la del sistema) antes de pintar.
+   - Ningún otro CSS debe usar colores fijos: solo estas variables.
+============================================================ */
+:root {
+  color-scheme: light;
+
+  /* Superficies */
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f7f8fa; /* relleno sutil: tickets, cabeceras de tabla */
+  --surface-hover: #f0f3f8;
+  --overlay: rgba(16, 24, 40, 0.45);
+
+  /* Texto */
+  --text: #2f3a47;
+  --text-2: #5f6b7a; /* secundario: 5.4:1 sobre --surface */
+  --text-3: #6f7987; /* ayudas y placeholders */
+
+  /* Bordes */
+  --border: #e4e7ec;
+  --border-strong: #cfd5de;
+
+  /* Acento (marca) */
+  --accent: #4370c2;
+  --accent-hover: #355ea9;
+  --accent-solid: #4a73c6; /* fondo de botones con texto blanco (4.6:1) */
+  --accent-soft: rgba(67, 112, 194, 0.1);
+  --accent-softer: rgba(67, 112, 194, 0.05);
+  --on-accent: #ffffff;
+
+  /* Estados (fondo + texto, siempre en pareja) */
+  --success-bg: #e5f5ec;
+  --success-text: #11703d;
+  --warning-bg: #fff1d1;
+  --warning-text: #835400;
+  --danger-bg: #fdeceb;
+  --danger-text: #b42318;
+  --info-bg: #e7eefc;
+  --info-text: #2b55a6;
+  --muted-bg: #eef0f3;
+  --muted-text: #556170;
+  --danger: #d92d20; /* contador de notificaciones */
+
+  /* Marcas externas */
+  --whatsapp: #15803d;
+  --neutral-solid: #3b4552; /* botón Imprimir */
+
+  /* Profundidad */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 4px 14px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.16);
+  --focus-ring: 0 0 0 3px rgba(67, 112, 194, 0.35);
+
+  --scroll-thumb: #c5ccd6;
+  --skeleton: #eceff3;
+
+  /* Alias de la versión anterior (CSS existente) */
+  --body-bg: var(--bg);
+  --box-bg: var(--surface);
+  --main-color: var(--accent);
+  --text-color: var(--text);
+  --text-second-color: var(--text-2);
+  --border-color: var(--border);
+  --shadow: var(--shadow-sm);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0e1116;
+  --surface: #161a21;
+  --surface-2: #1b2029;
+  --surface-hover: #222834;
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  --text: #e4e8ee;
+  --text-2: #a3adbb;
+  --text-3: #858f9e;
+
+  --border: #272e3a;
+  --border-strong: #3a4352;
+
+  --accent: #86a6f0;
+  --accent-hover: #a2bbf5;
+  --accent-solid: #4a73c6;
+  --accent-soft: rgba(134, 166, 240, 0.14);
+  --accent-softer: rgba(134, 166, 240, 0.07);
+  --on-accent: #ffffff;
+
+  --success-bg: rgba(52, 168, 98, 0.16);
+  --success-text: #74d49d;
+  --warning-bg: rgba(236, 172, 44, 0.16);
+  --warning-text: #f2c463;
+  --danger-bg: rgba(240, 84, 72, 0.16);
+  --danger-text: #ff9e96;
+  --info-bg: rgba(110, 154, 240, 0.16);
+  --info-text: #a3c0ff;
+  --muted-bg: rgba(160, 172, 192, 0.13);
+  --muted-text: #c1c8d3;
+  --danger: #d92d20;
+
+  --whatsapp: #15803d;
+  --neutral-solid: #3a4352;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.55);
+  --focus-ring: 0 0 0 3px rgba(134, 166, 240, 0.4);
+
+  --scroll-thumb: #3a4352;
+  --skeleton: #222834;
+}
+
+/* Barra de desplazamiento acorde al tema */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+
+/* Transición suave solo al cambiar de tema (no al cargar la página). */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    fill 0.25s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition * {
+    transition: none !important;
+  }
+}
+
+/* Foco visible y consistente con teclado */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 6px;
+}
+
+/* El degradado azul del logo pierde contraste sobre fondo oscuro. */
+:root[data-theme="dark"] .logo-img,
+:root[data-theme="dark"] .card__logo {
+  filter: brightness(1.35) saturate(1.1);
+}

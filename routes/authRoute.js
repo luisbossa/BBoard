@@ -11,12 +11,12 @@ const limiter = rateLimit({
   standardHeaders: "draft-8",
   legacyHeaders: false,
   handler: (req, res) =>
-    res.status(429).render(req.path.startsWith("/reset") ? "auth/reset-request" : "auth/login", {
-      layout: false,
-      error: "Demasiados intentos. Espera unos minutos e intenta de nuevo.",
-      message: null,
-      username: "",
-    }),
+    auth.renderAuth(
+      res,
+      req.path.startsWith("/reset") ? "resetRequest" : "login",
+      { error: "Demasiados intentos. Espera unos minutos e intenta de nuevo." },
+      429,
+    ),
 });
 
 router.get("/", auth.loginPage);

@@ -66,6 +66,7 @@ app.use((req, res, next) => {
 });
 
 /* ---------- Rutas ---------- */
+app.use("/media", require("./routes/mediaRoute"));
 app.use("/", require("./routes/authRoute"));
 app.use("/dashboard", require("./routes/dashboardRoute"));
 

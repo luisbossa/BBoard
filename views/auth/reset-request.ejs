@@ -1,48 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
+<header class="card__header">
+    <h1 class="card__title">Recupera tu contraseña</h1>
+    <p class="card__subtitle">Escribe el correo de tu usuario y te enviaremos un enlace para crear una nueva.</p>
+</header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restablecer contraseña · Panel 100Puntadas</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="<%= asset('/css/reset-password.css') %>">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
-</head>
+<% if (message) { %><%- include("../partials/alert", { type: "success", message }) %><% } %>
+<% if (error) { %><%- include("../partials/alert", { type: "error", message: error }) %><% } %>
 
-<body class="reset-page">
-    <div class="reset-container animate-reset-scale">
-        <div class="reset-header">
-            <h2 class="reset-title">Restablecer contraseña</h2>
-            <p class="reset-subtitle">Ingresa el correo de tu usuario y te enviaremos un enlace de recuperación</p>
+<% if (!message) { %>
+    <form class="form" action="/reset" method="POST" data-auth-form>
+        <div class="field">
+            <label class="field__label" for="email">Correo electrónico</label>
+            <div class="field__control">
+                <span class="field__icon icon" aria-hidden="true">mail</span>
+                <input class="field__input" type="email" id="email" name="email" placeholder="tu@correo.com"
+                    autocomplete="email" required autofocus>
+            </div>
         </div>
 
-        <% if (message) { %>
-            <div class="reset-message"><p><%= message %></p></div>
-        <% } %>
-        <% if (error) { %>
-            <div class="reset-message error"><p><%= error %></p></div>
-        <% } %>
+        <button class="btn btn--primary btn--block" type="submit" data-loading-text="Enviando…">
+            <span class="btn__label">Enviar enlace</span>
+        </button>
+    </form>
+<% } %>
 
-        <% if (!message) { %>
-            <form class="reset-form" action="/reset" method="POST">
-                <div class="reset-form-group">
-                    <label for="email">Correo electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="tu@correo.com" required autocomplete="email">
-                </div>
-                <div class="reset-form-submit">
-                    <button type="submit">ENVIAR ENLACE</button>
-                </div>
-            </form>
-        <% } %>
-
-        <div class="reset-form-footer">
-            <a href="/">
-                <span class="material-symbols-rounded">arrow_back</span>
-                <span class="footer-text">Volver al login</span>
-            </a>
-        </div>
-    </div>
-</body>
-
-</html>
+<a class="link link--back" href="/">
+    <span class="icon icon--sm" aria-hidden="true">arrow_back</span> Volver a iniciar sesión
+</a>

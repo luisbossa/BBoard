@@ -1,24 +1,22 @@
+/* ============================================================
+   TARJETAS DEL DASHBOARD: cajas, más vendidos, tickets de pedido,
+   estados y botones de acción. Colores solo desde theme.css.
+============================================================ */
+.box {
+  padding: 20px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.box-body {
+  padding: 20px 0;
+}
+
 .dashcard-div {
   height: 370px;
   max-height: 500px;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #507cd1 #f1f1f1;
-}
-
-.dashcard-div::-webkit-scrollbar {
-  width: 8px;
-}
-
-.dashcard-div::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.dashcard-div::-webkit-scrollbar-thumb {
-  background-color: #507cd1;
-  border-radius: 4px;
-  border: 2px solid #f1f1f1;
 }
 
 .dashboard-card-header {
@@ -26,6 +24,7 @@
   font-weight: 600;
   margin-bottom: 15px;
   padding-bottom: 8px;
+  color: var(--text);
 }
 
 .bestseller-header {
@@ -33,27 +32,12 @@
   font-weight: 600;
 }
 
-/* Columnas */
-.order-col {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.text-second {
   font-size: 14px;
-  color: var(--text-color);
-  gap: 6px;
+  color: var(--text-2);
 }
 
-.box-body {
-  padding: 20px 0;
-}
-
-.box {
-  padding: 20px;
-  background-color: var(--box-bg); /* Fondo que cambia con el tema */
-  border: 0.5px solid var(--border-color); /* Borde que cambia con el tema */
-  border-radius: 10px;
-}
-
+/* ---------- Más vendidos ---------- */
 .product-list {
   list-style-type: none;
 }
@@ -73,25 +57,14 @@
 .item-info img {
   width: 50px;
   height: 50px;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-right: 10px;
-}
-
-.product-name {
-  margin-bottom: 5px;
-}
-
-.text-second {
-  font-size: 14px;
-  color: var(--text-second-color);
+  object-fit: cover;
+  background: var(--surface-2);
 }
 
 .item-sale-info {
   text-align: right;
-}
-
-.product-sales {
-  margin-top: 5px;
 }
 
 .product-name,
@@ -99,108 +72,62 @@
   font-weight: 600;
   font-size: 14px;
   text-transform: capitalize;
+  color: var(--text);
 }
 
+.product-name {
+  margin-bottom: 5px;
+}
+
+.product-sales {
+  margin-top: 5px;
+}
+
+/* ---------- Estado (badge) — colores por estado en admin.css ---------- */
 .status {
   width: fit-content;
-  color: #b78103;
   display: inline-block;
   margin-top: 6px;
-  padding: 4px 10px 8px;
+  padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.4;
   border-radius: 40px;
+  background: var(--muted-bg);
+  color: var(--muted-text);
 }
 
-.status.pending {
-  width: fit-content;
-  background: #ffd06b;
-}
-
-.status.paid {
-  background: #e6f7f1;
-  color: #0f9d58;
-}
-
-.order-actions {
-  display: flex;
-  margin-top: auto;
-  padding-top: 1rem;
-  gap: 10px;
-}
-
-.order-summary {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-top: 6px;
-  gap: 8px;
-}
-
-.btn-action {
-  width: fit-content;
-  display: flex;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-action.whatsapp {
-  background: #25d366;
-  color: #fff;
-}
-
-.btn-action.print {
-  background: #161616;
-  opacity: 0.8;
-  color: #fff;
-}
-
-.dashboard-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
+/* ---------- Ticket de pedido ---------- */
 .order-ticket {
-  padding: 12px 15px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  gap: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .gridcolums-4 {
   display: grid;
   grid-template-columns: 1.6fr 1.3fr 1.5fr 1fr;
   grid-template-areas: "pedido cliente direccion productos";
-  background-color: #f9f9f9;
-  border-radius: 10px;
+  background-color: var(--surface-2);
   padding: 15px;
   gap: 20px;
 }
 
-.gridcolums-4 > .order-col:nth-child(1) {
-  grid-area: pedido;
+.gridcolums-4 > .order-col:nth-child(1) { grid-area: pedido; }
+.gridcolums-4 > .order-col:nth-child(2) { grid-area: cliente; }
+.gridcolums-4 > .order-col:nth-child(3) { grid-area: direccion; }
+.gridcolums-4 > .order-col:nth-child(4) { grid-area: productos; }
+
+.order-col {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: var(--text);
+  gap: 6px;
 }
 
-.gridcolums-4 > .order-col:nth-child(2) {
-  grid-area: cliente;
-}
-
-.gridcolums-4 > .order-col:nth-child(3) {
-  grid-area: direccion;
-}
-
-.gridcolums-4 > .order-col:nth-child(4) {
-  grid-area: productos;
+.gap-col {
+  gap: 13px;
 }
 
 .order-number {
@@ -208,13 +135,18 @@
   margin-bottom: 4px;
 }
 
-.order-date {
-  font-size: 13px;
-}
-
 .order-client,
 .order-date {
   font-size: 14px;
+}
+
+.order-date,
+.order-id,
+.order-phone,
+.order-email,
+.order-neighborhood,
+.order-address-detail {
+  color: var(--text-2);
 }
 
 .order-payment,
@@ -228,107 +160,67 @@
   font-weight: 600;
 }
 
-/* Pedido */
-.order-id span {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.order-id small {
-  display: block;
-  font-size: 12px;
-}
-
-/* Badge estado */
-.order-badge {
-  width: fit-content;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.order-badge.pending {
-  background: rgba(255, 197, 66, 0.15);
-  color: #d18b00;
-}
-
-.order-badge.completed {
-  background: rgba(4, 209, 130, 0.15);
-  color: #00ab6f;
-}
-
 .order-address-detail {
   font-size: 13px;
 }
 
-.gap-col {
-  gap: 13px;
+.order-summary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  gap: 8px;
 }
 
-/* Modo oscuro */
-.dark .box {
-  background-color: var(--box-bg);
-  border: 0.5px solid var(--border-color);
+.order-actions {
+  display: flex;
+  margin-top: auto;
+  padding-top: 1rem;
+  gap: 10px;
 }
 
-.dark .status.pending {
-  background: #ffd06b;
+/* ---------- Botones de acción ---------- */
+.btn-action {
+  width: fit-content;
+  display: flex;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  align-items: center;
+  gap: 6px;
+  transition: filter 0.15s ease;
 }
 
-.dark .status.paid {
-  background: #333;
-  color: #0f9d58;
+.btn-action:hover {
+  filter: brightness(1.08);
 }
 
-.dark .order-ticket {
-  background-color: var(--box-bg);
+.btn-action.whatsapp {
+  background: var(--whatsapp);
+  color: var(--on-accent);
 }
 
-.dark .gridcolums-4 {
-  background-color: var(--box-bg);
-}
-
-.dark .order-actions .btn-action.print {
-  background: #333;
-}
-
-.dark .product-name,
-.dark .product-sales,
-.dark .order-id span {
-  color: var(--text-color);
-}
-
-.dark .order-col {
-  color: var(--text-color);
-}
-
-.dark .dashboard-card-header {
-  color: var(--text-color);
-}
-
-.dark .btn-action:hover {
-  opacity: 0.9;
+.btn-action.print {
+  background: var(--neutral-solid);
+  color: var(--on-accent);
 }
 
 .btn-action.approve {
-  color: #f8fafc;
-  border-radius: 6px;
   padding: 10px 16px;
-  font-weight: 600;
-  background: var(--main-color);
+  background: var(--accent-solid);
+  color: var(--on-accent);
   letter-spacing: 0.3px;
   white-space: nowrap;
-  cursor: pointer;
 }
 
-.btn-action.approve:disabled,
-.btn-action.approve.approved {
-  background: #e5e7eb;
-  color: #6b7280;
+.btn-action.approve:disabled {
+  background: var(--muted-bg);
+  color: var(--muted-text);
   cursor: not-allowed;
-  opacity: 0.7;
   pointer-events: none;
 }
 
@@ -358,13 +250,9 @@
     gap: 10px;
   }
 
-  .order-ticket {
-    padding: 14px 8px;
-  }
-
   .order-col {
     padding-bottom: 8px;
-    border-bottom: 1px dashed var(--border-color);
+    border-bottom: 1px dashed var(--border);
   }
 
   .order-col:last-child {

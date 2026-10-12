@@ -98,20 +98,20 @@
         const weekly = <%- JSON.stringify(bucket === "week") %>;
         const daily = <%- JSON.stringify(daily).replace(/</g, "\\u003c") %>;
         const money = (n) => "₡" + Math.round(n).toLocaleString("es-CR").replace(/\s/g, ".");
-        const css = (name) => getComputedStyle(document.body).getPropertyValue(name).trim();
+        const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
         function render() {
             const el = document.getElementById("daily-chart");
             el.innerHTML = "";
-            const isDark = document.body.classList.contains("dark");
+            const isDark = document.documentElement.getAttribute("data-theme") === "dark";
             new ApexCharts(el, {
-                chart: { type: "bar", height: 280, toolbar: { show: false }, fontFamily: "inherit", foreColor: css("--text-second-color"), background: "transparent" },
+                chart: { type: "bar", height: 280, toolbar: { show: false }, fontFamily: "inherit", foreColor: css("--text-2"), background: "transparent" },
                 theme: { mode: isDark ? "dark" : "light" },
                 series: [{ name: "Ingresos", data: daily.map((d) => ({ x: d.day, y: d.revenue, sales: d.sales })) }],
-                colors: [isDark ? "#8eaaf0" : "#507cd1"],
+                colors: [css("--accent")],
                 plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: "end", columnWidth: daily.length > 40 ? "80%" : "60%" } },
                 dataLabels: { enabled: false },
-                grid: { borderColor: css("--border-color"), strokeDashArray: 3, xaxis: { lines: { show: false } } },
+                grid: { borderColor: css("--border"), strokeDashArray: 3, xaxis: { lines: { show: false } } },
                 xaxis: {
                     type: "category",
                     tickAmount: Math.min(daily.length, 10),
@@ -130,7 +130,7 @@
         }
 
         render();
-        // Repinta si se cambia el modo oscuro.
-        new MutationObserver(render).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+        // Repinta al cambiar de tema (claro / oscuro).
+        new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     })();
 </script>

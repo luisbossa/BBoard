@@ -35,4 +35,22 @@ async function notifySinpePaid(orderId) {
   }
 }
 
-module.exports = { notifySinpePaid };
+/* ---------- Imágenes de la tienda ----------
+   Las fotos del catálogo están en el dominio de la tienda (/images/...).
+   El panel las pide desde el servidor y las entrega desde su propio
+   dominio: así no dependen de las cabeceras CORP de la tienda. */
+const IMAGE_PATH = /^\/images\/[\w\-./]+\.(?:jpe?g|png|webp|avif|gif)$/i;
+
+async function fetchImage(path) {
+  if (!IMAGE_PATH.test(path) || path.includes("..")) return null;
+
+  const response = await fetch(`${env.storeUrl}${path}`, {
+    signal: AbortSignal.timeout(8000),
+  });
+  const type = response.headers.get("content-type") || "";
+  if (!response.ok || !type.startsWith("image/")) return null;
+
+  return { type, body: Buffer.from(await response.arrayBuffer()) };
+}
+
+module.exports = { notifySinpePaid, fetchImage };

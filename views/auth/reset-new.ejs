@@ -1,55 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
+<header class="card__header">
+    <h1 class="card__title"><%= invalid ? "Enlace no válido" : "Nueva contraseña" %></h1>
+    <p class="card__subtitle">
+        <%= invalid
+            ? "El enlace caducó o ya se usó. Pide uno nuevo para continuar."
+            : "Elige una contraseña de al menos 8 caracteres." %>
+    </p>
+</header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva contraseña · Panel 100Puntadas</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="<%= asset('/css/reset-password.css') %>">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
-</head>
+<% if (error) { %><%- include("../partials/alert", { type: "error", message: error }) %><% } %>
 
-<body class="reset-page">
-    <div class="reset-container animate-reset-scale">
-        <div class="reset-header">
-            <h2 class="reset-title">Nueva contraseña</h2>
-            <p class="reset-subtitle">
-                <%= invalid ? "El enlace no es válido o ya caducó." : "Elige una contraseña de al menos 8 caracteres" %>
-            </p>
-        </div>
+<% if (invalid) { %>
+    <a class="btn btn--primary btn--block" href="/reset">Pedir un enlace nuevo</a>
+<% } else { %>
+    <form class="form" action="/reset/<%= token %>" method="POST" data-auth-form>
+        <%- include("../partials/password-field", {
+            id: "password", name: "password", label: "Nueva contraseña",
+            autocomplete: "new-password", minlength: 8,
+        }) %>
+        <%- include("../partials/password-field", {
+            id: "confirm", name: "confirm", label: "Confirmar contraseña",
+            autocomplete: "new-password", minlength: 8,
+        }) %>
 
-        <% if (error) { %>
-            <div class="reset-message error"><p><%= error %></p></div>
-        <% } %>
+        <button class="btn btn--primary btn--block" type="submit" data-loading-text="Guardando…">
+            <span class="btn__label">Guardar contraseña</span>
+        </button>
+    </form>
+<% } %>
 
-        <% if (invalid) { %>
-            <div class="reset-form-submit">
-                <a class="reset-button-link" href="/reset">PEDIR UN ENLACE NUEVO</a>
-            </div>
-        <% } else { %>
-            <form class="reset-form" action="/reset/<%= token %>" method="POST">
-                <div class="reset-form-group">
-                    <label for="password">Nueva contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required minlength="8" autocomplete="new-password">
-                </div>
-                <div class="reset-form-group">
-                    <label for="confirm">Confirmar contraseña</label>
-                    <input type="password" id="confirm" name="confirm" placeholder="••••••••" required minlength="8" autocomplete="new-password">
-                </div>
-                <div class="reset-form-submit">
-                    <button type="submit">ACTUALIZAR</button>
-                </div>
-            </form>
-        <% } %>
-
-        <div class="reset-form-footer">
-            <a href="/">
-                <span class="material-symbols-rounded">arrow_back</span>
-                <span class="footer-text">Volver al login</span>
-            </a>
-        </div>
-    </div>
-</body>
-
-</html>
+<a class="link link--back" href="/">
+    <span class="icon icon--sm" aria-hidden="true">arrow_back</span> Volver a iniciar sesión
+</a>

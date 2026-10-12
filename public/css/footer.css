@@ -1,13 +1,13 @@
 .footer {
   margin-top: auto;
   padding: 20px 3px 20px 10px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border);
 }
 
 .footer div {
   font-size: 12px;
   text-align: center;
-  color: var(--text-color);
+  color: var(--text);
   transition: all 0.3s ease;
 }
 

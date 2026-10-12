@@ -1,46 +1,13 @@
+/* Caja contenedora de tablas (pedidos, clientes, usuarios). */
 .box-table {
-  max-height: 600px;
   padding: 20px;
   border-radius: 10px;
-  background-color: var(--box-bg);
-  border: 0.5px solid var(--border-color);
-  scrollbar-color: #507cd1 #f1f1f1;
-  scrollbar-width: thin;
-  overflow-y: auto;
-}
-
-.box-table::-webkit-scrollbar {
-  width: 8px;
-}
-
-.box-table::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.box-table::-webkit-scrollbar-thumb {
-  background-color: #507cd1;
-  border-radius: 4px;
-  border: 2px solid #f1f1f1;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
 }
 
 table {
   width: 100%;
-  min-width: 1000px;
-}
-
-.order-owner {
-  display: flex;
-  align-items: center;
-  text-transform: capitalize;
-  font-weight: 500;
-}
-
-.order-owner img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  margin-right: 15px;
 }
 
 table thead tr {
@@ -49,39 +16,7 @@ table thead tr {
 
 table th,
 table td {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.order-status {
-  font-weight: 500;
-  padding: 5px 15px 10px;
-  border-radius: 40px;
-}
-
-.order-paid {
-  border-radius: 40px;
-  background: #b6fcd0; /* verde claro */
-  color: #067a23; /* verde oscuro */
-}
-
-.order-shipped {
-  border-radius: 40px;
-  background: #ffd06b;
-  color: #b78103;
-}
-
-.order-ready {
-  border-radius: 40px;
-  background: #a3d2ff;
-  color: #004085;
-}
-
-.product-quantity,
-.product-price,
-.order-total,
-.order-status {
-  font-size: 14px;
+  border-bottom: 1px solid var(--border);
 }
 
 @media (max-width: 600px) {

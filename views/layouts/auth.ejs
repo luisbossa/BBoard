@@ -1,0 +1,87 @@
+<%
+  // Íconos orbitando el logo: los módulos del panel.
+  const orbitIcons = ["receipt_long", "storefront", "group", "analytics", "payments"];
+  const features = [
+    ["receipt_long", "Pedidos y pagos", "Aprueba SINPE, prepara envíos e imprime órdenes."],
+    ["storefront", "Catálogo de la tienda", "Productos, fotos, tallas e inventario al día."],
+    ["analytics", "Clientes y analíticas", "Ventas, provincias y productos que más se mueven."],
+  ];
+%>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%- include("../partials/theme-head") %>
+    <title><%= title ? `${title} · ` : "" %>Panel 100Puntadas</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Solo los íconos que usan estas páginas (icon_names, en orden alfabético). -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400,0,0&icon_names=analytics,arrow_back,check_circle,contrast,dark_mode,error,group,keyboard_capslock,light_mode,lock,mail,open_in_new,payments,person,receipt_long,storefront,visibility,visibility_off&display=block">
+    <link rel="stylesheet" href="<%= asset('/css/auth.css') %>">
+</head>
+
+<body class="auth">
+    <button type="button" class="theme-switch" data-theme-switch>
+        <span class="icon" data-theme-icon aria-hidden="true">contrast</span>
+        <span class="theme-switch__label" data-theme-label>Sistema</span>
+    </button>
+
+    <main class="auth__shell">
+        <!-- Marca (decorativa en móvil: se oculta) -->
+        <aside class="brand" aria-label="Panel 100Puntadas">
+            <div class="orbit" aria-hidden="true">
+                <span class="orbit__ring orbit__ring--outer"></span>
+                <span class="orbit__ring orbit__ring--middle"></span>
+                <span class="orbit__ring orbit__ring--inner"></span>
+                <span class="orbit__core">
+                    <img src="/images/login-minilogo.png" alt="" width="40" height="33">
+                </span>
+                <% orbitIcons.forEach((icon, i) => { %>
+                    <span class="orbit__item" style="--i: <%= i %>">
+                        <span class="icon"><%= icon %></span>
+                    </span>
+                <% }) %>
+            </div>
+
+            <h2 class="brand__title">Tu tienda, en un solo lugar</h2>
+            <p class="brand__text">El panel administrativo de 100Puntadas.</p>
+
+            <ul class="brand__features">
+                <% features.forEach(([icon, title, text]) => { %>
+                    <li class="feature">
+                        <span class="feature__icon icon" aria-hidden="true"><%= icon %></span>
+                        <span>
+                            <strong class="feature__title"><%= title %></strong>
+                            <span class="feature__text"><%= text %></span>
+                        </span>
+                    </li>
+                <% }) %>
+            </ul>
+        </aside>
+
+        <!-- Formulario (login / recuperar contraseña) -->
+        <section class="auth__panel">
+            <div class="card">
+                <img class="card__logo" src="/images/logo.png" alt="BBoard" width="150" height="23">
+                <%- body %>
+            </div>
+
+            <footer class="auth__footer">
+                <span>© <%= new Date().getFullYear() %> 100Puntadas</span>
+                <a class="link link--muted" href="<%= storeUrl %>" target="_blank" rel="noopener">
+                    Ir a la tienda <span class="icon icon--sm" aria-hidden="true">open_in_new</span>
+                </a>
+            </footer>
+        </section>
+    </main>
+
+    <script src="<%= asset('/js/theme.js') %>"></script>
+    <script src="<%= asset('/js/auth.js') %>"></script>
+</body>
+
+</html>

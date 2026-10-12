@@ -35,16 +35,55 @@
     if (window.innerWidth <= MOBILE && !sidebar.contains(e.target)) sidebar.classList.remove("active");
   });
 
-  /* ---------- Modo oscuro ---------- */
-  const darkToggle = $("#darkmode-toggle");
-  const darkSwitch = darkToggle?.querySelector(".darkmode-switch");
-  darkSwitch?.classList.toggle("active", document.body.classList.contains("dark"));
+  /* ---------- Menú de tema del header (lógica en theme.js) ---------- */
+  Theme.onChange((pref) => {
+    const icon = $("#themeIcon");
+    if (icon) icon.textContent = Theme.ICONS[pref];
+    $("#themeBtn")?.setAttribute("aria-label", `Tema: ${Theme.LABELS[pref]}. Cambiar tema`);
+    $$("[data-theme-choice]").forEach((item) =>
+      item.setAttribute("aria-checked", String(item.dataset.themeChoice === pref)),
+    );
+  });
 
-  darkToggle?.addEventListener("click", (e) => {
-    e.preventDefault();
-    const dark = document.body.classList.toggle("dark");
-    darkSwitch.classList.toggle("active", dark);
-    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+  const themeMenu = $("#themeMenu");
+  const themeBtn = $("#themeBtn");
+  const setMenu = (open) => {
+    themeMenu.classList.toggle("open", open);
+    themeBtn.setAttribute("aria-expanded", String(open));
+  };
+
+  themeBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = !themeMenu.classList.contains("open");
+    $("#notificationBtn")?.classList.remove("active");
+    setMenu(open);
+    if (open) themeMenu.querySelector('[aria-checked="true"]')?.focus();
+  });
+
+  themeMenu?.addEventListener("click", (e) => {
+    const item = e.target.closest("[data-theme-choice]");
+    if (!item) return;
+    Theme.set(item.dataset.themeChoice);
+    setMenu(false);
+    themeBtn.focus();
+  });
+
+  // Teclado: flechas para moverse, Escape para cerrar.
+  themeMenu?.addEventListener("keydown", (e) => {
+    const items = $$("[data-theme-choice]", themeMenu);
+    const index = items.indexOf(document.activeElement);
+    if (e.key === "Escape") {
+      setMenu(false);
+      themeBtn.focus();
+    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = (index + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      items[next].focus();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (themeMenu && !themeMenu.contains(e.target)) setMenu(false);
   });
 
   /* ---------- Toast ---------- */
@@ -88,6 +127,24 @@
     form.submit();
   });
 
+  /* ---------- Imágenes que no cargan → marcador neutro ---------- */
+  document.addEventListener(
+    "error",
+    (e) => {
+      const img = e.target;
+      if (!(img instanceof HTMLImageElement) || img.classList.contains("img-missing")) return;
+      img.classList.add("img-missing");
+      img.title = "Imagen no disponible";
+      img.removeAttribute("srcset");
+      img.src = "data:image/svg+xml," + encodeURIComponent(
+        // Gris semitransparente: se ve bien sobre fondo claro y oscuro.
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" fill="rgba(128,138,152,0.16)"/>' +
+        '<path d="M5 17l4-5 3 4 2-3 5 4H5z" fill="rgba(128,138,152,0.55)"/><circle cx="9" cy="8" r="1.8" fill="rgba(128,138,152,0.55)"/></svg>',
+      );
+    },
+    true, // los errores de <img> no burbujean: se capturan
+  );
+
   /* ---------- Filas de tabla clicables ---------- */
   document.addEventListener("click", (e) => {
     const row = e.target.closest("tr[data-href]");
@@ -100,6 +157,7 @@
   notifBtn?.addEventListener("click", (e) => {
     if (e.target.closest("a")) return;
     e.stopPropagation();
+    if (themeMenu) setMenu(false);
     notifBtn.classList.toggle("active");
   });
   document.addEventListener("click", () => notifBtn?.classList.remove("active"));

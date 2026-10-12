@@ -1,0 +1,5 @@
+<%# Aviso con ícono. type: "success" | "error". Los errores se anuncian al lector de pantalla. %>
+<p class="alert alert--<%= type %>" role="<%= type === 'error' ? 'alert' : 'status' %>">
+    <span class="icon" aria-hidden="true"><%= type === "error" ? "error" : "check_circle" %></span>
+    <span><%= message %></span>
+</p>

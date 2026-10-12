@@ -1,3 +1,7 @@
+/* ============================================================
+   ESTRUCTURA GENERAL: contenido principal, contadores, modal de
+   confirmación y toast. Colores solo desde theme.css.
+============================================================ */
 .main {
   padding-left: 260px;
   transition: padding-left 0.3s ease;
@@ -14,6 +18,7 @@
 .counter-title {
   margin-bottom: 20px;
   text-transform: capitalize;
+  color: var(--text-2);
 }
 
 .counter-info {
@@ -24,8 +29,8 @@
   font-weight: 700;
 }
 
-.counter-info i {
-  color: var(--main-color);
+.counter-count {
+  color: var(--text);
 }
 
 .box-header {
@@ -33,27 +38,6 @@
   font-size: 1.25rem;
   font-weight: 700;
 }
-
-.card-div {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-}
-
-.overlay.active {
-  display: block;
-}
-
-/*----------------------------------*/
 
 .dashboard-card-body {
   display: flex;
@@ -66,119 +50,16 @@
   margin: 6px 0;
 }
 
-.dashboard-card-body p span {
-  font-weight: 700;
-  color: #111;
-}
-
-/* ==============================
-   ORDER TICKET MODERNO
-================================ */
-
-.order-ticket.modern {
-  display: grid;
-  grid-template-columns: 1.2fr 2fr 1.2fr;
-  gap: 20px;
-  padding: 18px;
-  background: #ffffff;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.order-ticket.modern:hover {
-  border-color: var(--main-color);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
-
-.order-col-main {
-  gap: 8px;
-}
-
-.order-col-total {
-  align-items: flex-end;
-  text-align: right;
-}
-
-/* Cliente */
-.order-col-client p {
-  margin: 0;
-}
-
-.address {
-  font-size: 13px;
-  color: #666;
-  line-height: 1.4;
-}
-
-.shipping-cost {
-  font-size: 13px;
-  color: #777;
-}
-
-.grid-3 {
-  display: grid;
-  grid-template-columns: 1.2fr 1.4fr 2fr;
-  gap: 20px;
-}
-
-.order-ticket {
-  background: #fff;
-  border: 1px solid #e6e8ec;
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.order-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 150px;
-}
-
-.order-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  text-align: right;
-}
-
-.order-products {
-  font-size: 13px;
-}
-
-.order-product {
-  padding: 8px 0;
-  border-bottom: 1px dashed #ddd;
-}
-
-.order-product:last-child {
-  border-bottom: none;
-}
-
-.product-meta {
-  color: #555;
-}
-
-.product-extra {
-  font-size: 12px;
-  color: #777;
-}
-
 .main-icons {
   font-size: 3rem !important;
-  color: var(--main-color) !important;
+  color: var(--accent) !important;
 }
 
-.dark .main-icons {
-  color: var(--text-color) !important;
-}
-
+/* ---------- Modal de confirmación ---------- */
 .approve-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--overlay);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -194,14 +75,21 @@
 }
 
 .approve-box {
-  background: #fff;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   border-radius: 14px;
+  box-shadow: var(--shadow-lg);
   padding: 1.5rem 1.8rem;
-  max-width: 360px;
-  width: 100%;
+  max-width: 380px;
+  width: calc(100% - 32px);
   text-align: center;
   transform: scale(1);
   transition: transform 0.25s ease;
+}
+
+.approve-box p {
+  color: var(--text-2);
 }
 
 .approve-h3 {
@@ -220,8 +108,8 @@
 }
 
 .btn-confirm {
-  background: var(--main-color);
-  color: #fff;
+  background: var(--accent-solid);
+  color: var(--on-accent);
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
@@ -229,23 +117,32 @@
   cursor: pointer;
 }
 
+.btn-confirm:hover {
+  filter: brightness(1.08);
+}
+
 .btn-cancel {
-  background: #e5e7eb;
-  color: #111;
+  background: var(--muted-bg);
+  color: var(--text);
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
 }
 
-/* Toast */
+.btn-cancel:hover {
+  background: var(--surface-hover);
+}
+
+/* ---------- Toast ---------- */
 .approve-msg {
   position: fixed;
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--main-color);
-  color: #f8fafc;
+  background: var(--accent-solid);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-lg);
   padding: 12px 18px;
   border-radius: 10px;
   font-weight: 500;
@@ -262,24 +159,13 @@
 }
 
 .approve-msg.error {
-  background: #7f1d1d;
+  background: var(--danger);
 }
 
 @media only screen and (max-width: 1280px) {
   .main,
   .main.sidebar-collapsed {
     padding-left: 0;
-  }
-}
-
-@media (max-width: 1024px) {
-  .order-ticket.modern {
-    grid-template-columns: 1fr;
-  }
-
-  .order-col-total {
-    align-items: flex-start;
-    text-align: left;
   }
 }
 

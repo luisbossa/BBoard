@@ -2,8 +2,6 @@
    FORMATO Y CATÁLOGOS DE ESTADOS — usado por servicios y vistas
    (expuesto en las vistas como `fmt`).
 ============================================================ */
-const env = require("../config/env");
-
 const TIME_ZONE = "America/Costa_Rica";
 
 // 30000 → "₡30.000"
@@ -57,11 +55,13 @@ const ROLE = {
 const status = (value) => ORDER_STATUS[value] || value || "—";
 const payment = (value) => PAYMENT_METHOD[value] || value || "—";
 
-// Las imágenes del catálogo son rutas de la tienda (/images/...);
-// las subidas desde el panel ya son URLs absolutas de Vercel Blob.
+// Las imágenes del catálogo son rutas de la tienda (/images/...) y se sirven
+// a través del panel (/media/images/...), ver routes/mediaRoute.js.
+// Las subidas desde el panel ya son URLs absolutas de Vercel Blob.
 const storeImage = (src) => {
   if (!src) return "/images/user-default.webp";
-  return /^https?:\/\//.test(src) ? src : `${env.storeUrl}${src.startsWith("/") ? "" : "/"}${src}`;
+  if (/^https?:\/\//.test(src)) return src;
+  return `/media${src.startsWith("/") ? "" : "/"}${src}`;
 };
 
 module.exports = {

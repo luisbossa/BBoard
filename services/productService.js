@@ -227,6 +227,16 @@ async function save(id, body, uploadedUrls, user) {
           );
 
       await saveChildren(client, rows[0].id, data);
+
+      // Las URLs viejas siguen funcionando: la tienda redirige el slug anterior.
+      await client.query("DELETE FROM product_slug_redirects WHERE old_slug = $1", [data.slug]);
+      if (previous && previous.slug !== data.slug) {
+        await client.query(
+          `INSERT INTO product_slug_redirects (old_slug, product_id) VALUES ($1, $2)
+           ON CONFLICT (old_slug) DO UPDATE SET product_id = EXCLUDED.product_id`,
+          [previous.slug, previous.id],
+        );
+      }
       await activityService.log(
         user.id,
         previous ? "product_updated" : "product_created",

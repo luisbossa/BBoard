@@ -1,0 +1,15 @@
+<%# Tema día/noche: se decide ANTES de cargar el CSS para no ver un destello claro.
+    Preferencia en localStorage("theme"): "light" | "dark" | "system" (por defecto). %>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161a21" media="(prefers-color-scheme: dark)">
+<script>
+    (function () {
+        var pref = "system";
+        try { pref = localStorage.getItem("theme") || "system"; } catch (e) {}
+        var dark = pref === "dark" ||
+            (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    })();
+</script>
+<link rel="stylesheet" href="<%= asset('/css/theme.css') %>">

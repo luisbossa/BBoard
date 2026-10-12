@@ -8,7 +8,6 @@
     "dev": "nodemon server.js --ext js,ejs,sql --ignore public/",
     "migrate": "node scripts/migrate.js",
     "backup": "node scripts/backup.js",
-    "seed:catalog": "node scripts/seed-catalog.js",
     "create-admin": "node scripts/create-admin.js"
   },
   "author": "",
