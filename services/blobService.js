@@ -12,7 +12,10 @@ const BLOB_HOST = /\.public\.blob\.vercel-storage\.com\//;
 
 async function upload(file, folder) {
   if (!env.blobToken) {
-    throw new HttpError(500, "Falta BLOB_READ_WRITE_TOKEN para subir imágenes");
+    throw new HttpError(
+      503,
+      "No se pueden subir imágenes: falta configurar Vercel Blob (BLOB_READ_WRITE_TOKEN). Revisa Integraciones.",
+    );
   }
 
   const ext = path.extname(file.originalname).toLowerCase() || ".jpg";

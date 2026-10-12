@@ -15,7 +15,10 @@ const ABANDON_HOURS = 48;
 
 async function request(path) {
   if (!env.onvoSecretKey) {
-    throw new HttpError(500, "Falta ONVOPAY_SECRET_KEY para consultar ONVO");
+    throw new HttpError(
+      503,
+      "No se pudo consultar ONVO: falta configurar ONVOPAY_SECRET_KEY en el panel. Revisa Integraciones.",
+    );
   }
   const response = await fetch(`${API}${path}`, {
     headers: { Authorization: `Bearer ${env.onvoSecretKey}` },
